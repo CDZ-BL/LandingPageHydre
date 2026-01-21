@@ -1,0 +1,209 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --void: #050505;
+  --void-light: #111111;
+  --text: #F5F5F5;
+  --text-muted: #8A8A8A;
+  --border: #2A2A2A;
+  --neon-orange: #FF6B00;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Industrial Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--void);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Utility Classes */
+@layer utilities {
+  /* Typography */
+  .font-display {
+    font-family: var(--font-cinzel), serif;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .font-data {
+    font-family: var(--font-jetbrains), monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+
+  /* Industrial Borders */
+  .border-industrial {
+    border: 1px solid var(--border);
+  }
+
+  .border-industrial-b {
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Glass Effect - Minimal */
+  .glass {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Glitch Effect */
+  .glitch {
+    animation: glitch 0.3s ease-in-out;
+  }
+
+  /* Text Outline - For Marquee */
+  .text-outline {
+    -webkit-text-stroke: 1px currentColor;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* HUD Corner */
+  .hud-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--border);
+  }
+
+  .hud-corner-tl {
+    top: 0;
+    left: 0;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .hud-corner-tr {
+    top: 0;
+    right: 0;
+    border-top: 1px solid;
+    border-right: 1px solid;
+  }
+
+  .hud-corner-bl {
+    bottom: 0;
+    left: 0;
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .hud-corner-br {
+    bottom: 0;
+    right: 0;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+}
+
+/* Terminal Input Style */
+.terminal-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+  color: var(--text);
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 0.875rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.terminal-input:focus {
+  border-color: var(--text);
+}
+
+.terminal-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Particle Explosion Container */
+.particle-container {
+  position: absolute;
+  pointer-events: none;
+}
+
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: particle-fly 0.6s ease-out forwards;
+}
+
+@keyframes particle-fly {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Marquee */
+.marquee-track {
+  display: flex;
+  gap: 4rem;
+  animation: marquee 40s linear infinite;
+}
+
+/* X-Ray Hover Effect */
+.x-ray-container {
+  position: relative;
+}
+
+.x-ray-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.x-ray-container:hover .x-ray-layer {
+  opacity: 1;
+}
+
+.x-ray-container:hover .x-ray-surface {
+  opacity: 0.3;
+}
+
+/* Founders Card */
+.founders-card {
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
+  backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 20px 50px rgba(0, 0, 0, 0.5);
+}

@@ -1,0 +1,69 @@
+{
+    "benefits": [
+        {
+            "id": "magnesium",
+            "name": "Magnesium",
+            "amount": "200mg",
+            "description": "Supports muscle function and recovery",
+            "icon": "Mg"
+        },
+        {
+            "id": "potassium",
+            "name": "Potassium",
+            "amount": "400mg",
+            "description": "Helps maintain proper fluid balance",
+            "icon": "K"
+        },
+        {
+            "id": "sodium",
+            "name": "Sodium",
+            "amount": "300mg",
+            "description": "Essential for hydration during intense activity",
+            "icon": "Na"
+        },
+        {
+            "id": "calcium",
+            "name": "Calcium",
+            "amount": "100mg",
+            "description": "Supports bone health and muscle contractions",
+            "icon": "Ca"
+        },
+        {
+            "id": "zinc",
+            "name": "Zinc",
+            "amount": "15mg",
+            "description": "Supports immune function",
+            "icon": "Zn"
+        },
+        {
+            "id": "vitaminB6",
+            "name": "Vitamin B6",
+            "amount": "10mg",
+            "description": "Aids in energy metabolism",
+            "icon": "B6"
+        }
+    ],
+    "generalClaims": [
+        "Electrolytes support hydration*",
+        "Designed for athletic performance*",
+        "No artificial colors or flavors"
+    ],
+    "disclaimer": "*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.",
+    "flavors": [
+        {
+            "id": "citrus-blast",
+            "name": "Citrus Blast",
+            "color": "#FF6B35"
+        },
+        {
+            "id": "arctic-blue",
+            "name": "Arctic Blue",
+            "color": "#00D4FF"
+        },
+        {
+            "id": "tropical-storm",
+            "name": "Tropical Storm",
+            "color": "#FFD700"
+        }
+    ]
+}
