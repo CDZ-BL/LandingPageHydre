@@ -39,3 +39,4 @@ export function Marquee({ items, speed = 30, reverse = false, className = '' }: 
         </div>
     );
 }
+

@@ -33,8 +33,9 @@ module.exports = {
             },
             fontFamily: {
                 display: ['var(--font-cinzel)', 'serif'],
+                data: ['var(--font-jetbrains)', 'monospace'],
                 mono: ['var(--font-jetbrains)', 'monospace'],
-                sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+                sans: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
             },
             animation: {
                 'marquee': 'marquee 40s linear infinite',

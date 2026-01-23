@@ -121,8 +121,8 @@ function FlavorCard({ flavor, onTap, isCompleted, isWinner }: FlavorCardProps) {
                 {/* Progress */}
                 <div className="space-y-2">
                     <div className="flex justify-between font-data text-xs">
-                        <span className="text-void-700">{flavor.taps}/{flavor.maxTaps}</span>
-                        <span className="text-void-500">{FLAVOR_BATTLE_CLAIMS.tapsLabel}</span>
+                        <span className="text-white">{flavor.taps}/{flavor.maxTaps}</span>
+                        <span className="text-white">{FLAVOR_BATTLE_CLAIMS.tapsLabel}</span>
                     </div>
                     <div className="h-1 bg-void-200">
                         <motion.div
@@ -188,11 +188,11 @@ export function FlavorBattle({ onComplete }: FlavorBattleProps) {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <p className="font-data text-void-600 mb-4">{FLAVOR_BATTLE_CLAIMS.sectionLabel}</p>
+                    <p className="font-data text-void-900 mb-4">{FLAVOR_BATTLE_CLAIMS.sectionLabel}</p>
                     <h2 className="font-display text-4xl md:text-5xl text-white mb-4">
                         {FLAVOR_BATTLE_CLAIMS.headline}
                     </h2>
-                    <p className="font-data text-void-600 max-w-md mx-auto">
+                    <p className="font-data text-void-900 max-w-md mx-auto">
                         {FLAVOR_BATTLE_CLAIMS.description}
                     </p>
                 </motion.div>
@@ -221,7 +221,7 @@ export function FlavorBattle({ onComplete }: FlavorBattleProps) {
                             <p className="font-display text-2xl text-white">
                                 {FLAVOR_BATTLE_CLAIMS.flavorLocked} {flavors.find(f => f.id === winner)?.name}
                             </p>
-                            <p className="font-data text-void-600 mt-2">
+                            <p className="font-data text-void-900 mt-2">
                                 {FLAVOR_BATTLE_CLAIMS.proceedingText}
                             </p>
                         </motion.div>
@@ -231,3 +231,4 @@ export function FlavorBattle({ onComplete }: FlavorBattleProps) {
         </section>
     );
 }
+

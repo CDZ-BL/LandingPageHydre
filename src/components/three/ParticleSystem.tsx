@@ -157,3 +157,4 @@ export function IngredientLabels({ isVisible }: IngredientLabelProps) {
         </group>
     );
 }
+

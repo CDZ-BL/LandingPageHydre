@@ -101,11 +101,11 @@ export function AICoach() {
                     viewport={{ once: true }}
                     className="text-center mb-16"
                 >
-                    <p className="font-data text-void-600 mb-4">{AI_COACH_CLAIMS.sectionLabel}</p>
+                    <p className="font-data text-void-900 mb-4">{AI_COACH_CLAIMS.sectionLabel}</p>
                     <h2 className="font-display text-4xl md:text-5xl text-white mb-4">
                         {AI_COACH_CLAIMS.headline}
                     </h2>
-                    <p className="font-data text-void-600">
+                    <p className="font-data text-void-900">
                         {AI_COACH_CLAIMS.description}
                     </p>
                 </motion.div>
@@ -120,7 +120,7 @@ export function AICoach() {
                     {/* Input Fields */}
                     <div className="space-y-8 mb-12">
                         <div>
-                            <label className="font-data text-void-500 text-xs block mb-2">
+                            <label className="font-data text-white text-xs block mb-2">
                                 {AI_COACH_CLAIMS.sportLabel}
                             </label>
                             <input
@@ -133,7 +133,7 @@ export function AICoach() {
                         </div>
 
                         <div>
-                            <label className="font-data text-void-500 text-xs block mb-2">
+                            <label className="font-data text-white text-xs block mb-2">
                                 {AI_COACH_CLAIMS.durationLabel}
                             </label>
                             <input
@@ -151,7 +151,7 @@ export function AICoach() {
                         onClick={generateProtocol}
                         disabled={!sport || isGenerating}
                         className="w-full py-4 border border-void-300 text-white font-display text-sm tracking-widest
-                       hover:bg-white hover:text-void transition-all duration-300
+                       hover:bg-white hover:text-black transition-all duration-300
                        disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                         {isGenerating ? AI_COACH_CLAIMS.generating : AI_COACH_CLAIMS.generateButton}
@@ -165,8 +165,8 @@ export function AICoach() {
                             className="mt-12 border-t border-void-300 pt-8"
                         >
                             <div className="flex justify-between items-center mb-6">
-                                <span className="font-data text-void-600 text-xs">{AI_COACH_CLAIMS.protocolLabel}</span>
-                                <span className="font-data text-neon-orange text-xs">{protocol.sport} • {protocol.duration}</span>
+                                <span className="font-data text-void-900 text-xs">{AI_COACH_CLAIMS.protocolLabel}</span>
+                                <span className="font-data text-neon-orange text-sm font-semibold">{protocol.sport} • {protocol.duration}</span>
                             </div>
 
                             <div className="space-y-6">
@@ -178,10 +178,10 @@ export function AICoach() {
                                         transition={{ delay: i * 0.2 }}
                                         className="flex gap-4"
                                     >
-                                        <span className="font-data text-void-500 text-xs flex-shrink-0 pt-1">
+                                        <span className="font-data text-white text-xs flex-shrink-0 pt-1">
                                             {String(i + 1).padStart(2, '0')}
                                         </span>
-                                        <p className="font-sans text-sm text-void-800 leading-relaxed">
+                                        <p className="font-sans text-sm text-white leading-relaxed">
                                             {step}
                                         </p>
                                     </motion.div>
@@ -189,7 +189,7 @@ export function AICoach() {
                             </div>
 
                             <div className="mt-8 pt-6 border-t border-void-200">
-                                <p className="font-data text-void-500 text-xs">
+                                <p className="font-data text-white text-xs">
                                     {AI_COACH_CLAIMS.disclaimer}
                                 </p>
                             </div>
@@ -198,10 +198,11 @@ export function AICoach() {
                 </motion.div>
 
                 {/* API Note for Developers */}
-                <p className="font-data text-void-400 text-xs text-center mt-8">
+                <p className="font-data text-white text-xs text-center mt-8">
                     {AI_COACH_CLAIMS.apiNote}
                 </p>
             </div>
         </section>
     );
 }
+

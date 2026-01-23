@@ -175,3 +175,4 @@ export function Scene3D({ className }: Scene3DProps) {
         </div>
     );
 }
+

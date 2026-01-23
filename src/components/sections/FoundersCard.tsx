@@ -61,11 +61,11 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
                 {/* Card Header */}
                 <div className="flex justify-between items-start mb-8">
                     <div>
-                        <p className="font-data text-void-600 text-xs mb-1">{FOUNDERS_CLAIMS.cardLabel}</p>
+                        <p className="font-data text-void-900 text-xs mb-1">{FOUNDERS_CLAIMS.cardLabel}</p>
                         <h3 className="font-display text-2xl text-white">AETHER</h3>
                     </div>
                     <div className="text-right">
-                        <p className="font-data text-void-600 text-xs mb-1">{FOUNDERS_CLAIMS.agentLabel}</p>
+                        <p className="font-data text-void-900 text-xs mb-1">{FOUNDERS_CLAIMS.agentLabel}</p>
                         <p className="font-mono text-2xl text-white">#{agentNumber}</p>
                     </div>
                 </div>
@@ -78,19 +78,19 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
                         {/* Benefits */}
                         <div className="space-y-3 mb-8">
                             <div className="flex justify-between font-data text-xs">
-                                <span className="text-void-600">{FOUNDERS_CLAIMS.statusLabel}</span>
-                                <span className="text-neon-orange">{FOUNDERS_CLAIMS.statusValue}</span>
+                                <span className="text-void-900">{FOUNDERS_CLAIMS.statusLabel}</span>
+                                <span className="text-neon-orange font-semibold text-sm">{FOUNDERS_CLAIMS.statusValue}</span>
                             </div>
                             <div className="flex justify-between font-data text-xs">
-                                <span className="text-void-600">{FOUNDERS_CLAIMS.discountLabel}</span>
+                                <span className="text-void-900">{FOUNDERS_CLAIMS.discountLabel}</span>
                                 <span className="text-white">{FOUNDERS_CLAIMS.discountValue}</span>
                             </div>
                             <div className="flex justify-between font-data text-xs">
-                                <span className="text-void-600">{FOUNDERS_CLAIMS.flavorLabel}</span>
+                                <span className="text-void-900">{FOUNDERS_CLAIMS.flavorLabel}</span>
                                 <span className="text-white">{selectedFlavor.toUpperCase()}</span>
                             </div>
                             <div className="flex justify-between font-data text-xs">
-                                <span className="text-void-600">{FOUNDERS_CLAIMS.deliveryLabel}</span>
+                                <span className="text-void-900">{FOUNDERS_CLAIMS.deliveryLabel}</span>
                                 <span className="text-white">{FOUNDERS_CLAIMS.deliveryValue}</span>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
                         {/* Form */}
                         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                             <div>
-                                <label className="font-data text-void-500 text-xs block mb-2">
+                                <label className="font-data text-white text-xs block mb-2">
                                     {FOUNDERS_CLAIMS.emailLabel}
                                 </label>
                                 <input
@@ -124,7 +124,7 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
                         </form>
 
                         {/* Legal */}
-                        <p className="font-data text-void-500 text-[10px] text-center mt-6 leading-relaxed">
+                        <p className="font-data text-white text-[10px] text-center mt-6 leading-relaxed">
                             {FOUNDERS_CLAIMS.legalText}
                         </p>
                     </>
@@ -137,7 +137,7 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
                     >
                         <div className="font-display text-4xl text-white mb-4">✓</div>
                         <h4 className="font-display text-xl text-white mb-2">{FOUNDERS_CLAIMS.welcomeTitle} #{agentNumber}</h4>
-                        <p className="font-data text-void-600 text-sm mb-6">
+                        <p className="font-data text-void-900 text-sm mb-6">
                             {FOUNDERS_CLAIMS.welcomeMessage}
                         </p>
                         <button
@@ -153,7 +153,7 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
                 {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 font-data text-void-500 hover:text-white transition-colors"
+                    className="absolute top-4 right-4 font-data text-white hover:text-white transition-colors"
                 >
                     ✕
                 </button>
@@ -161,3 +161,4 @@ export function FoundersCard({ selectedFlavor, onClose }: FoundersCardProps) {
         </motion.div>
     );
 }
+

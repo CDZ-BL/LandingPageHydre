@@ -231,3 +231,4 @@ export function WaitlistCapture() {
         </section>
     );
 }
+

@@ -109,3 +109,4 @@ export function TabletModel({ isExploding, explosionProgress }: TabletModelProps
         </Float>
     );
 }
+

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, JetBrains_Mono, Inter } from 'next/font/google';
+import { Cinzel, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
 const cinzel = Cinzel({
@@ -14,9 +14,9 @@ const jetbrains = JetBrains_Mono({
     display: 'swap',
 });
 
-const inter = Inter({
+const plusJakarta = Plus_Jakarta_Sans({
     subsets: ['latin'],
-    variable: '--font-inter',
+    variable: '--font-jakarta',
     display: 'swap',
 });
 
@@ -49,7 +49,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${cinzel.variable} ${jetbrains.variable} ${inter.variable}`}>
+        <html lang="en" className={`${cinzel.variable} ${jetbrains.variable} ${plusJakarta.variable}`}>
             <body className="antialiased bg-void text-void-950">
                 {children}
             </body>
