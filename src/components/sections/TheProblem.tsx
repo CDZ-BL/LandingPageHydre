@@ -323,23 +323,53 @@ export function TheProblem() {
                         DISSOLUTION TOTALE. ZÉRO RÉSIDU.
                     </h3>
 
+                    {/* Cinematic Portal Video Container */}
                     <div
-                        className="relative left-1/2 -translate-x-1/2 w-screen border-y border-void-300 overflow-hidden"
-                        style={{ boxShadow: '0 0 50px rgba(255,255,255,0.05)' }}
+                        className="relative overflow-hidden bg-black"
+                        style={{
+                            width: '100vw',
+                            height: '85vh',
+                            marginLeft: 'calc(-50vw + 50%)',
+                            marginRight: 'calc(-50vw + 50%)'
+                        }}
                     >
+                        {/* Gradient Overlay - Fades edges into black */}
+                        <div
+                            className="absolute inset-0 z-10 pointer-events-none"
+                            style={{
+                                background: `linear-gradient(
+                                    to bottom,
+                                    #050505 0%,
+                                    transparent 15%,
+                                    transparent 85%,
+                                    #050505 100%
+                                )`
+                            }}
+                        />
+
+                        {/* Video - Fills container */}
                         <video
                             autoPlay
                             loop
                             muted
                             playsInline
-                            className="w-full block"
+                            className="w-full h-full object-cover"
+                            style={{
+                                opacity: 0.9,
+                                filter: 'contrast(1.1)'
+                            }}
                         >
                             <source src={getAssetPath('/videos/tabletteeffervescence.mp4')} type="video/mp4" />
                             Your browser does not support the video tag.
                         </video>
+
+                        {/* Floating Data Overlay */}
+                        <div className="absolute bottom-8 right-8 z-20 font-mono text-white/50 text-xs tracking-widest">
+                            [ REACTIVE_POWER ] : MAXIMUM
+                        </div>
                     </div>
 
-                    <p className="font-mono text-void-500 text-sm mt-4 tracking-wider">
+                    <p className="font-mono text-void-500 text-sm mt-8 tracking-wider">
                         [DATA] : DISSOLUTION TIME &lt; 45s // RESIDUE : 0.00%
                     </p>
                 </motion.div>

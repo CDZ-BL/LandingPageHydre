@@ -12,7 +12,7 @@ export function HeroVoid() {
     useEffect(() => {
         const interval = setInterval(() => {
             setIsXray(true);
-            setTimeout(() => setIsXray(false), 500); // 0.5 second blink
+            setTimeout(() => setIsXray(false), 300); // 0.3 second blink
         }, 5000); // Every 5 seconds
 
         return () => clearInterval(interval);
