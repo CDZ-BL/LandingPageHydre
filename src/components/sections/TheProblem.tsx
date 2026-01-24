@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { getAssetPath } from '@/lib/utils';
 
 // Radar chart metrics - higher is better for AETHER
 const METRICS = [
@@ -271,51 +272,76 @@ export function TheProblem() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.6 }}
-                    className="border border-void-300 p-8 md:p-12"
+                    className="space-y-6"
                 >
-                    <div className="grid md:grid-cols-2 gap-12">
-                        {/* They */}
-                        <div>
-                            <div className="font-mono text-red-500 text-xs font-bold tracking-wider mb-6">
-                                [EUX]
-                            </div>
-                            <div className="space-y-4 font-mono text-white">
-                                <div className="flex justify-between border-b border-void-300 pb-3">
-                                    <span className="text-white">Sucre</span>
-                                    <span className="text-red-500 font-semibold">15g</span>
-                                </div>
-                                <div className="flex justify-between border-b border-void-300 pb-3">
-                                    <span className="text-white">Excipient</span>
-                                    <span className="text-red-500 font-semibold">Maltodextrine</span>
-                                </div>
-                                <div className="flex justify-between pb-3">
-                                    <span className="text-white">Colorant</span>
-                                    <span className="text-red-500 font-semibold">E133</span>
-                                </div>
-                            </div>
+                    {/* Enemy Card - Standard Market */}
+                    <div className="relative opacity-60 border border-void-300 bg-[#0a0a0a] p-6 md:p-8">
+                        <div className="absolute -top-3 left-4 bg-void px-2 py-0.5 font-mono text-[10px] text-void-500 uppercase tracking-widest">
+                            Standard Market
                         </div>
-
-                        {/* AETHER */}
-                        <div>
-                            <div className="font-mono text-neon-orange text-xs font-bold tracking-wider mb-6">
-                                [AETHER]
+                        <div className="space-y-3 font-mono text-sm md:text-base">
+                            <div className="text-void-500">
+                                <span className="text-red-800 font-semibold">[ DETECTED ]</span> 15g Sucre
                             </div>
-                            <div className="space-y-4 font-mono text-white">
-                                <div className="flex justify-between border-b border-void-300 pb-3">
-                                    <span className="text-white">Sucre</span>
-                                    <span className="text-neon-orange font-semibold">0g</span>
-                                </div>
-                                <div className="flex justify-between border-b border-void-300 pb-3">
-                                    <span className="text-white">Magnésium</span>
-                                    <span className="text-neon-orange font-semibold">Bisglycinate</span>
-                                </div>
-                                <div className="flex justify-between pb-3">
-                                    <span className="text-white">Arôme</span>
-                                    <span className="text-neon-orange font-semibold">Naturel</span>
-                                </div>
+                            <div className="text-void-500">
+                                <span className="text-red-800 font-semibold">[ DETECTED ]</span> Maltodextrine
+                            </div>
+                            <div className="text-void-500">
+                                <span className="text-red-800 font-semibold">[ DETECTED ]</span> Colorant E133
                             </div>
                         </div>
                     </div>
+
+                    {/* Hero Card - AETHER SYSTEM */}
+                    <div className="relative border border-void-400 bg-void p-6 md:p-8" style={{ boxShadow: '0 0 20px rgba(255, 255, 255, 0.05)' }}>
+                        <div className="absolute -top-3 left-4 bg-void px-2 py-0.5 border border-void-400 font-mono text-[10px] text-white uppercase tracking-widest">
+                            AETHER SYSTEM
+                        </div>
+                        <div className="space-y-3 font-mono text-sm md:text-base">
+                            <div className="text-void-600">
+                                <span className="text-white font-bold">// 0.00g</span> Sucre
+                            </div>
+                            <div className="text-void-600">
+                                <span className="text-white font-bold">// 200mg</span> Magnésium Bisglycinate
+                            </div>
+                            <div className="text-void-600">
+                                <span className="text-white font-bold">// PURE</span> Arôme Naturel
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+
+                {/* Video Evidence Section */}
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, margin: "-100px" }}
+                    transition={{ duration: 0.8, delay: 0.7 }}
+                    className="mt-16 text-center"
+                >
+                    <h3 className="font-sans text-2xl md:text-4xl text-white font-bold tracking-tight mb-8">
+                        DISSOLUTION TOTALE. ZÉRO RÉSIDU.
+                    </h3>
+
+                    <div
+                        className="max-w-3xl mx-auto border border-void-300 overflow-hidden"
+                        style={{ boxShadow: '0 0 50px rgba(255,255,255,0.05)' }}
+                    >
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="w-full block"
+                        >
+                            <source src={getAssetPath('/videos/tabletteeffervescence.mp4')} type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+
+                    <p className="font-mono text-void-500 text-sm mt-4 tracking-wider">
+                        [DATA] : DISSOLUTION TIME &lt; 45s // RESIDUE : 0.00%
+                    </p>
                 </motion.div>
             </div>
         </section>

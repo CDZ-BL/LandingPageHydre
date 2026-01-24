@@ -4,6 +4,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HeroVoid } from '@/components/sections/Hero3D';
 import { TheProblem } from '@/components/sections/TheProblem';
+import { GlitchOverride } from '@/components/sections/GlitchOverride';
 import { TheSpecs } from '@/components/sections/TheSpecs';
 import { ThePhilosophy } from '@/components/sections/ThePhilosophy';
 import { FounderStatus } from '@/components/sections/FounderStatus';
@@ -20,7 +21,10 @@ export default function Home() {
             {/* Block 2: The Problem */}
             <TheProblem />
 
-            {/* Block 3: The Specs */}
+            {/* Block 3: Glitch Override */}
+            <GlitchOverride />
+
+            {/* Block 4: The Specs */}
             <TheSpecs />
 
             {/* Block 4: The Philosophy */}
