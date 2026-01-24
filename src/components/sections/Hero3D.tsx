@@ -19,14 +19,23 @@ export function HeroVoid() {
                 }}
             />
 
-            {/* Layer 2: Black Matte Tube Image - Full Coverage Background */}
+            {/* Layer 2: Black Matte Tube Image - Scales with text */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.2, delay: 0.2 }}
                 className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"
             >
-                <div className="relative w-[150%] h-[150%]">
+                {/* Using em units so image scales with font-size/zoom like text does */}
+                <div
+                    className="relative"
+                    style={{
+                        width: '100em',
+                        height: '100em',
+                        minWidth: '100em',
+                        minHeight: '100em'
+                    }}
+                >
                     <Image
                         src={getAssetPath('/images/Blackmatetube.png')}
                         alt="AETHER System"
@@ -40,7 +49,7 @@ export function HeroVoid() {
             {/* Layer 3: Dark overlay for text contrast */}
             <div className="absolute inset-0 bg-gradient-to-b from-void/30 via-void/60 to-void z-10" />
 
-            {/* Layer 4: Status Bar - Top */}
+            {/* Layer 4: Status Bar - Top (below fixed header) */}
             <div className="absolute top-8 left-8 right-8 flex justify-between items-start z-30">
                 <div className="font-mono text-white text-xs tracking-wider">
                     <span className="block">AETHER [LABS]</span>
