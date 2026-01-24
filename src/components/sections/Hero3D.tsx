@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { getAssetPath } from '@/lib/utils';
 
 export function HeroVoid() {
     return (
@@ -27,7 +28,7 @@ export function HeroVoid() {
             >
                 <div className="relative w-[150%] h-[150%]">
                     <Image
-                        src="/images/Blackmatetube.png"
+                        src={getAssetPath('/images/Blackmatetube.png')}
                         alt="AETHER System"
                         fill
                         className="object-contain"
