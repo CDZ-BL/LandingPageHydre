@@ -69,7 +69,7 @@ export function HeroVoid() {
                                 className="absolute inset-0"
                             >
                                 <Image
-                                    src={getAssetPath('/images/Blackmatetubexray.jpg')}
+                                    src={getAssetPath('/images/tubenoirxray4k.png')}
                                     alt="AETHER System X-Ray"
                                     fill
                                     className="object-contain"

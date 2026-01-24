@@ -21,13 +21,13 @@ export default function Home() {
             {/* Block 2: The Problem */}
             <TheProblem />
 
-            {/* Block 3: Glitch Override */}
-            <GlitchOverride />
-
-            {/* Block 4: The Specs */}
+            {/* Block 3: The Specs */}
             <TheSpecs />
 
-            {/* Block 4: The Philosophy */}
+            {/* Block 4: Glitch Override - System Bug */}
+            <GlitchOverride />
+
+            {/* Block 5: The Philosophy */}
             <ThePhilosophy />
 
             {/* Block 5: Founder Status */}
