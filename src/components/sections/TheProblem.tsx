@@ -13,11 +13,16 @@ const METRICS = [
     { label: 'ZÉRO SUCRE', aether: 100, competitors: 15 },
 ];
 
-function RadarChart({ showAether, showCompetitors }: { showAether: boolean; showCompetitors: boolean }) {
-    const size = 300;
+function RadarChart({ activeAether, activeCompetitors }: { activeAether: boolean; activeCompetitors: boolean }) {
+    const size = 450;
     const center = size / 2;
-    const radius = 120;
+    const radius = 140;
     const levels = 5;
+
+    // Calculate opacity: full if active OR if both active, faded if only other is active
+    const bothActive = activeAether && activeCompetitors;
+    const competitorsOpacity = bothActive ? 1 : (activeCompetitors ? 1 : 0.25);
+    const aetherOpacity = bothActive ? 1 : (activeAether ? 1 : 0.25);
 
     // Calculate point position on radar
     const getPoint = (index: number, value: number) => {
@@ -77,7 +82,7 @@ function RadarChart({ showAether, showCompetitors }: { showAether: boolean; show
     // Generate labels
     const labels = METRICS.map((metric, i) => {
         const angle = (Math.PI * 2 * i) / METRICS.length - Math.PI / 2;
-        const labelRadius = radius + 35;
+        const labelRadius = radius + 65;
         const x = center + labelRadius * Math.cos(angle);
         const y = center + labelRadius * Math.sin(angle);
         return (
@@ -95,62 +100,63 @@ function RadarChart({ showAether, showCompetitors }: { showAether: boolean; show
     });
 
     return (
-        <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[400px] mx-auto">
+        <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[600px] mx-auto">
             {/* Grid */}
             {gridLines}
             {axisLines}
 
-            {/* Competitors polygon */}
-            {showCompetitors && (
-                <motion.path
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    d={getPolygonPath(METRICS.map(m => m.competitors))}
-                    fill="rgba(239, 68, 68, 0.2)"
-                    stroke="#ef4444"
-                    strokeWidth="2"
-                />
-            )}
+            {/* Competitors polygon - always visible with dynamic opacity */}
+            <motion.path
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: competitorsOpacity, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                d={getPolygonPath(METRICS.map(m => m.competitors))}
+                fill="rgba(239, 68, 68, 0.2)"
+                stroke="#ef4444"
+                strokeWidth="2"
+            />
 
-            {/* AETHER polygon */}
-            {showAether && (
-                <motion.path
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5 }}
-                    d={getPolygonPath(METRICS.map(m => m.aether))}
-                    fill="rgba(255, 122, 0, 0.25)"
-                    stroke="#ff7a00"
-                    strokeWidth="2"
-                />
-            )}
+            {/* AETHER polygon - always visible with dynamic opacity */}
+            <motion.path
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: aetherOpacity, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                d={getPolygonPath(METRICS.map(m => m.aether))}
+                fill="rgba(255, 122, 0, 0.25)"
+                stroke="#ff7a00"
+                strokeWidth="2"
+            />
 
             {/* Labels */}
             {labels}
 
-            {/* Data points */}
-            {showCompetitors && METRICS.map((metric, i) => {
+            {/* Data points - competitors */}
+            {METRICS.map((metric, i) => {
                 const point = getPoint(i, metric.competitors);
                 return (
-                    <circle
+                    <motion.circle
                         key={`comp-${i}`}
                         cx={point.x}
                         cy={point.y}
                         r="4"
                         fill="#ef4444"
+                        animate={{ opacity: competitorsOpacity }}
+                        transition={{ duration: 0.3 }}
                     />
                 );
             })}
-            {showAether && METRICS.map((metric, i) => {
+            {/* Data points - AETHER */}
+            {METRICS.map((metric, i) => {
                 const point = getPoint(i, metric.aether);
                 return (
-                    <circle
+                    <motion.circle
                         key={`aether-${i}`}
                         cx={point.x}
                         cy={point.y}
                         r="4"
                         fill="#ff7a00"
+                        animate={{ opacity: aetherOpacity }}
+                        transition={{ duration: 0.3 }}
                     />
                 );
             })}
@@ -223,8 +229,8 @@ export function TheProblem() {
                             <button
                                 onClick={() => setShowCompetitors(!showCompetitors)}
                                 className={`px-6 py-3 font-mono text-sm tracking-wider border transition-all ${showCompetitors
-                                        ? 'border-red-500 bg-red-500/20 text-red-500'
-                                        : 'border-void-300 text-white hover:border-red-500'
+                                    ? 'border-red-500 bg-red-500/20 text-red-500'
+                                    : 'border-void-300 text-white hover:border-red-500'
                                     }`}
                             >
                                 CONCURRENTS
@@ -232,8 +238,8 @@ export function TheProblem() {
                             <button
                                 onClick={() => setShowAether(!showAether)}
                                 className={`px-6 py-3 font-mono text-sm tracking-wider border transition-all ${showAether
-                                        ? 'border-neon-orange bg-neon-orange/20 text-neon-orange'
-                                        : 'border-void-300 text-white hover:border-neon-orange'
+                                    ? 'border-neon-orange bg-neon-orange/20 text-neon-orange'
+                                    : 'border-void-300 text-white hover:border-neon-orange'
                                     }`}
                             >
                                 AETHER
@@ -241,22 +247,20 @@ export function TheProblem() {
                         </div>
 
                         {/* Radar Chart */}
-                        <RadarChart showAether={showAether} showCompetitors={showCompetitors} />
+                        <RadarChart activeAether={showAether} activeCompetitors={showCompetitors} />
 
-                        {/* Legend */}
+                        {/* Legend - always visible with dynamic opacity */}
                         <div className="flex justify-center gap-8 mt-8">
-                            {showCompetitors && (
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 bg-red-500/50 border border-red-500" />
-                                    <span className="font-mono text-xs text-red-500">CONCURRENTS</span>
-                                </div>
-                            )}
-                            {showAether && (
-                                <div className="flex items-center gap-2">
-                                    <div className="w-4 h-4 bg-neon-orange/50 border border-neon-orange" />
-                                    <span className="font-mono text-xs text-neon-orange">AETHER</span>
-                                </div>
-                            )}
+                            <div className={`flex items-center gap-2 transition-opacity duration-300 ${showAether && !showCompetitors ? 'opacity-25' : 'opacity-100'
+                                }`}>
+                                <div className="w-4 h-4 bg-red-500/50 border border-red-500" />
+                                <span className="font-mono text-xs text-red-500">CONCURRENTS</span>
+                            </div>
+                            <div className={`flex items-center gap-2 transition-opacity duration-300 ${showCompetitors && !showAether ? 'opacity-25' : 'opacity-100'
+                                }`}>
+                                <div className="w-4 h-4 bg-neon-orange/50 border border-neon-orange" />
+                                <span className="font-mono text-xs text-neon-orange">AETHER</span>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
