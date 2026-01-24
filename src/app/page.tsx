@@ -6,6 +6,7 @@ import { HeroVoid } from '@/components/sections/Hero3D';
 import { TheProblem } from '@/components/sections/TheProblem';
 import { TheSpecs } from '@/components/sections/TheSpecs';
 import { ThePhilosophy } from '@/components/sections/ThePhilosophy';
+import { FounderStatus } from '@/components/sections/FounderStatus';
 import { TheClose } from '@/components/sections/TheClose';
 
 export default function Home() {
@@ -25,7 +26,10 @@ export default function Home() {
             {/* Block 4: The Philosophy */}
             <ThePhilosophy />
 
-            {/* Block 5: The Close */}
+            {/* Block 5: Founder Status */}
+            <FounderStatus />
+
+            {/* Block 6: The Close */}
             <TheClose />
 
             <Footer />
