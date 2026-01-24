@@ -1,9 +1,23 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { getAssetPath } from '@/lib/utils';
 
 export function HeroVoid() {
+    const [isXray, setIsXray] = useState(false);
+
+    // X-ray blink effect: every 5 seconds, show X-ray for 0.5 seconds
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsXray(true);
+            setTimeout(() => setIsXray(false), 500); // 0.5 second blink
+        }, 5000); // Every 5 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <section className="relative min-h-screen bg-void text-white overflow-hidden flex items-center justify-center">
             {/* Layer 1: Grid overlay - technical aesthetic */}
@@ -18,28 +32,74 @@ export function HeroVoid() {
                 }}
             />
 
-            {/* Layer 2: Black Matte Tube Image - Full Coverage Background */}
+            {/* Layer 2: Black Matte Tube Image with X-ray Blink */}
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.2, delay: 0.2 }}
                 className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"
             >
-                <div className="relative w-[150%] h-[150%]">
+                {/* Container for both images */}
+                <div
+                    className="relative"
+                    style={{
+                        width: '100em',
+                        height: '100em',
+                        minWidth: '100em',
+                        minHeight: '100em'
+                    }}
+                >
+                    {/* Normal tube image */}
                     <Image
-                        src="/images/Blackmatetube.png"
+                        src={getAssetPath('/images/Blackmatetube.png')}
                         alt="AETHER System"
                         fill
-                        className="object-contain"
+                        className={`object-contain transition-opacity duration-100 ${isXray ? 'opacity-0' : 'opacity-100'}`}
                         priority
                     />
+
+                    {/* X-ray overlay with glitch effect */}
+                    <AnimatePresence>
+                        {isXray && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 1.02 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.98 }}
+                                transition={{ duration: 0.1 }}
+                                className="absolute inset-0"
+                            >
+                                <Image
+                                    src={getAssetPath('/images/Blackmatetubexray.jpg')}
+                                    alt="AETHER System X-Ray"
+                                    fill
+                                    className="object-contain"
+                                    style={{
+                                        filter: 'brightness(1.2) contrast(1.1)',
+                                    }}
+                                />
+                                {/* Scanline effect during X-ray */}
+                                <div
+                                    className="absolute inset-0 pointer-events-none opacity-30"
+                                    style={{
+                                        background: `repeating-linear-gradient(
+                                            to bottom,
+                                            transparent 0px,
+                                            transparent 2px,
+                                            rgba(0, 255, 255, 0.1) 3px,
+                                            rgba(0, 255, 255, 0.1) 4px
+                                        )`
+                                    }}
+                                />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
                 </div>
             </motion.div>
 
             {/* Layer 3: Dark overlay for text contrast */}
             <div className="absolute inset-0 bg-gradient-to-b from-void/30 via-void/60 to-void z-10" />
 
-            {/* Layer 4: Status Bar - Top */}
+            {/* Layer 4: Status Bar - Top (below fixed header) */}
             <div className="absolute top-8 left-8 right-8 flex justify-between items-start z-30">
                 <div className="font-mono text-white text-xs tracking-wider">
                     <span className="block">AETHER [LABS]</span>

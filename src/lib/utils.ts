@@ -52,3 +52,9 @@ export function debounce<T extends (...args: unknown[]) => void>(
         timeout = setTimeout(() => func(...args), wait);
     };
 }
+
+// Get asset path with basePath for GitHub Pages
+export function getAssetPath(path: string): string {
+    const basePath = process.env.NODE_ENV === 'production' ? '/LandingPageHydre' : '';
+    return `${basePath}${path}`;
+}

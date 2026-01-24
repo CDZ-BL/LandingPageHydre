@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { getAssetPath } from '@/lib/utils';
 
 interface Ingredient {
     id: string;
@@ -92,7 +93,7 @@ export function TheSpecs() {
                         <div className="border border-void-300 p-8 bg-void/50">
                             <div className="relative w-full aspect-square">
                                 <Image
-                                    src="/images/Xraytube.png"
+                                    src={getAssetPath('/images/Xraytube.png')}
                                     alt="X-Ray Formula"
                                     fill
                                     className="object-contain"

@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { getAssetPath } from '@/lib/utils';
 
 interface TubeVideoPlayerProps {
     className?: string;
@@ -71,7 +72,7 @@ export function TubeVideoPlayer({ className = '' }: TubeVideoPlayerProps) {
                     >
                         <div className="relative w-full h-full max-w-lg lg:max-w-xl">
                             <Image
-                                src="/images/tubehydre.png"
+                                src={getAssetPath('/images/tubehydre.png')}
                                 alt="HYDRE Tube"
                                 fill
                                 className="object-contain"
@@ -112,7 +113,7 @@ export function TubeVideoPlayer({ className = '' }: TubeVideoPlayerProps) {
             {/* Video (shown when playing) - Full size */}
             <video
                 ref={videoRef}
-                src="/videos/_scene_the_1080p_202601151645.mp4"
+                src={getAssetPath('/videos/_scene_the_1080p_202601151645.mp4')}
                 muted
                 playsInline
                 preload="auto"
