@@ -1,22 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { getAssetPath } from '@/lib/utils';
+import { FounderCard3D } from '@/components/ui/FounderCard3D';
 
 export function FounderStatus() {
-    const [slots, setSlots] = useState(42);
-
-    // Fake countdown to create urgency - decreases randomly, never goes below 12
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if (Math.random() > 0.7) {
-                setSlots(prev => prev > 12 ? prev - 1 : prev);
-            }
-        }, 5000);
-        return () => clearInterval(interval);
-    }, []);
 
     return (
         <>
@@ -94,31 +81,15 @@ export function FounderStatus() {
                     </motion.h2>
 
                     {/* Card with CSS Sheen Effect Only */}
+                    {/* 3D Card with texture */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="relative mx-auto mb-16 max-w-2xl"
+                        className="relative mx-auto mb-16 max-w-2xl h-[400px] md:h-[500px]"
                     >
-                        {/* Cold Glow Shadow */}
-                        <div
-                            className="absolute inset-0 blur-3xl opacity-30 -z-10"
-                            style={{
-                                background: 'radial-gradient(ellipse at center, rgba(0, 200, 255, 0.3) 0%, transparent 70%)',
-                                transform: 'scale(1.2)',
-                            }}
-                        />
-
-                        {/* Card Image with CSS Sheen */}
-                        <div className="founder-card-container relative w-full aspect-[1.6/1]">
-                            <Image
-                                src={getAssetPath('/images/cartemembre.png')}
-                                alt="AETHER Founder Card - Titanium Black"
-                                fill
-                                className="object-contain"
-                            />
-                        </div>
+                        <FounderCard3D />
                     </motion.div>
 
                     {/* Body Text */}
@@ -180,11 +151,6 @@ export function FounderStatus() {
                             <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400" />
                             RÉCLAMER MON IDENTIFIANT
                         </button>
-
-                        {/* SYSTEM ALERT - Urgency Counter */}
-                        <div className="mt-6 font-mono text-sm text-red-500 animate-pulse">
-                            [SYSTEM ALERT] : SEULEMENT <span className="text-white font-bold">{slots}</span> PLACES RESTANTES
-                        </div>
                     </motion.div>
                 </div>
             </section>

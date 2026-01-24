@@ -324,7 +324,7 @@ export function TheProblem() {
                     </h3>
 
                     <div
-                        className="max-w-3xl mx-auto border border-void-300 overflow-hidden"
+                        className="relative left-1/2 -translate-x-1/2 w-screen border-y border-void-300 overflow-hidden"
                         style={{ boxShadow: '0 0 50px rgba(255,255,255,0.05)' }}
                     >
                         <video
