@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { getAssetPath } from '@/lib/utils';
+import { TacticalGlass } from '@/components/ui/TacticalGlass';
 
 interface Ingredient {
     id: string;
@@ -75,7 +76,7 @@ export function TheSpecs() {
                     transition={{ duration: 0.8 }}
                     className="mb-16 text-center"
                 >
-                    <span className="font-mono text-neon-orange text-xs font-bold tracking-wider">COMPOSITION</span>
+                    <span className="font-mono text-neon-cyan text-xs font-bold tracking-wider">COMPOSITION</span>
                     <h2 className="font-sans text-4xl md:text-6xl text-white font-bold tracking-tight mt-2">
                         ARCHITECTURE MOLÉCULAIRE
                     </h2>
@@ -90,7 +91,7 @@ export function TheSpecs() {
                         transition={{ duration: 0.8 }}
                         className="relative"
                     >
-                        <div className="border border-void-300 p-8 bg-void/50">
+                        <TacticalGlass label="X-RAY" className="p-8" scanLine={true}>
                             <div className="relative w-full aspect-square">
                                 <Image
                                     src={getAssetPath('/images/Xraytube.png')}
@@ -99,10 +100,10 @@ export function TheSpecs() {
                                     className="object-contain"
                                 />
                             </div>
-                            <div className="mt-6 font-mono text-xs text-white tracking-wider text-center">
+                            <div className="mt-6 font-mono text-xs text-neon-cyan tracking-wider text-center">
                                 [X-RAY MODE] — FORMULE V1.0
                             </div>
-                        </div>
+                        </TacticalGlass>
                     </motion.div>
 
                     {/* Ingredient List - Code Style */}
@@ -121,17 +122,17 @@ export function TheSpecs() {
                                 viewport={{ once: false }}
                                 transition={{ duration: 0.6, delay: i * 0.1 }}
                                 onClick={() => setSelectedIngredient(ingredient)}
-                                className="border border-void-300 p-6 hover:border-neon-orange transition-colors cursor-pointer"
+                                className="tactical-glass p-6 hover:neon-border transition-all cursor-pointer targeting-reticle"
                             >
-                                <div className="font-mono text-neon-orange text-sm mb-3">
+                                <div className="font-mono text-neon-cyan text-sm mb-3">
                                     // {ingredient.number}. {ingredient.name} ({ingredient.amount})
                                 </div>
-                                <div className="space-y-2 font-mono text-sm text-white">
+                                <div className="space-y-2 font-mono text-sm text-void-600">
                                     <div>
-                                        <span className="text-white">Fonction :</span> {ingredient.function}
+                                        <span className="text-void-400">Fonction :</span> {ingredient.function}
                                     </div>
                                     <div>
-                                        <span className="text-white">Spécificité :</span> {ingredient.specificity}
+                                        <span className="text-void-400">Spécificité :</span> {ingredient.specificity}
                                     </div>
                                 </div>
                             </motion.div>
@@ -142,42 +143,41 @@ export function TheSpecs() {
                 {/* Detail Panel */}
                 <AnimatePresence>
                     {selectedIngredient && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
-                            className="mt-12 border-2 border-neon-orange bg-void p-8 md:p-12"
+                        <TacticalGlass
+                            label="ANALYSIS"
+                            className="mt-12 p-8 md:p-12"
+                            scanLine={true}
                         >
                             <div className="flex justify-between items-start mb-6">
                                 <div>
-                                    <div className="font-mono text-neon-orange text-xs font-bold tracking-wider">
+                                    <div className="font-mono text-neon-cyan text-xs font-bold tracking-wider">
                                         ANALYSE DÉTAILLÉE — {selectedIngredient.number}
                                     </div>
                                     <h3 className="font-sans text-3xl text-white font-bold mt-2">
                                         {selectedIngredient.name}
                                     </h3>
-                                    <div className="font-mono text-neon-orange text-xl font-semibold mt-1">
+                                    <div className="font-mono text-neon-cyan text-xl font-semibold mt-1">
                                         {selectedIngredient.amount}
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => setSelectedIngredient(null)}
-                                    className="font-mono text-white hover:text-neon-orange transition-colors text-2xl"
+                                    className="font-mono text-void-500 hover:text-neon-cyan transition-colors text-2xl"
                                 >
                                     ✕
                                 </button>
                             </div>
-                            <div className="space-y-4 font-sans text-lg text-white">
+                            <div className="space-y-4 font-sans text-lg text-void-700">
                                 <div>
-                                    <span className="text-neon-orange font-semibold">Fonction : </span>
+                                    <span className="text-neon-cyan font-semibold">Fonction : </span>
                                     {selectedIngredient.function}
                                 </div>
                                 <div>
-                                    <span className="text-neon-orange font-semibold">Spécificité : </span>
+                                    <span className="text-neon-cyan font-semibold">Spécificité : </span>
                                     {selectedIngredient.specificity}
                                 </div>
                             </div>
-                        </motion.div>
+                        </TacticalGlass>
                     )}
                 </AnimatePresence>
             </div>

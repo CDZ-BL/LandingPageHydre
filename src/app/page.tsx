@@ -1,6 +1,7 @@
 'use client';
 
-import { Header } from '@/components/layout/Header';
+import { TacticalNavigation } from '@/components/ui/TacticalNavigation';
+import { DataGridBackground } from '@/components/effects/DataGridBackground';
 import { Footer } from '@/components/layout/Footer';
 import { HeroVoid } from '@/components/sections/Hero3D';
 import { TheProblem } from '@/components/sections/TheProblem';
@@ -12,8 +13,12 @@ import { TheClose } from '@/components/sections/TheClose';
 
 export default function Home() {
     return (
-        <main className="min-h-screen bg-void">
-            <Header />
+        <main className="min-h-screen bg-void relative">
+            {/* FUI Data Grid Background with radar pulse */}
+            <DataGridBackground enableRadarPulse density="normal" />
+
+            {/* Tactical Navigation HUD */}
+            <TacticalNavigation />
 
             {/* Block 1: Hero */}
             <HeroVoid />
@@ -40,3 +45,4 @@ export default function Home() {
         </main>
     );
 }
+

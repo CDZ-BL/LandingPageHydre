@@ -8,7 +8,7 @@
   --text: #F5F5F5;
   --text-muted: #8A8A8A;
   --border: #2A2A2A;
-  --neon-orange: #FF6B00;
+  --neon-cyan: #00F0FF;
 }
 
 * {
@@ -47,6 +47,7 @@ body {
 
 /* Utility Classes */
 @layer utilities {
+
   /* Typography */
   .font-display {
     font-family: var(--font-cinzel), serif;
@@ -165,6 +166,7 @@ body {
     transform: translate(0, 0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translate(var(--tx), var(--ty)) scale(0);
     opacity: 0;
@@ -203,7 +205,267 @@ body {
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
   backdrop-filter: blur(40px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
+  box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.05),
     0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================================
+   FUI TACTICAL INTERFACE STYLES
+   ============================================ */
+
+/* Tactical Glass Container */
+.tactical-glass {
+  background: rgba(10, 15, 20, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  box-shadow: 
+    0 0 0 1px rgba(0, 240, 255, 0.1),
+    0 0 30px rgba(0, 240, 255, 0.05),
+    inset 0 0 30px rgba(0, 240, 255, 0.02);
+  position: relative;
+}
+
+.tactical-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 240, 255, 0.05) 0%,
+    transparent 50%,
+    rgba(0, 240, 255, 0.02) 100%
+  );
+  pointer-events: none;
+}
+
+/* Neon Glow - Using drop-shadow for authentic effect */
+.neon-glow {
+  filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.8));
+}
+
+.neon-glow-text {
+  text-shadow: 
+    0 0 10px rgba(0, 240, 255, 0.8),
+    0 0 20px rgba(0, 240, 255, 0.5),
+    0 0 40px rgba(0, 240, 255, 0.3);
+}
+
+.neon-border {
+  box-shadow: 
+    0 0 0 1px rgba(0, 240, 255, 0.5),
+    0 0 15px rgba(0, 240, 255, 0.3),
+    inset 0 0 15px rgba(0, 240, 255, 0.05);
+}
+
+/* Data Grid Background */
+.data-grid-bg {
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: flicker 4s linear infinite;
+}
+
+.data-grid-bg-dense {
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Scan Line Overlay */
+.scan-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 240, 255, 0.8) 50%,
+    transparent 100%
+  );
+  animation: scan-line 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan-line {
+  0% { top: -2px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* HUD Corner Brackets - Enhanced */
+.hud-brackets {
+  position: relative;
+}
+
+.hud-brackets::before,
+.hud-brackets::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(0, 240, 255, 0.5);
+  pointer-events: none;
+}
+
+.hud-brackets::before {
+  top: 0;
+  left: 0;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.hud-brackets::after {
+  bottom: 0;
+  right: 0;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+/* Targeting Reticle */
+.targeting-reticle {
+  position: relative;
+}
+
+.targeting-reticle::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  opacity: 0;
+  transform: scale(1.2);
+  transition: all 0.2s ease-out;
+  pointer-events: none;
+}
+
+.targeting-reticle:hover::before {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Radar Pulse Effect */
+.radar-pulse {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  animation: radar-pulse 1.5s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes radar-pulse {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.8;
+  }
+  100% {
+    width: 300px;
+    height: 300px;
+    margin-left: -150px;
+    margin-top: -150px;
+    opacity: 0;
+  }
+}
+
+/* Coordinate Display */
+.coordinate-display {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(0, 240, 255, 0.7);
+  text-transform: uppercase;
+}
+
+/* System Status Indicator */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-indicator::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00F0FF;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+  }
+  50% { 
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.9);
+  }
+}
+
+/* Neural Loader */
+.neural-loader {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+}
+
+.neural-loader .segment {
+  width: 4px;
+  height: 20px;
+  background: rgba(0, 240, 255, 0.3);
+  border-radius: 2px;
+  animation: neural-pulse 1.2s ease-in-out infinite;
+}
+
+.neural-loader .segment:nth-child(1) { animation-delay: 0s; }
+.neural-loader .segment:nth-child(2) { animation-delay: 0.1s; }
+.neural-loader .segment:nth-child(3) { animation-delay: 0.2s; }
+.neural-loader .segment:nth-child(4) { animation-delay: 0.3s; }
+.neural-loader .segment:nth-child(5) { animation-delay: 0.4s; }
+
+@keyframes neural-pulse {
+  0%, 100% { 
+    background: rgba(0, 240, 255, 0.3);
+    box-shadow: none;
+  }
+  50% { 
+    background: rgba(0, 240, 255, 1);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+  }
+}
+
+/* Telemetry Readout */
+.telemetry {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 11px;
+  color: rgba(0, 240, 255, 0.8);
+  background: rgba(0, 10, 15, 0.8);
+  padding: 4px 8px;
+  border-left: 2px solid rgba(0, 240, 255, 0.5);
+}
+
+/* SVG Border Animation */
+.svg-border {
+  stroke-dasharray: 100%;
+  stroke-dashoffset: 100%;
+  animation: border-draw 1s ease-out forwards;
+}
+
+@keyframes border-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
 }

@@ -32,7 +32,7 @@ export function Marquee({ items, speed = 30, reverse = false, className = '' }: 
                         className="flex items-center gap-8 text-charcoal-50/60 font-medium text-sm tracking-widest uppercase"
                     >
                         <span>{item}</span>
-                        <span className="text-orange-600">•</span>
+                        <span className="text-cyan-500">•</span>
                     </span>
                 ))}
             </motion.div>

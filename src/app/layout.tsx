@@ -1,4 +1,4 @@
-import type { Metadata, Viewport } from 'next';
+import type { Metadata } from 'next';
 import { Cinzel, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
@@ -37,11 +37,15 @@ export const metadata: Metadata = {
     },
 };
 
-export const viewport: Viewport = {
+// Next.js 13.5 prefers simple object for viewport if Viewport type is not found
+export const themeColor = '#050505';
+
+export const viewport = {
     width: 'device-width',
     initialScale: 1,
-    themeColor: '#050505',
 };
+
+import { TacticalCursor } from '@/components/ui/TacticalCursor';
 
 export default function RootLayout({
     children,
@@ -51,6 +55,7 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${cinzel.variable} ${jetbrains.variable} ${plusJakarta.variable}`}>
             <body className="antialiased bg-void text-void-950">
+                <TacticalCursor />
                 {children}
             </body>
         </html>

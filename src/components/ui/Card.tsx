@@ -18,7 +18,7 @@ export function Card({ children, className, glass = false, hover = false }: Card
                 glass
                     ? 'bg-charcoal-700/60 backdrop-blur-lg border border-charcoal-600/50 shadow-soft'
                     : 'bg-charcoal-800 shadow-lg border border-charcoal-700',
-                hover && 'hover:scale-[1.02] hover:shadow-xl hover:border-orange-600/30 cursor-pointer',
+                hover && 'hover:scale-[1.02] hover:shadow-xl hover:border-cyan-600/30 cursor-pointer',
                 className
             )}
         >
@@ -32,7 +32,7 @@ interface IngredientCardProps {
     amount: string;
     description: string;
     icon: string;
-    accentColor?: 'orange' | 'lab';
+    accentColor?: 'cyan' | 'lab';
 }
 
 export function IngredientCard({
@@ -40,20 +40,20 @@ export function IngredientCard({
     amount,
     description,
     icon,
-    accentColor = 'orange'
+    accentColor = 'cyan'
 }: IngredientCardProps) {
     const colors = {
-        orange: 'from-orange-600 to-orange-500',
+        cyan: 'from-cyan-600 to-cyan-500',
         lab: 'from-lab-600 to-lab-500',
     };
 
     const textColors = {
-        orange: 'text-orange-500',
+        cyan: 'text-cyan-500',
         lab: 'text-lab-400',
     };
 
     const glows = {
-        orange: 'group-hover:shadow-glow-orange',
+        cyan: 'group-hover:shadow-glow',
         lab: 'group-hover:shadow-glow-lab',
     };
 

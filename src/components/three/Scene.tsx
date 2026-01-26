@@ -25,7 +25,7 @@ function SceneContent({ isExploding, explosionProgress }: SceneProps) {
                 intensity={1.5}
                 castShadow
             />
-            <pointLight position={[-10, -10, -5]} intensity={0.5} color="#FF6B35" />
+            <pointLight position={[-10, -10, -5]} intensity={0.5} color="#00F0FF" />
             <pointLight position={[10, -10, 5]} intensity={0.3} color="#00D4FF" />
 
             {/* Main tablet */}
@@ -65,9 +65,9 @@ function LoadingFallback() {
     return (
         <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative">
-                <div className="w-24 h-24 rounded-full border-4 border-accent-orange/30 animate-pulse" />
+                <div className="w-24 h-24 rounded-full border-4 border-neon-cyan/30 animate-pulse" />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-accent-orange to-accent-blue animate-spin-slow" />
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-neon-cyan to-neon-blue animate-spin-slow" />
                 </div>
             </div>
         </div>

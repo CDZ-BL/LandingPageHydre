@@ -97,10 +97,10 @@ export function TubeVideoPlayer({ className = '' }: TubeVideoPlayerProps) {
                                         ease: 'easeInOut',
                                     }}
                                     className="px-6 py-3 rounded-full bg-charcoal-900/80 backdrop-blur-sm 
-                             border border-orange-600/50 shadow-glow-orange"
+                             border border-cyan-500/50 shadow-glow"
                                 >
                                     <span className="text-charcoal-50 font-medium text-lg tracking-wide flex items-center gap-2">
-                                        <span className="text-orange-500">👆</span>
+                                        <span className="text-cyan-400">👆</span>
                                         TAP TO OPEN
                                     </span>
                                 </motion.div>

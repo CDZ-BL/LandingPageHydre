@@ -28,7 +28,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               focus:outline-none
               placeholder:text-transparent`,
                             isFocused || props.value
-                                ? 'border-orange-600 shadow-[0_0_0_2px_rgba(234,88,12,0.2)]'
+                                ? 'border-cyan-500 shadow-[0_0_0_2px_rgba(0,240,255,0.2)]'
                                 : 'border-charcoal-600/50',
                             error && 'border-red-500',
                             className
@@ -49,7 +49,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
                         className={cn(
                             `absolute left-4 transition-all duration-300 pointer-events-none`,
                             isFocused || props.value
-                                ? 'top-2 text-xs text-orange-500 font-medium'
+                                ? 'top-2 text-xs text-cyan-400 font-medium'
                                 : 'top-1/2 -translate-y-1/2 text-base text-charcoal-50/50'
                         )}
                     >

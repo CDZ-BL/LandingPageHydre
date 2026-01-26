@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { FounderCard3D } from '@/components/ui/FounderCard3D';
+import { TacticalGlass, TacticalReadout, SystemStatus } from '@/components/ui/TacticalGlass';
 
 export function FounderStatus() {
 
@@ -56,18 +57,14 @@ export function FounderStatus() {
                 }}
             >
                 <div className="relative z-10 w-[85%] max-w-[1200px] mx-auto">
-                    {/* Tagline */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: false, margin: "-100px" }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-8"
-                    >
-                        <span className="font-mono text-cyan-400 text-xs tracking-widest">
-                            // BATCH 001 EXCLUSIVE
-                        </span>
-                    </motion.div>
+                    {/* Tagline HUD */}
+                    <div className="flex justify-center mb-8">
+                        <TacticalGlass label="CERTIFICATION" className="px-6 py-2" hudBrackets={true}>
+                            <span className="font-mono text-cyan-400 text-xs tracking-widest">
+                                BATCH 001 // EXCLUSIVE ACCESS
+                            </span>
+                        </TacticalGlass>
+                    </div>
 
                     {/* Headline */}
                     <motion.h2
@@ -75,13 +72,12 @@ export function FounderStatus() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.1 }}
-                        className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight text-center mb-8"
+                        className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight text-center mb-16"
                     >
                         CECI N'EST PAS UNE CARTE DE FIDÉLITÉ.
                     </motion.h2>
 
-                    {/* Card with CSS Sheen Effect Only */}
-                    {/* 3D Card with texture */}
+                    {/* Card container with background scanlines */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
@@ -89,6 +85,8 @@ export function FounderStatus() {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="relative mx-auto mb-16 max-w-2xl h-[400px] md:h-[500px]"
                     >
+                        {/* Background Aura */}
+                        <div className="absolute inset-0 bg-cyan-500/5 blur-[100px] rounded-full pointer-events-none" />
                         <FounderCard3D />
                     </motion.div>
 
@@ -98,42 +96,61 @@ export function FounderStatus() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.3 }}
-                        className="text-center mb-12"
+                        className="text-center mb-16"
                     >
-                        <p className="font-sans text-lg md:text-xl text-[#E0E0E0] leading-relaxed max-w-2xl mx-auto">
-                            L'accès au Batch 001 vous octroie le rang de <span className="text-white font-semibold">Membre Fondateur</span>.
+                        <p className="font-sans text-lg md:text-xl text-[#E0E0E0] leading-relaxed max-w-2xl mx-auto uppercase tracking-wide">
+                            L'accès au Batch 001 vous octroie le rang de <span className="text-white font-bold border-b-2 border-cyan-400/50 pb-1">Membre Fondateur</span>.
                             <br />
-                            Cette carte en Titanium Black physique certifie votre position dans la hiérarchie AETHER.
-                            <br />
-                            <span className="text-cyan-400">Elle est votre clé pour le futur.</span>
+                            <span className="text-xs font-mono text-void-500 mt-4 block">TITANIUM BLACK SERIES // RFID ENCRYPTED</span>
                         </p>
                     </motion.div>
 
-                    {/* Features List - Terminal Style */}
+                    {/* Features List - Tactical Glass */}
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="max-w-xl mx-auto mb-16"
+                        className="max-w-2xl mx-auto mb-16"
                     >
-                        <div className="border border-void-300 bg-void/50 backdrop-blur-sm p-6 md:p-8">
-                            <div className="space-y-4 font-mono text-sm md:text-base">
-                                <div className="flex items-start gap-3">
-                                    <span className="text-cyan-400">[&gt;]</span>
-                                    <span className="text-[#E0E0E0]">ACCÈS PRIORITAIRE AUX FUTURS DROPS (24H AVANT LE PUBLIC)</span>
+                        <TacticalGlass label="BENEFITS_ARRAY" className="p-8" scanLine={true}>
+                            <div className="space-y-6 font-mono text-sm md:text-base">
+                                <div className="flex items-start gap-4 group">
+                                    <span className="text-cyan-400 group-hover:animate-pulse">[&gt;]</span>
+                                    <div className="flex flex-col">
+                                        <span className="text-white font-bold">ACCÈS PRIORITAIRE AUX FUTURS DROPS</span>
+                                        <span className="text-void-500 text-[10px] mt-1">WINDOW: 24H PRE-PUBLIC</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="text-cyan-400">[&gt;]</span>
-                                    <span className="text-[#E0E0E0]">DROIT DE VOTE SUR LES PROTOCOLES R&D</span>
+                                <div className="flex items-start gap-4 group">
+                                    <span className="text-cyan-400 group-hover:animate-pulse">[&gt;]</span>
+                                    <div className="flex flex-col">
+                                        <span className="text-white font-bold">DROIT DE VOTE SUR LES PROTOCOLES R&D</span>
+                                        <span className="text-void-500 text-[10px] mt-1">DIRECT INFLUENCE // FORMULATION V2</span>
+                                    </div>
                                 </div>
-                                <div className="flex items-start gap-3">
-                                    <span className="text-cyan-400">[&gt;]</span>
-                                    <span className="text-[#E0E0E0]">CANAL DE COMMUNICATION PRIVÉ</span>
+                                <div className="flex items-start gap-4 group">
+                                    <span className="text-cyan-400 group-hover:animate-pulse">[&gt;]</span>
+                                    <div className="flex flex-col">
+                                        <span className="text-white font-bold">CANAL DE COMMUNICATION PRIVÉ</span>
+                                        <span className="text-void-500 text-[10px] mt-1">ENCRYPTED // DIRECT ACCESS</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </TacticalGlass>
                     </motion.div>
+
+                    {/* Stats HUD - Bottom */}
+                    <div className="flex justify-center gap-12 mb-16">
+                        <div className="text-center">
+                            <span className="block font-mono text-void-500 text-[10px] uppercase">Slot Availability</span>
+                            <span className="block font-mono text-cyan-400 text-sm">LOW SUPPLY</span>
+                        </div>
+                        <div className="text-center">
+                            <span className="block font-mono text-void-500 text-[10px] uppercase">Node Status</span>
+                            <SystemStatus status="ENCRYPTED" />
+                        </div>
+                    </div>
 
                     {/* CTA Button */}
                     <motion.div
@@ -143,12 +160,12 @@ export function FounderStatus() {
                         transition={{ duration: 0.8, delay: 0.5 }}
                         className="text-center"
                     >
-                        <button className="group relative px-10 py-5 bg-transparent border-2 border-white text-white font-mono text-sm tracking-widest uppercase transition-all duration-300 hover:bg-white hover:text-black">
+                        <button className="group relative px-12 py-6 bg-white text-black font-mono text-sm font-bold tracking-[0.2em] uppercase transition-all duration-300 hover:bg-cyan-400 hover:text-black hover:scale-105">
                             {/* Corner accents for military style */}
-                            <span className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400" />
-                            <span className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400" />
-                            <span className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400" />
-                            <span className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400" />
+                            <span className="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-cyan-400" />
+                            <span className="absolute -top-1 -right-1 w-4 h-4 border-t-2 border-r-2 border-cyan-400" />
+                            <span className="absolute -bottom-1 -left-1 w-4 h-4 border-b-2 border-l-2 border-cyan-400" />
+                            <span className="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-cyan-400" />
                             RÉCLAMER MON IDENTIFIANT
                         </button>
                     </motion.div>

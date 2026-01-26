@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { getAssetPath } from '@/lib/utils';
+import { TacticalGlass, TacticalReadout, SystemStatus } from '@/components/ui/TacticalGlass';
+import { TerminalText, DecryptText } from '@/components/ui/TerminalText';
 
 export function HeroVoid() {
     const [isXray, setIsXray] = useState(false);
@@ -100,15 +102,29 @@ export function HeroVoid() {
             <div className="absolute inset-0 bg-gradient-to-b from-void/30 via-void/60 to-void z-10" />
 
             {/* Layer 4: Status Bar - Top (below fixed header) */}
-            <div className="absolute top-8 left-8 right-8 flex justify-between items-start z-30">
-                <div className="font-mono text-white text-xs tracking-wider">
-                    <span className="block">AETHER [LABS]</span>
-                    <span className="block text-white mt-1">BATCH 001</span>
-                </div>
-                <div className="font-mono text-right text-xs tracking-wider">
-                    <span className="block text-white">STATUS</span>
-                    <span className="block text-neon-orange font-semibold mt-1">AVAILABLE</span>
-                </div>
+            <div className="absolute top-24 left-8 right-8 flex justify-between items-start z-30">
+                <TacticalGlass label="SYSTEM" className="p-4" hudBrackets={true}>
+                    <div className="font-mono text-white text-xs tracking-wider">
+                        <span className="block text-neon-cyan">AETHER [LABS]</span>
+                        <span className="block text-void-500 mt-1">BATCH 001</span>
+                    </div>
+                </TacticalGlass>
+                <TacticalGlass label="STATUS" className="p-4" hudBrackets={true}>
+                    <div className="font-mono text-right text-xs tracking-wider">
+                        <SystemStatus status="ONLINE" />
+                        <span className="block text-neon-cyan font-semibold mt-2">AVAILABLE</span>
+                    </div>
+                </TacticalGlass>
+            </div>
+
+            {/* Telemetry readouts - bottom corners */}
+            <div className="absolute bottom-8 left-8 z-30 space-y-2">
+                <TacticalReadout label="FORMULA" value="v1.0.3" />
+                <TacticalReadout label="PURITY" value="99.7%" />
+            </div>
+            <div className="absolute bottom-8 right-8 z-30 space-y-2">
+                <TacticalReadout label="IONS" value="ACTIVE" />
+                <TacticalReadout label="INTEGRITY" value="VERIFIED" />
             </div>
 
             {/* Layer 5: Main Content - Text on top */}
@@ -122,15 +138,17 @@ export function HeroVoid() {
                         className="mb-8"
                     >
                         <h1 className="font-sans text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight mb-6">
-                            PERFORMANCE HYDRIQUE.
+                            <TerminalText text="PERFORMANCE HYDRIQUE." speed={60} />
                             <br />
-                            <span className="text-white">NON DILUÉE.</span>
+                            <span className="text-white"><TerminalText text="NON DILUÉE." speed={60} delay={1500} /></span>
                         </h1>
-                        <p className="font-sans text-lg md:text-xl text-white max-w-3xl mx-auto leading-relaxed tracking-wide">
-                            Zéro Sucre. Zéro Taxe Marketing. 100% Ingrédients Actifs.
+                        <div className="font-sans text-lg md:text-xl text-white max-w-3xl mx-auto leading-relaxed tracking-wide">
+                            <DecryptText text="Zéro Sucre. Zéro Taxe Marketing. 100% Ingrédients Actifs." />
                             <br />
-                            Le premier système d'électrolytes conçu sur la base de données cliniques, pas de tendances.
-                        </p>
+                            <span className="mt-4 block text-void-300">
+                                Le premier système d'électrolytes conçu sur la base de données cliniques, pas de tendances.
+                            </span>
+                        </div>
                     </motion.div>
 
                     {/* CTA */}
@@ -140,10 +158,10 @@ export function HeroVoid() {
                         transition={{ duration: 0.8, delay: 0.6 }}
                         className="space-y-3"
                     >
-                        <button className="px-12 py-5 bg-white text-black font-sans text-sm font-semibold tracking-widest hover:bg-neon-orange hover:text-white transition-all duration-300">
+                        <button className="px-12 py-5 bg-white text-void font-sans text-sm font-semibold tracking-widest hover:bg-neon-cyan hover:text-void transition-all duration-300 neon-border">
                             INITIALISER L'ACCÈS
                         </button>
-                        <p className="font-mono text-xs text-white tracking-wider">
+                        <p className="font-mono text-xs text-void-500 tracking-wider">
                             Stock limité au Batch 001.
                         </p>
                     </motion.div>
