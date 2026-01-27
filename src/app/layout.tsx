@@ -50,7 +50,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en" className={`${cinzel.variable} ${jetbrains.variable} ${plusJakarta.variable}`}>
-            <body className="antialiased bg-void text-void-950">
+            <body className="antialiased text-void-950 bg-black">
                 {children}
             </body>
         </html>

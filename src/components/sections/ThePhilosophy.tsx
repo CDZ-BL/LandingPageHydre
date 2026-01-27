@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export function ThePhilosophy() {
     return (
-        <section className="relative py-32 bg-black overflow-hidden">
+        <section className="relative py-32 bg-transparent overflow-hidden">
             {/* Subtle scanline effect */}
             <div
                 className="absolute inset-0 opacity-10 pointer-events-none"

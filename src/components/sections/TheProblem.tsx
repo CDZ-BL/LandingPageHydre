@@ -170,7 +170,7 @@ export function TheProblem() {
     const [showCompetitors, setShowCompetitors] = useState(true);
 
     return (
-        <section className="relative py-32 bg-void overflow-hidden">
+        <section className="relative py-32 bg-transparent overflow-hidden">
             {/* Grid background */}
             <div
                 className="absolute inset-0 opacity-5"

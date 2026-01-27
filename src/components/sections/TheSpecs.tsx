@@ -53,7 +53,7 @@ export function TheSpecs() {
     const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null);
 
     return (
-        <section className="relative py-32 bg-void overflow-hidden">
+        <section className="relative py-32 bg-transparent overflow-hidden">
             {/* Grid background */}
             <div
                 className="absolute inset-0 opacity-5"

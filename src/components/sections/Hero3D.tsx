@@ -19,7 +19,7 @@ export function HeroVoid() {
     }, []);
 
     return (
-        <section className="relative min-h-screen bg-void text-white overflow-hidden flex items-center justify-center">
+        <section className="relative min-h-screen bg-transparent text-white overflow-hidden flex items-center justify-center">
             {/* Layer 1: Grid overlay - technical aesthetic */}
             <div
                 className="absolute inset-0 opacity-5 z-0"
@@ -51,7 +51,7 @@ export function HeroVoid() {
                 >
                     {/* Normal tube image */}
                     <Image
-                        src={getAssetPath('/images/Blackmatetube.png')}
+                        src={getAssetPath('/images/blackmatetubetrans.png')}
                         alt="AETHER System"
                         fill
                         className={`object-contain transition-opacity duration-100 ${isXray ? 'opacity-0' : 'opacity-100'}`}
@@ -69,7 +69,7 @@ export function HeroVoid() {
                                 className="absolute inset-0"
                             >
                                 <Image
-                                    src={getAssetPath('/images/tubenoirxray4k.png')}
+                                    src={getAssetPath('/images/backmatetubexraytrans.png')}
                                     alt="AETHER System X-Ray"
                                     fill
                                     className="object-contain"
@@ -96,8 +96,8 @@ export function HeroVoid() {
                 </div>
             </motion.div>
 
-            {/* Layer 3: Dark overlay for text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-b from-void/30 via-void/60 to-void z-10" />
+            {/* Layer 3: Dark overlay removed for seamless transition */}
+            {/* <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-void/80 z-10" /> */}
 
             {/* Layer 4: Status Bar - Top (below fixed header) */}
             <div className="absolute top-8 left-8 right-8 flex justify-between items-start z-30">

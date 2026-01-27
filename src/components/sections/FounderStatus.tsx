@@ -124,7 +124,7 @@ export function FounderStatus() {
             <section
                 className="relative py-32 md:py-40 overflow-hidden"
                 style={{
-                    background: `radial-gradient(ellipse at center, #111111 0%, #050505 50%, #050505 100%)`
+                    // Background removed for global DarkWater visibility
                 }}
             >
                 <div className="relative z-10 w-[85%] max-w-[1200px] mx-auto">

@@ -7,7 +7,7 @@ export function TheClose() {
     const [selectedOption, setSelectedOption] = useState<'monthly' | 'single'>('monthly');
 
     return (
-        <section className="relative py-32 bg-void overflow-hidden">
+        <section className="relative py-32 bg-transparent overflow-hidden">
             {/* Grid background */}
             <div
                 className="absolute inset-0 opacity-5"
@@ -76,8 +76,8 @@ export function TheClose() {
                         <button
                             onClick={() => setSelectedOption('monthly')}
                             className={`w-full p-6 border text-left transition-all ${selectedOption === 'monthly'
-                                    ? 'border-neon-orange bg-neon-orange/10'
-                                    : 'border-void-300 hover:border-void-100'
+                                ? 'border-neon-orange bg-neon-orange/10'
+                                : 'border-void-300 hover:border-void-100'
                                 }`}
                         >
                             <div className="flex items-start justify-between">
@@ -105,8 +105,8 @@ export function TheClose() {
                         <button
                             onClick={() => setSelectedOption('single')}
                             className={`w-full p-6 border text-left transition-all ${selectedOption === 'single'
-                                    ? 'border-neon-orange bg-neon-orange/10'
-                                    : 'border-void-300 hover:border-void-100'
+                                ? 'border-neon-orange bg-neon-orange/10'
+                                : 'border-void-300 hover:border-void-100'
                                 }`}
                         >
                             <div className="flex items-start justify-between">

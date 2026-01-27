@@ -1,6 +1,7 @@
 'use client';
 
 import { Header } from '@/components/layout/Header';
+import { DarkWaterBackground } from '@/components/effects/DarkWaterBackground';
 import { Footer } from '@/components/layout/Footer';
 import { HeroVoid } from '@/components/sections/Hero3D';
 import { TheProblem } from '@/components/sections/TheProblem';
@@ -12,7 +13,8 @@ import { TheClose } from '@/components/sections/TheClose';
 
 export default function Home() {
     return (
-        <main className="min-h-screen bg-void">
+        <main className="min-h-screen relative">
+            <DarkWaterBackground />
             <Header />
 
             {/* Block 1: Hero */}
