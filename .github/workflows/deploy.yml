@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [alo-dev]
+    branches: [alo-dev, feat/new-manifesto]
   workflow_dispatch:
 
 permissions:
