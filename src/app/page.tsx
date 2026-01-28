@@ -1,13 +1,12 @@
-'use client';
-
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HeroVoid } from '@/components/sections/Hero3D';
-import { TheProblem } from '@/components/sections/TheProblem';
-import { GlitchOverride } from '@/components/sections/GlitchOverride';
+import { ThePact } from '@/components/sections/ThePact';
 import { TheSpecs } from '@/components/sections/TheSpecs';
-import { ThePhilosophy } from '@/components/sections/ThePhilosophy';
-import { FounderStatus } from '@/components/sections/FounderStatus';
+import { ProductVision } from '@/components/sections/ProductVision';
+import { Reciprocity } from '@/components/sections/Reciprocity';
+import { FounderCircle } from '@/components/sections/FounderCircle';
+import { Roadmap } from '@/components/sections/Roadmap';
 import { TheClose } from '@/components/sections/TheClose';
 
 export default function Home() {
@@ -15,25 +14,28 @@ export default function Home() {
         <main className="min-h-screen bg-void">
             <Header />
 
-            {/* Block 1: Hero */}
+            {/* Block 1: Architecture Hero */}
             <HeroVoid />
 
-            {/* Block 2: The Problem */}
-            <TheProblem />
+            {/* Block 2: The Pact (Value) */}
+            <ThePact />
 
-            {/* Block 3: The Specs */}
+            {/* Block 3: The Specs (Product) */}
             <TheSpecs />
 
-            {/* Block 4: Glitch Override - System Bug */}
-            <GlitchOverride />
+            {/* Block 4: Product Vision (Versioning) */}
+            <ProductVision />
 
-            {/* Block 5: The Philosophy */}
-            <ThePhilosophy />
+            {/* Block 5: Reciprocity (Alliance) */}
+            <Reciprocity />
 
-            {/* Block 5: Founder Status */}
-            <FounderStatus />
+            {/* Block 6: Founder Circle (Co-Creation) */}
+            <FounderCircle />
 
-            {/* Block 6: The Close */}
+            {/* Block 7: Detailed Roadmap */}
+            <Roadmap />
+
+            {/* Block 8: The Close */}
             <TheClose />
 
             <Footer />

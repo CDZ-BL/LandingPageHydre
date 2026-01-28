@@ -136,9 +136,7 @@ export function FounderStatus() {
                         transition={{ duration: 0.6 }}
                         className="text-center mb-8"
                     >
-                        <span className="font-mono text-cyan-400 text-xs tracking-widest">
-                            // BATCH 001 EXCLUSIVE
-                        </span>
+                            // BATCH 001 : ACCÈS PIONNIER
                     </motion.div>
 
                     {/* Headline */}
@@ -173,11 +171,11 @@ export function FounderStatus() {
                         className="text-center mb-12"
                     >
                         <p className="font-sans text-lg md:text-xl text-[#E0E0E0] leading-relaxed max-w-2xl mx-auto">
-                            L'accès au Batch 001 vous octroie le rang de <span className="text-white font-semibold">Membre Fondateur</span>.
+                            L'acquisition du Batch 001 n'est pas un achat, c'est une adhésion à une nouvelle norme. Cette carte en Titanium Black matérialise votre statut de <span className="text-white font-semibold">Membre Fondateur</span>.
+                            <br /><br />
+                            Elle prouve que vous étiez là avant que le reste du monde ne comprenne.
                             <br />
-                            Cette carte en Titanium Black physique certifie votre position dans la hiérarchie AETHER.
-                            <br />
-                            <span className="text-cyan-400">Elle est votre clé pour le futur.</span>
+                            <span className="text-cyan-400">Vous ne suivez pas la tendance. Vous la précédez.</span>
                         </p>
                     </motion.div>
 

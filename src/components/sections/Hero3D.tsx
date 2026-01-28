@@ -49,13 +49,27 @@ export function HeroVoid() {
                         minHeight: '100em'
                     }}
                 >
-                    {/* Normal tube image */}
+                    {/* ATMOSPHERIC GLOW (Behind Tube) - MAX INTENSITY - UPDATED WARMTH */}
+                    <motion.div
+                        animate={{ opacity: [0.6, 0.9, 0.6] }}
+                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                        className="absolute inset-0 z-[-1] pointer-events-none"
+                        style={{
+                            background: 'radial-gradient(circle at center, rgba(255,215,0,0.15) 0%, rgba(255,255,255,0) 70%)',
+                            filter: 'blur(80px)',
+                        }}
+                    />
+
+                    {/* Normal tube image - HIGH VISIBILITY */}
                     <Image
-                        src={getAssetPath('/images/Blackmatetube.png')}
+                        src={getAssetPath('/images/blackmatetubetrans.png')}
                         alt="AETHER System"
                         fill
                         className={`object-contain transition-opacity duration-100 ${isXray ? 'opacity-0' : 'opacity-100'}`}
                         priority
+                        style={{
+                            filter: 'drop-shadow(0 0 50px rgba(255,255,255,0.5)) brightness(1.35) contrast(1.2)'
+                        }}
                     />
 
                     {/* X-ray overlay with glitch effect */}
@@ -69,7 +83,7 @@ export function HeroVoid() {
                                 className="absolute inset-0"
                             >
                                 <Image
-                                    src={getAssetPath('/images/tubenoirxray4k.png')}
+                                    src={getAssetPath('/images/backmatetubexraytrans.png')}
                                     alt="AETHER System X-Ray"
                                     fill
                                     className="object-contain"
@@ -122,14 +136,14 @@ export function HeroVoid() {
                         className="mb-8"
                     >
                         <h1 className="font-sans text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight mb-6">
-                            PERFORMANCE HYDRIQUE.
+                            ARCHITECTURE CELLULAIRE.
                             <br />
-                            <span className="text-white">NON DILUÉE.</span>
+                            <span className="text-white">CONÇUE AVEC VOUS.</span>
                         </h1>
                         <p className="font-sans text-lg md:text-xl text-white max-w-3xl mx-auto leading-relaxed tracking-wide">
-                            Zéro Sucre. Zéro Taxe Marketing. 100% Ingrédients Actifs.
+                            Le premier système d'hydratation qui investit dans votre biologie, pas dans votre attention.
                             <br />
-                            Le premier système d'électrolytes conçu sur la base de données cliniques, pas de tendances.
+                            <span className="text-white/60 text-base mt-2 block">Performance Hydrique V1.0 · Zéro Sucre · Co-développé par le Cercle Fondateur.</span>
                         </p>
                     </motion.div>
 
@@ -140,11 +154,11 @@ export function HeroVoid() {
                         transition={{ duration: 0.8, delay: 0.6 }}
                         className="space-y-3"
                     >
-                        <button className="px-12 py-5 bg-white text-black font-sans text-sm font-semibold tracking-widest hover:bg-neon-orange hover:text-white transition-all duration-300">
-                            INITIALISER L'ACCÈS
+                        <button className="px-12 py-5 bg-white text-black font-sans text-sm font-semibold tracking-widest hover:bg-amber-400 hover:text-black transition-all duration-300 border border-white hover:border-amber-400">
+                            REJOINDRE L'ALLIANCE
                         </button>
-                        <p className="font-mono text-xs text-white tracking-wider">
-                            Stock limité au Batch 001.
+                        <p className="font-mono text-xs text-amber-500/80 tracking-wider">
+                            Alliance Ouverte · Batch V1.0
                         </p>
                     </motion.div>
                 </div>

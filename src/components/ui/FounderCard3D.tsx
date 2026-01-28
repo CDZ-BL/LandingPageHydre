@@ -77,12 +77,12 @@ function TexturedCard() {
 export function FounderCard3D() {
     return (
         <div className="relative w-full h-full">
-            {/* Cold Glow Shadow */}
+            {/* Cold Glow Shadow - ENHANCED */}
             <div
-                className="absolute inset-0 blur-3xl opacity-30 -z-10"
+                className="absolute inset-0 blur-3xl opacity-60 -z-10"
                 style={{
-                    background: 'radial-gradient(ellipse at center, rgba(0, 200, 255, 0.3) 0%, transparent 70%)',
-                    transform: 'scale(1.2)',
+                    background: 'radial-gradient(ellipse at center, rgba(0, 220, 255, 0.4) 0%, rgba(0, 150, 255, 0.1) 50%, transparent 80%)',
+                    transform: 'scale(1.5)',
                 }}
             />
 
@@ -92,15 +92,16 @@ export function FounderCard3D() {
                 gl={{ antialias: true, alpha: true }}
             >
                 {/* Lighting - front and back for both sides */}
-                <ambientLight intensity={1.2} />
+                {/* Lighting - front and back for both sides */}
+                <ambientLight intensity={1.5} />
                 {/* Front lights */}
-                <directionalLight position={[5, 5, 5]} intensity={2} />
-                <directionalLight position={[-5, 3, 5]} intensity={1} color="#00ccff" />
-                <pointLight position={[0, 0, 4]} intensity={1.5} />
+                <directionalLight position={[5, 5, 5]} intensity={4} />
+                <directionalLight position={[-5, 3, 5]} intensity={2} color="#00ccff" />
+                <pointLight position={[0, 0, 4]} intensity={3} />
                 {/* Back lights */}
-                <directionalLight position={[5, 5, -5]} intensity={2} />
-                <directionalLight position={[-5, 3, -5]} intensity={1} color="#00ccff" />
-                <pointLight position={[0, 0, -4]} intensity={1.5} />
+                <directionalLight position={[5, 5, -5]} intensity={3} />
+                <directionalLight position={[-5, 3, -5]} intensity={2} color="#00ccff" />
+                <pointLight position={[0, 0, -4]} intensity={3} />
 
                 <Suspense fallback={null}>
                     <TexturedCard />

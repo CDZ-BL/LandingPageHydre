@@ -37,7 +37,7 @@ export function GlitchOverride() {
                     transition={{ duration: 0.6 }}
                     className="inline-block font-mono text-red-500 text-xs tracking-widest mb-6 animate-hard-blink"
                 >
-                    [ SYSTEM_OVERRIDE // PROTOCOL VIOLATION ]
+                    [ SYSTEM_CORRECTION // STANDARD OBSOLÈTE ]
                 </motion.div>
 
                 {/* INTENSE Glitch Title with EXTREME TELEPORTING */}
@@ -50,55 +50,7 @@ export function GlitchOverride() {
                 >
                     {/* Base text with intense shake */}
                     <h2 className="font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-text-distort">
-                        RÈGLES DU MARCHÉ : BRISÉES.
-                    </h2>
-
-                    {/* Cyan glitch layer */}
-                    <h2
-                        className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-cyan-400 font-black uppercase tracking-tight opacity-80 mix-blend-screen animate-glitch-hard-1"
-                        aria-hidden="true"
-                    >
-                        RÈGLES DU MARCHÉ : BRISÉES.
-                    </h2>
-
-                    {/* Red glitch layer */}
-                    <h2
-                        className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-red-500 font-black uppercase tracking-tight opacity-80 mix-blend-screen animate-glitch-hard-2"
-                        aria-hidden="true"
-                    >
-                        RÈGLES DU MARCHÉ : BRISÉES.
-                    </h2>
-
-                    {/* EXTREME TELEPORT SLICE - Layer 1 */}
-                    <h2
-                        className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-teleport-slice-1"
-                        aria-hidden="true"
-                    >
-                        RÈGLES DU MARCHÉ : BRISÉES.
-                    </h2>
-
-                    {/* EXTREME TELEPORT SLICE - Layer 2 */}
-                    <h2
-                        className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-teleport-slice-2"
-                        aria-hidden="true"
-                    >
-                        RÈGLES DU MARCHÉ : BRISÉES.
-                    </h2>
-
-                    {/* EXTREME TELEPORT SLICE - Layer 3 */}
-                    <h2
-                        className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight opacity-90 animate-teleport-slice-3"
-                        aria-hidden="true"
-                    >
-                        RÈGLES DU MARCHÉ : BRISÉES.
-                    </h2>
-
-                    {/* EXTREME TELEPORT SLICE - Layer 4 */}
-                    <h2
-                        className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight opacity-80 animate-teleport-slice-4"
-                        aria-hidden="true"
-                    >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                        LE SILENCE EST NOTRE ARME.
                     </h2>
                 </motion.div>
 
@@ -111,13 +63,13 @@ export function GlitchOverride() {
                     className="space-y-4 font-mono text-sm md:text-base text-left max-w-xl mx-auto"
                 >
                     <p className="text-gray-400 animate-line-teleport-1 relative">
-                        <span className="text-white">&gt;</span> ANALYSE : Le standard industriel (Sucre + Marge 80%) est incompatible avec l'architecture AETHER.
+                        <span className="text-white">&gt;</span> L'industrie crie pour masquer le vide de ses formules. Nous avons choisi le silence pour laisser parler la densité de nos actifs.
                     </p>
                     <p className="text-gray-400 animate-line-teleport-2 relative">
-                        <span className="text-white">&gt;</span> ACTION : Réécriture du code source. Suppression des intermédiaires. Priorité aux actifs.
+                        <span className="text-white">&gt;</span> ANALYSE : Le modèle actuel repose sur l'opacité et l'addiction au sucre. CORRECTION : Réallocation totale du budget. Suppression du "bruit" marketing. Investissement massif dans la pureté des composés.
                     </p>
-                    <p className="text-red-500 mt-6 font-bold text-base md:text-lg animate-emergency-flash">
-                        <span className="text-white">&gt;</span> STATUS : ANOMALIE DÉTECTÉE. NE PAS REVENIR EN ARRIÈRE.
+                    <p className="text-cyan-400 mt-6 font-bold text-base md:text-lg animate-emergency-flash">
+                        <span className="text-white">&gt;</span> SYSTEM_STATUS : ÉVOLUTION NÉCESSAIRE. L'ÈRE DU PLACEBO EST TERMINÉE.
                     </p>
                 </motion.div>
             </div>

@@ -193,7 +193,7 @@ export function TheProblem() {
                     className="mb-16"
                 >
                     <h2 className="font-sans text-4xl md:text-6xl text-white font-bold tracking-tight">
-                        LE MENSONGE DU MARCHÉ
+                        L'ILLUSION INDUSTRIELLE
                     </h2>
                 </motion.div>
 
@@ -206,13 +206,10 @@ export function TheProblem() {
                     className="mb-16"
                 >
                     <p className="font-sans text-xl md:text-2xl text-white leading-relaxed max-w-3xl">
-                        Vous ne payez pas pour l'hydratation. Vous payez pour leurs publicités, leurs couleurs néons et leur sucre industriel.
+                        Le marché vous a manqué de respect. Depuis des décennies, l'industrie du sport a fait un choix silencieux : la marge avant la performance. On vous a vendu du sucre coloré en l'appelant "carburant". On vous a vendu du marketing en l'appelant "science".
                     </p>
                     <p className="font-sans text-xl md:text-2xl text-white leading-relaxed max-w-3xl mt-6">
-                        La majorité des boissons "sportives" sont des <span className="text-red-500 font-semibold">confiseries liquides déguisées en performance</span>.
-                    </p>
-                    <p className="font-sans text-xl md:text-2xl text-white leading-relaxed max-w-3xl mt-6">
-                        Votre corps est une <span className="text-neon-orange font-semibold">machine thermique</span>, pas une poubelle.
+                        Votre biologie mérite une <span className="text-neon-orange font-semibold">ingénierie de précision</span>, pas des confiseries industrielles. Ils ont profité de votre soif d'excellence. Nous sommes là pour rétablir la vérité.
                     </p>
                 </motion.div>
 

@@ -22,35 +22,29 @@ export function ThePhilosophy() {
                 >
                     {/* Title */}
                     <h2 className="font-mono text-white text-3xl md:text-5xl font-bold mb-12 tracking-tight">
-                        NOUS AVONS TUÉ LE MARKETING.
+                        LE RESPECT DE L'INTELLIGENCE.
                     </h2>
 
                     {/* Manifesto Text - Terminal Style */}
                     <div className="font-mono text-white text-base md:text-lg leading-loose space-y-6">
                         <p className="text-left">
-                            Nous n'avons pas d'influenceurs qui dansent.
+                            Nous n'avons pas besoin de mascottes ou de néons pour vous convaincre.
                         </p>
                         <p className="text-left">
-                            Nous n'avons pas d'emballages fluo.
-                        </p>
-                        <p className="text-left">
-                            Nous avons investi chaque centime dans ce qui se trouve dans le tube.
+                            Nous parions sur le fait que vous savez lire une étiquette clinique.
                         </p>
 
                         <div className="h-12" />
 
                         <p className="text-left text-white">
-                            AETHER est une <span className="text-neon-orange font-semibold">anomalie économique</span> :
-                            une marque qui respecte votre intelligence et votre biologie.
+                            AETHER n'est pas une dépense, c'est un <span className="text-neon-orange font-semibold">investissement structurel</span>.
+                            Nous avons retiré tout ce qui n'améliore pas votre physiologie. Le superflu a été éliminé pour ne laisser que l'essentiel : L'Efficacité.
                         </p>
 
                         <div className="h-12" />
 
                         <p className="text-left text-white">
-                            Ceci n'est pas pour tout le monde.
-                        </p>
-                        <p className="text-left text-white">
-                            C'est pour ceux qui <span className="text-neon-orange font-semibold">lisent les étiquettes</span>.
+                            Ceci est pour ceux qui refusent le compromis imposé par le marché de masse.
                         </p>
                     </div>
 
