@@ -33,7 +33,7 @@ export function TheClose() {
                         <span className="font-mono text-red-500 text-xs font-bold tracking-wider">
                             ACCÈS LIMITÉ
                         </span>
-                        <h2 className="font-sans text-4xl md:text-5xl text-white font-bold tracking-tight mt-2 mb-6">
+                        <h2 className="font-headline text-4xl md:text-5xl text-white font-bold tracking-tight mt-2 mb-6">
                             SÉCURISEZ VOTRE ALLOCATION.
                         </h2>
                         <p className="font-sans text-lg text-white leading-relaxed max-w-2xl">
@@ -76,8 +76,8 @@ export function TheClose() {
                         <button
                             onClick={() => setSelectedOption('monthly')}
                             className={`w-full p-6 border text-left transition-all ${selectedOption === 'monthly'
-                                    ? 'border-neon-orange bg-neon-orange/10'
-                                    : 'border-void-300 hover:border-void-100'
+                                ? 'border-neon-orange bg-neon-orange/10'
+                                : 'border-void-300 hover:border-void-100'
                                 }`}
                         >
                             <div className="flex items-start justify-between">
@@ -105,8 +105,8 @@ export function TheClose() {
                         <button
                             onClick={() => setSelectedOption('single')}
                             className={`w-full p-6 border text-left transition-all ${selectedOption === 'single'
-                                    ? 'border-neon-orange bg-neon-orange/10'
-                                    : 'border-void-300 hover:border-void-100'
+                                ? 'border-neon-orange bg-neon-orange/10'
+                                : 'border-void-300 hover:border-void-100'
                                 }`}
                         >
                             <div className="flex items-start justify-between">

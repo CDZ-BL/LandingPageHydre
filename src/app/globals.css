@@ -2,12 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   AETHER DESIGN SYSTEM — Swiss Biotech / Dark Luxury
+   Opacity Premium Method
+═══════════════════════════════════════════════════════════════════════════ */
+
 :root {
+  /* === ATMOSPHERE === */
+  --obsidian: #050505;
+  --bone: #E6DCC8;
+
+  /* === OPACITY TEXT SYSTEM === */
+  --text-primary: rgba(255, 255, 255, 1);
+  /* 100% - Headlines */
+  --text-secondary: rgba(255, 255, 255, 0.85);
+  /* 85% - Body (Platine) */
+  --text-tertiary: rgba(255, 255, 255, 0.60);
+  /* 60% - Labels (Métal) */
+  --text-muted: rgba(255, 255, 255, 0.40);
+  /* 40% - Structure (Carbone) */
+
+  /* === STROKES & BORDERS === */
+  --stroke: rgba(255, 255, 255, 0.10);
+  /* 10% - Subtle borders */
+  --stroke-hover: rgba(255, 255, 255, 0.20);
+
+  /* === LEGACY COMPAT === */
   --void: #050505;
   --void-light: #111111;
   --text: #F5F5F5;
-  --text-muted: #8A8A8A;
-  --border: #2A2A2A;
+  --text-muted-old: #8A8A8A;
+  --border: rgba(255, 255, 255, 0.10);
   --neon-orange: #FF6B00;
 }
 
@@ -22,14 +47,18 @@ html {
 }
 
 body {
-  background: var(--void);
-  color: var(--text);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  background: var(--obsidian);
+  color: var(--text-secondary);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow-x: hidden;
   position: relative;
 }
 
-/* Cinematic Vignette Overlay */
+/* ═══════════════════════════════════════════════════════════════════════════
+   ATMOSPHERIC OVERLAYS — Noise + Vignette
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Cinematic Vignette — DISABLED
 body::after {
   content: '';
   position: fixed;
@@ -38,8 +67,9 @@ body::after {
   pointer-events: none;
   z-index: 9998;
 }
+*/
 
-/* Animated Noise Texture Overlay */
+/* Film Grain Noise (3-4% opacity) */
 body::before {
   content: '';
   position: fixed;
@@ -47,86 +77,148 @@ body::before {
   width: 200%;
   height: 200%;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.03;
+  opacity: 0.035;
   pointer-events: none;
   z-index: 9999;
   animation: noise-shift 0.5s steps(5) infinite;
 }
 
 @keyframes noise-shift {
-  0% { transform: translate(0, 0); }
-  20% { transform: translate(-2%, 2%); }
-  40% { transform: translate(2%, -2%); }
-  60% { transform: translate(-1%, -1%); }
-  80% { transform: translate(1%, 1%); }
-  100% { transform: translate(0, 0); }
+  0% {
+    transform: translate(0, 0);
+  }
+
+  20% {
+    transform: translate(-2%, 2%);
+  }
+
+  40% {
+    transform: translate(2%, -2%);
+  }
+
+  60% {
+    transform: translate(-1%, -1%);
+  }
+
+  80% {
+    transform: translate(1%, 1%);
+  }
+
+  100% {
+    transform: translate(0, 0);
+  }
 }
 
-/* Industrial Scrollbar */
+/* ═══════════════════════════════════════════════════════════════════════════
+   INDUSTRIAL SCROLLBAR
+═══════════════════════════════════════════════════════════════════════════ */
+
 ::-webkit-scrollbar {
   width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--void);
+  background: var(--obsidian);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--text-muted);
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: var(--text-tertiary);
 }
 
-/* Utility Classes */
+/* ═══════════════════════════════════════════════════════════════════════════
+   TYPOGRAPHY UTILITIES
+═══════════════════════════════════════════════════════════════════════════ */
+
 @layer utilities {
-  /* Typography */
-  .font-display {
-    font-family: var(--font-cinzel), serif;
+
+  /* === FONT FAMILIES === */
+  .font-headline {
+    font-family: var(--font-clash), system-ui, sans-serif;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+  }
+
+  .font-body {
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
   }
 
   .font-data {
     font-family: var(--font-jetbrains), monospace;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
-  /* Industrial Borders */
-  .border-industrial {
-    border: 1px solid var(--border);
+  /* Legacy compat */
+  .font-display {
+    font-family: var(--font-clash), serif;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
   }
 
-  .border-industrial-b {
-    border-bottom: 1px solid var(--border);
+  /* === OPACITY TEXT SYSTEM === */
+  .text-primary {
+    color: var(--text-primary);
   }
 
-  /* Glass Effect - Minimal */
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-tertiary {
+    color: var(--text-tertiary);
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
+
+  .text-bone {
+    color: var(--bone);
+  }
+
+  /* === MACHINED METAL (2px radius) === */
+  .rounded-machined {
+    border-radius: 2px;
+  }
+
+  /* === STROKES === */
+  .stroke-subtle {
+    border: 1px solid var(--stroke);
+  }
+
+  .stroke-subtle-hover:hover {
+    border-color: var(--stroke-hover);
+  }
+
+  /* === GLASS EFFECT === */
   .glass {
     background: rgba(10, 10, 10, 0.8);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--stroke);
   }
 
-  /* Glitch Effect */
+  /* === GLITCH === */
   .glitch {
     animation: glitch 0.3s ease-in-out;
   }
 
-  /* Text Outline - For Marquee */
+  /* === TEXT OUTLINE === */
   .text-outline {
     -webkit-text-stroke: 1px currentColor;
     -webkit-text-fill-color: transparent;
   }
 
-  /* HUD Corner */
+  /* === HUD CORNERS === */
   .hud-corner {
     position: absolute;
     width: 20px;
     height: 20px;
-    border-color: var(--border);
+    border-color: var(--stroke);
   }
 
   .hud-corner-tl {
@@ -158,13 +250,17 @@ body::before {
   }
 }
 
-/* Terminal Input Style */
+/* ═══════════════════════════════════════════════════════════════════════════
+   COMPONENT STYLES
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Terminal Input */
 .terminal-input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--stroke);
   padding: 0.75rem 0;
-  color: var(--text);
+  color: var(--text-primary);
   font-family: var(--font-jetbrains), monospace;
   font-size: 0.875rem;
   width: 100%;
@@ -173,14 +269,14 @@ body::before {
 }
 
 .terminal-input:focus {
-  border-color: var(--text);
+  border-color: var(--text-tertiary);
 }
 
 .terminal-input::placeholder {
   color: var(--text-muted);
 }
 
-/* Particle Explosion Container */
+/* Particle Container */
 .particle-container {
   position: absolute;
   pointer-events: none;
@@ -199,6 +295,7 @@ body::before {
     transform: translate(0, 0) scale(1);
     opacity: 1;
   }
+
   100% {
     transform: translate(var(--tx), var(--ty)) scale(0);
     opacity: 0;
@@ -212,7 +309,7 @@ body::before {
   animation: marquee 40s linear infinite;
 }
 
-/* X-Ray Hover Effect */
+/* X-Ray Effect */
 .x-ray-container {
   position: relative;
 }
@@ -236,8 +333,46 @@ body::before {
 .founders-card {
   background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
   backdrop-filter: blur(40px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 20px 50px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Bar Shake Animation */
+@keyframes shake-subtle {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-1px);
+    opacity: 0.8;
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(1px);
+    opacity: 1;
+  }
+}
+
+.animate-bar-shake {
+  animation: shake-subtle 0.5s cubic-bezier(.36, .07, .19, .97) both;
+  animation-delay: 1.5s;
+}
+
+/* Background Utilities */
+.bg-obsidian {
+  background-color: var(--obsidian);
+}
+
+.bg-void {
+  background-color: var(--void);
 }

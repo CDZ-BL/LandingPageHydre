@@ -1,29 +1,117 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getAssetPath } from '@/lib/utils';
 
-// Radar chart metrics - higher is better for AETHER
-const METRICS = [
-    { label: 'QUALITÉ INGRÉDIENTS', aether: 95, competitors: 35 },
-    { label: 'EFFICACITÉ', aether: 90, competitors: 40 },
-    { label: 'BIODISPONIBILITÉ', aether: 95, competitors: 25 },
-    { label: 'RAPPORT QUALITÉ/PRIX', aether: 85, competitors: 30 },
-    { label: 'TRANSPARENCE', aether: 100, competitors: 20 },
-    { label: 'ZÉRO SUCRE', aether: 100, competitors: 15 },
+// ═══════════════════════════════════════════════════════════════════════════
+// COMPETITOR DATA — REAL BRAND COMPARISON
+// ═══════════════════════════════════════════════════════════════════════════
+
+const COMPETITORS = [
+    {
+        id: 'decathlon',
+        codename: 'DECATHLON',
+        realname: 'Grande Distribution Sport',
+        // Stats scored 0-100: higher = better (Aether is baseline 100)
+        stats: {
+            magnesium: 47,    // 56.3/60 * 50 (Oxyde = poor form, half credit)
+            vitamineB: 10,    // 1.17/12.2 = ~10%
+            vitamineC: 31,    // 24/77 = ~31%
+            sodium: 89,       // 250/280 = ~89%
+            price: 86         // 5.99/6.99 = ~86%
+        },
+        data: {
+            price: '6,99€',
+            magnesium: '56,3mg Oxyde (Faible abs.)',
+            sugar: '0g',
+            sodium: '250mg',
+            vitamineC: '24mg',
+            vitamineB: '1,17mg total',
+            zinc: '0mg'
+        }
+    },
+    {
+        id: 'hydratis',
+        codename: 'HYDRATIS',
+        realname: 'Pharmacie Premium',
+        stats: {
+            magnesium: 27,    // 32.5/60 * 50 (probably Oxyde)
+            vitamineB: 0,     // 0/12.2 = 0%
+            vitamineC: 0,     // 0/77 = 0%
+            sodium: 21,       // 58/280 = ~21%
+            price: 60         // 5.99/9.99 = ~60%
+        },
+        data: {
+            price: '9,99€',
+            magnesium: '32,5mg (Forme non spécifiée)',
+            sugar: '1,8g',
+            sodium: '58mg',
+            vitamineC: '0mg',
+            vitamineB: '0mg',
+            zinc: '1mg'
+        }
+    },
+    {
+        id: 'waterdrop',
+        codename: 'WATERDROP',
+        realname: 'Marketing Lifestyle',
+        stats: {
+            magnesium: 0,     // 0mg
+            vitamineB: 49,    // 6/12.2 = ~49%
+            vitamineC: 31,    // 24/77 = ~31%
+            sodium: 0,        // 0mg
+            price: 80         // 5.99/7.49 = ~80%
+        },
+        data: {
+            price: '7,49€',
+            magnesium: '0mg',
+            sugar: '0g',
+            sodium: '0mg',
+            vitamineC: '24mg',
+            vitamineB: '6mg total',
+            zinc: '0mg'
+        }
+    }
 ];
 
-function RadarChart({ activeAether, activeCompetitors }: { activeAether: boolean; activeCompetitors: boolean }) {
-    const size = 450;
-    const center = size / 2;
-    const radius = 140;
-    const levels = 5;
+// AETHER Reference — Baseline 100%
+const AETHER = {
+    id: 'aether',
+    codename: 'AETHER SYSTEM',
+    realname: 'HYDRE V1.0',
+    stats: { magnesium: 100, vitamineB: 100, vitamineC: 100, sodium: 100, price: 100 },
+    data: {
+        price: '5,99€',
+        magnesium: '60mg Bisglycinate (Haute abs.)',
+        sugar: '0g',
+        sodium: '280mg',
+        vitamineC: '77mg',
+        vitamineB: '12,2mg total (B3, B5, B6, B12)',
+        zinc: '3mg'
+    }
+};
 
-    // Calculate opacity: full if active OR if both active, faded if only other is active
-    const bothActive = activeAether && activeCompetitors;
-    const competitorsOpacity = bothActive ? 1 : (activeCompetitors ? 1 : 0.25);
-    const aetherOpacity = bothActive ? 1 : (activeAether ? 1 : 0.25);
+const METRICS = [
+    { key: 'magnesium', label: 'MAGNÉSIUM' },
+    { key: 'vitamineB', label: 'VITAMINES B' },
+    { key: 'vitamineC', label: 'VITAMINE C' },
+    { key: 'sodium', label: 'SODIUM' },
+    { key: 'price', label: 'PRIX' },
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// RADAR CHART COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
+
+function RadarChart({ aetherStats, competitorStats }: {
+    aetherStats: Record<string, number>;
+    competitorStats: Record<string, number>;
+}) {
+    const size = 400;
+    const center = size / 2;
+    const radius = 130;
+    const levels = 4;
 
     // Calculate point position on radar
     const getPoint = (index: number, value: number) => {
@@ -36,128 +124,114 @@ function RadarChart({ activeAether, activeCompetitors }: { activeAether: boolean
     };
 
     // Generate polygon path
-    const getPolygonPath = (values: number[]) => {
-        return values
-            .map((value, i) => {
-                const point = getPoint(i, value);
+    const getPolygonPath = (stats: Record<string, number>) => {
+        return METRICS
+            .map((metric, i) => {
+                const point = getPoint(i, stats[metric.key] || 0);
                 return `${i === 0 ? 'M' : 'L'} ${point.x} ${point.y}`;
             })
             .join(' ') + ' Z';
     };
 
-    // Generate grid lines
-    const gridLines = [];
+    // Generate grid circles
+    const gridCircles = [];
     for (let level = 1; level <= levels; level++) {
         const levelRadius = (radius * level) / levels;
-        const points = METRICS.map((_, i) => {
-            const angle = (Math.PI * 2 * i) / METRICS.length - Math.PI / 2;
-            return `${center + levelRadius * Math.cos(angle)},${center + levelRadius * Math.sin(angle)}`;
-        }).join(' ');
-        gridLines.push(
-            <polygon
+        gridCircles.push(
+            <circle
                 key={level}
-                points={points}
+                cx={center}
+                cy={center}
+                r={levelRadius}
                 fill="none"
-                stroke="rgba(255,255,255,0.1)"
+                stroke="rgba(255,255,255,0.05)"
                 strokeWidth="1"
             />
         );
     }
 
-    // Generate axis lines
-    const axisLines = METRICS.map((_, i) => {
+    // Generate axis lines and labels
+    const axisElements = METRICS.map((metric, i) => {
         const angle = (Math.PI * 2 * i) / METRICS.length - Math.PI / 2;
-        return (
-            <line
-                key={i}
-                x1={center}
-                y1={center}
-                x2={center + radius * Math.cos(angle)}
-                y2={center + radius * Math.sin(angle)}
-                stroke="rgba(255,255,255,0.15)"
-                strokeWidth="1"
-            />
-        );
-    });
-
-    // Generate labels
-    const labels = METRICS.map((metric, i) => {
-        const angle = (Math.PI * 2 * i) / METRICS.length - Math.PI / 2;
-        const labelRadius = radius + 65;
+        const labelRadius = radius + 40;
         const x = center + labelRadius * Math.cos(angle);
         const y = center + labelRadius * Math.sin(angle);
+
         return (
-            <text
-                key={i}
-                x={x}
-                y={y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                className="fill-white text-[9px] font-mono"
-            >
-                {metric.label}
-            </text>
+            <g key={i}>
+                <line
+                    x1={center}
+                    y1={center}
+                    x2={center + radius * Math.cos(angle)}
+                    y2={center + radius * Math.sin(angle)}
+                    stroke="rgba(255,255,255,0.1)"
+                    strokeWidth="1"
+                />
+                <text
+                    x={x}
+                    y={y}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    className="fill-white/60 text-[8px] font-mono"
+                >
+                    {metric.label}
+                </text>
+            </g>
         );
     });
 
     return (
-        <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[600px] mx-auto">
+        <svg viewBox={`0 0 ${size} ${size}`} className="w-full max-w-[400px] mx-auto">
             {/* Grid */}
-            {gridLines}
-            {axisLines}
+            {gridCircles}
+            {axisElements}
 
-            {/* Competitors polygon - always visible with dynamic opacity */}
+            {/* Competitor polygon — RED/ORANGE thin stroke */}
             <motion.path
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: competitorsOpacity, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                d={getPolygonPath(METRICS.map(m => m.competitors))}
-                fill="rgba(239, 68, 68, 0.2)"
+                key="competitor"
+                initial={{ opacity: 0, scale: 0.5 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                d={getPolygonPath(competitorStats)}
+                fill="rgba(239, 68, 68, 0.15)"
                 stroke="#ef4444"
                 strokeWidth="2"
             />
 
-            {/* AETHER polygon - always visible with dynamic opacity */}
+            {/* AETHER polygon — WHITE solid with glow */}
             <motion.path
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: aetherOpacity, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                d={getPolygonPath(METRICS.map(m => m.aether))}
-                fill="rgba(255, 122, 0, 0.25)"
-                stroke="#ff7a00"
+                d={getPolygonPath(aetherStats)}
+                fill="rgba(255, 255, 255, 0.08)"
+                stroke="#ffffff"
                 strokeWidth="2"
+                style={{ filter: 'drop-shadow(0 0 8px rgba(255,255,255,0.3))' }}
             />
 
-            {/* Labels */}
-            {labels}
-
-            {/* Data points - competitors */}
+            {/* AETHER data points */}
             {METRICS.map((metric, i) => {
-                const point = getPoint(i, metric.competitors);
+                const point = getPoint(i, aetherStats[metric.key] || 0);
                 return (
-                    <motion.circle
-                        key={`comp-${i}`}
-                        cx={point.x}
-                        cy={point.y}
-                        r="4"
-                        fill="#ef4444"
-                        animate={{ opacity: competitorsOpacity }}
-                        transition={{ duration: 0.3 }}
-                    />
-                );
-            })}
-            {/* Data points - AETHER */}
-            {METRICS.map((metric, i) => {
-                const point = getPoint(i, metric.aether);
-                return (
-                    <motion.circle
+                    <circle
                         key={`aether-${i}`}
                         cx={point.x}
                         cy={point.y}
                         r="4"
-                        fill="#ff7a00"
-                        animate={{ opacity: aetherOpacity }}
-                        transition={{ duration: 0.3 }}
+                        fill="#ffffff"
+                    />
+                );
+            })}
+
+            {/* Competitor data points */}
+            {METRICS.map((metric, i) => {
+                const point = getPoint(i, competitorStats[metric.key] || 0);
+                return (
+                    <motion.circle
+                        key={`comp-${i}`}
+                        initial={{ cx: center, cy: center }}
+                        animate={{ cx: point.x, cy: point.y }}
+                        transition={{ duration: 0.5, ease: "easeOut" }}
+                        r="4"
+                        fill="#ef4444"
                     />
                 );
             })}
@@ -165,9 +239,12 @@ function RadarChart({ activeAether, activeCompetitors }: { activeAether: boolean
     );
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
+
 export function TheProblem() {
-    const [showAether, setShowAether] = useState(true);
-    const [showCompetitors, setShowCompetitors] = useState(true);
+    const [selectedTarget, setSelectedTarget] = useState(COMPETITORS[0]);
 
     return (
         <section className="relative py-32 bg-void overflow-hidden">
@@ -192,7 +269,7 @@ export function TheProblem() {
                     transition={{ duration: 0.8 }}
                     className="mb-16"
                 >
-                    <h2 className="font-sans text-4xl md:text-6xl text-white font-bold tracking-tight">
+                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-tight">
                         L'ILLUSION INDUSTRIELLE
                     </h2>
                 </motion.div>
@@ -206,14 +283,13 @@ export function TheProblem() {
                     className="mb-16"
                 >
                     <p className="font-sans text-xl md:text-2xl text-white leading-relaxed max-w-3xl">
-                        Le marché vous a manqué de respect. Depuis des décennies, l'industrie du sport a fait un choix silencieux : la marge avant la performance. On vous a vendu du sucre coloré en l'appelant "carburant". On vous a vendu du marketing en l'appelant "science".
-                    </p>
-                    <p className="font-sans text-xl md:text-2xl text-white leading-relaxed max-w-3xl mt-6">
-                        Votre biologie mérite une <span className="text-neon-orange font-semibold">ingénierie de précision</span>, pas des confiseries industrielles. Ils ont profité de votre soif d'excellence. Nous sommes là pour rétablir la vérité.
+                        L'industrie a parié contre notre intelligence. Depuis des décennies, le marché du sport a fait un choix silencieux : la marge avant la performance.
                     </p>
                 </motion.div>
 
-                {/* Spider Chart Comparison */}
+                {/* ═══════════════════════════════════════════════════════════════════
+                    INTERCEPTOR MODULE — Target Selection + Radar + Data Table
+                ═══════════════════════════════════════════════════════════════════ */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -221,88 +297,157 @@ export function TheProblem() {
                     transition={{ duration: 0.8, delay: 0.4 }}
                     className="mb-16"
                 >
-                    <div className="border border-void-300 p-8 md:p-12">
-                        {/* Toggle Buttons */}
-                        <div className="flex justify-center gap-4 mb-8">
-                            <button
-                                onClick={() => setShowCompetitors(!showCompetitors)}
-                                className={`px-6 py-3 font-mono text-sm tracking-wider border transition-all ${showCompetitors
-                                    ? 'border-red-500 bg-red-500/20 text-red-500'
-                                    : 'border-void-300 text-white hover:border-red-500'
-                                    }`}
-                            >
-                                CONCURRENTS
-                            </button>
-                            <button
-                                onClick={() => setShowAether(!showAether)}
-                                className={`px-6 py-3 font-mono text-sm tracking-wider border transition-all ${showAether
-                                    ? 'border-neon-orange bg-neon-orange/20 text-neon-orange'
-                                    : 'border-void-300 text-white hover:border-neon-orange'
-                                    }`}
-                            >
-                                AETHER
-                            </button>
+                    <div className="grid md:grid-cols-12 gap-8 border-t border-white/10 pt-12">
+
+                        {/* ZONE A: TARGET SELECTOR */}
+                        <div className="md:col-span-4 space-y-2">
+                            <h3 className="font-mono text-xs text-[#E6DCC8] mb-6 tracking-widest">
+                                [ SELECT TARGET FOR ANALYSIS ]
+                            </h3>
+
+                            {COMPETITORS.map((target) => (
+                                <button
+                                    key={target.id}
+                                    onClick={() => setSelectedTarget(target)}
+                                    className={`w-full text-left px-4 py-3 font-mono text-sm border-l-2 transition-all duration-300
+                                        ${selectedTarget.id === target.id
+                                            ? 'border-[#E6DCC8] bg-white/5 text-white'
+                                            : 'border-white/5 text-white/40 hover:text-white/80 hover:border-white/20'
+                                        }`}
+                                >
+                                    <div className="font-bold">{target.codename}</div>
+                                    <div className="text-xs text-white/30">{target.realname}</div>
+                                </button>
+                            ))}
                         </div>
 
-                        {/* Radar Chart */}
-                        <RadarChart activeAether={showAether} activeCompetitors={showCompetitors} />
+                        {/* ZONE B: RADAR + DATA */}
+                        <div className="md:col-span-8 bg-[#0A0A0A] border border-white/10 rounded-sm p-6 relative overflow-hidden">
 
-                        {/* Legend - always visible with dynamic opacity */}
-                        <div className="flex justify-center gap-8 mt-8">
-                            <div className={`flex items-center gap-2 transition-opacity duration-300 ${showAether && !showCompetitors ? 'opacity-25' : 'opacity-100'
-                                }`}>
-                                <div className="w-4 h-4 bg-red-500/50 border border-red-500" />
-                                <span className="font-mono text-xs text-red-500">CONCURRENTS</span>
+                            {/* Header */}
+                            <div className="grid grid-cols-2 mb-6 border-b border-white/10 pb-4">
+                                <div className="font-headline text-white text-lg">AETHER V1.0</div>
+                                <div className="font-headline text-red-400/80 text-right text-lg">
+                                    {selectedTarget.codename}
+                                </div>
                             </div>
-                            <div className={`flex items-center gap-2 transition-opacity duration-300 ${showCompetitors && !showAether ? 'opacity-25' : 'opacity-100'
-                                }`}>
-                                <div className="w-4 h-4 bg-neon-orange/50 border border-neon-orange" />
-                                <span className="font-mono text-xs text-neon-orange">AETHER</span>
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
 
-                {/* Comparative Stats */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-100px" }}
-                    transition={{ duration: 0.8, delay: 0.6 }}
-                    className="space-y-6"
-                >
-                    {/* Enemy Card - Standard Market */}
-                    <div className="relative opacity-60 border border-void-300 bg-[#0a0a0a] p-6 md:p-8">
-                        <div className="absolute -top-3 left-4 bg-void px-2 py-0.5 font-mono text-[10px] text-void-500 uppercase tracking-widest">
-                            Standard Market
-                        </div>
-                        <div className="space-y-3 font-mono text-sm md:text-base">
-                            <div className="text-void-500">
-                                <span className="text-red-800 font-semibold">[ DETECTED ]</span> 15g Sucre
+                            {/* Radar Chart */}
+                            <div className="mb-8">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={selectedTarget.id}
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.3 }}
+                                    >
+                                        <RadarChart
+                                            aetherStats={AETHER.stats}
+                                            competitorStats={selectedTarget.stats}
+                                        />
+                                    </motion.div>
+                                </AnimatePresence>
                             </div>
-                            <div className="text-void-500">
-                                <span className="text-red-800 font-semibold">[ DETECTED ]</span> Maltodextrine
-                            </div>
-                            <div className="text-void-500">
-                                <span className="text-red-800 font-semibold">[ DETECTED ]</span> Colorant E133
-                            </div>
-                        </div>
-                    </div>
 
-                    {/* Hero Card - AETHER SYSTEM */}
-                    <div className="relative border border-void-400 bg-void p-6 md:p-8" style={{ boxShadow: '0 0 20px rgba(255, 255, 255, 0.05)' }}>
-                        <div className="absolute -top-3 left-4 bg-void px-2 py-0.5 border border-void-400 font-mono text-[10px] text-white uppercase tracking-widest">
-                            AETHER SYSTEM
-                        </div>
-                        <div className="space-y-3 font-mono text-sm md:text-base">
-                            <div className="text-void-600">
-                                <span className="text-white font-bold">// 0.00g</span> Sucre
+                            {/* Legend */}
+                            <div className="flex justify-center gap-8 mb-8">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 bg-white/20 border border-white" />
+                                    <span className="font-mono text-xs text-white">AETHER</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 bg-red-500/20 border border-red-500" />
+                                    <span className="font-mono text-xs text-red-400">CONCURRENT</span>
+                                </div>
                             </div>
-                            <div className="text-void-600">
-                                <span className="text-white font-bold">// 200mg</span> Magnésium Bisglycinate
+
+                            {/* Data Table */}
+                            <div className="space-y-3 font-mono text-sm border-t border-white/10 pt-6">
+
+                                {/* Row: SUCRE */}
+                                <div className="grid grid-cols-2 items-center">
+                                    <div className="text-green-400">
+                                        {AETHER.data.sugar}
+                                        <span className="text-white/40 text-xs ml-2">SUCRE</span>
+                                    </div>
+                                    <div className={`text-right ${selectedTarget.data.sugar === '0g' ? 'text-green-400' : 'text-red-400/80'}`}>
+                                        {selectedTarget.data.sugar}
+                                    </div>
+                                </div>
+
+                                {/* Row: MAGNESIUM */}
+                                <div className="grid grid-cols-2 items-center">
+                                    <div className="text-white text-xs">
+                                        {AETHER.data.magnesium}
+                                        <span className="text-green-400 ml-1">●</span>
+                                    </div>
+                                    <div className={`text-right text-xs ${selectedTarget.data.magnesium === '0mg' ? 'text-red-400/60' : 'text-white/60'}`}>
+                                        {selectedTarget.data.magnesium}
+                                    </div>
+                                </div>
+
+                                {/* Row: SODIUM */}
+                                <div className="grid grid-cols-2 items-center">
+                                    <div className="text-white">
+                                        {AETHER.data.sodium}
+                                        <span className="text-white/40 text-xs ml-2">SODIUM</span>
+                                    </div>
+                                    <div className={`text-right ${selectedTarget.data.sodium === '0mg' ? 'text-red-400/60' : 'text-white/60'}`}>
+                                        {selectedTarget.data.sodium}
+                                    </div>
+                                </div>
+
+                                {/* Row: VITAMINE C */}
+                                <div className="grid grid-cols-2 items-center">
+                                    <div className="text-white">
+                                        {AETHER.data.vitamineC}
+                                        <span className="text-white/40 text-xs ml-2">VIT. C</span>
+                                    </div>
+                                    <div className={`text-right ${selectedTarget.data.vitamineC === '0mg' ? 'text-red-400/60' : 'text-white/60'}`}>
+                                        {selectedTarget.data.vitamineC}
+                                    </div>
+                                </div>
+
+                                {/* Row: VITAMINES B */}
+                                <div className="grid grid-cols-2 items-center">
+                                    <div className="text-white text-xs">
+                                        {AETHER.data.vitamineB}
+                                        <span className="text-green-400 ml-1">●</span>
+                                    </div>
+                                    <div className={`text-right text-xs ${selectedTarget.data.vitamineB === '0mg' ? 'text-red-400/60' : 'text-white/60'}`}>
+                                        {selectedTarget.data.vitamineB}
+                                    </div>
+                                </div>
+
+                                {/* Row: ZINC */}
+                                <div className="grid grid-cols-2 items-center">
+                                    <div className="text-white">
+                                        {AETHER.data.zinc}
+                                        <span className="text-white/40 text-xs ml-2">ZINC</span>
+                                    </div>
+                                    <div className={`text-right ${selectedTarget.data.zinc === '0mg' ? 'text-red-400/60' : 'text-white/60'}`}>
+                                        {selectedTarget.data.zinc}
+                                    </div>
+                                </div>
+
+                                {/* Row: PRIX */}
+                                <div className="grid grid-cols-2 items-center pt-4 border-t border-white/5">
+                                    <div className="text-2xl text-green-400 font-bold">
+                                        {AETHER.data.price}
+                                        <span className="text-xs text-white/40 ml-2 font-normal">/boîte</span>
+                                    </div>
+                                    <div className="text-right text-xl text-red-400/60 line-through">
+                                        {selectedTarget.data.price}
+                                    </div>
+                                </div>
                             </div>
-                            <div className="text-void-600">
-                                <span className="text-white font-bold">// PURE</span> Arôme Naturel
+
+                            {/* Alert indicator */}
+                            <div className="absolute top-4 right-4 opacity-20 pointer-events-none">
+                                <div className="text-6xl leading-none font-headline text-red-500">
+                                    !
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -330,7 +475,7 @@ export function TheProblem() {
                             marginRight: 'calc(-50vw + 50%)'
                         }}
                     >
-                        {/* Gradient Overlay - Fades edges into black */}
+                        {/* Gradient Overlay */}
                         <div
                             className="absolute inset-0 z-10 pointer-events-none"
                             style={{
@@ -344,7 +489,7 @@ export function TheProblem() {
                             }}
                         />
 
-                        {/* Video - Fills container */}
+                        {/* Video */}
                         <video
                             autoPlay
                             loop

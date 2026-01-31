@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import NumberTicker from '@/components/ui/NumberTicker';
 
 export function ThePact() {
     return (
@@ -103,19 +104,22 @@ export function ThePact() {
                                 viewport={{ once: false, margin: "-50px" }}
                                 transition={{ duration: 0.6 }}
                             >
-                                <div className="flex justify-between text-xs font-mono text-gray-500 mb-3">
+                                <div className="flex justify-between items-center text-xs font-mono text-gray-500 mb-3">
                                     <span>STANDARD INDUSTRY</span>
-                                    <span className="text-gray-600">PRIX : 45€</span>
+                                    <div className="flex items-center gap-3">
+                                        <NumberTicker value={85} delay={0.3} />
+                                        <span className="text-gray-600">PRIX : 45€</span>
+                                    </div>
                                 </div>
                                 {/* Ultra-thin bar container */}
                                 <div className="h-2 bg-void-900 w-full relative overflow-hidden border border-void-700">
-                                    {/* Marketing portion - dark gray with hatching effect */}
+                                    {/* Marketing portion - dark gray with hatching effect + SHAKE */}
                                     <motion.div
                                         initial={{ width: 0 }}
                                         whileInView={{ width: '85%' }}
                                         viewport={{ once: false, margin: "-50px" }}
                                         transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                                        className="h-full bg-red-900/40 absolute left-0"
+                                        className="h-full bg-red-900/40 absolute left-0 animate-bar-shake"
                                         style={{
                                             backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)'
                                         }}
@@ -134,9 +138,12 @@ export function ThePact() {
                                 viewport={{ once: false, margin: "-50px" }}
                                 transition={{ duration: 0.6, delay: 0.3 }}
                             >
-                                <div className="flex justify-between text-xs font-mono text-white mb-3">
+                                <div className="flex justify-between items-center text-xs font-mono text-white mb-3">
                                     <span>AETHER ARCHITECTURE</span>
-                                    <span>PRIX : 45€</span>
+                                    <div className="flex items-center gap-3">
+                                        <NumberTicker value={100} delay={0.5} />
+                                        <span>PRIX : 45€</span>
+                                    </div>
                                 </div>
                                 {/* Ultra-thin bar container */}
                                 <div className="h-2 bg-void-900 w-full relative overflow-hidden border border-void-700">

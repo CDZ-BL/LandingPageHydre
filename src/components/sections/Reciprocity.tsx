@@ -24,7 +24,7 @@ export function Reciprocity() {
                         [ SECTION 3 : LA RÉCIPROCITÉ ]
                     </h2>
                     {/* Title */}
-                    <h2 className="font-sans text-white text-3xl md:text-5xl font-bold mb-12 tracking-tight">
+                    <h2 className="font-headline text-white text-3xl md:text-5xl font-bold mb-12 tracking-tight">
                         NOUS SOMMES CLIENTS DE NOS CLIENTS.
                     </h2>
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { getAssetPath } from '@/lib/utils';
 
@@ -34,79 +34,54 @@ export function HeroVoid() {
 
             {/* Layer 2: Black Matte Tube Image with X-ray Blink */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.2, delay: 0.2 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.6 }}
                 className="absolute inset-0 flex items-center justify-center overflow-hidden z-0"
             >
-                {/* Container for both images */}
+                {/* Container for tube - MASSIVE SIZE to dominate hero */}
                 <div
                     className="relative"
                     style={{
-                        width: '100em',
-                        height: '100em',
-                        minWidth: '100em',
-                        minHeight: '100em'
+                        width: '115rem',
+                        height: '115rem',
+                        maxWidth: '100vw',
+                        maxHeight: '120vh'
                     }}
                 >
-                    {/* ATMOSPHERIC GLOW (Behind Tube) - MAX INTENSITY - UPDATED WARMTH */}
-                    <motion.div
-                        animate={{ opacity: [0.6, 0.9, 0.6] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    {/* Static glow - NO ANIMATION */}
+                    <div
                         className="absolute inset-0 z-[-1] pointer-events-none"
                         style={{
-                            background: 'radial-gradient(circle at center, rgba(255,215,0,0.15) 0%, rgba(255,255,255,0) 70%)',
-                            filter: 'blur(80px)',
+                            background: 'radial-gradient(circle at center, rgba(255,215,0,0.12) 0%, transparent 60%)',
+                            filter: 'blur(60px)',
                         }}
                     />
 
-                    {/* Normal tube image - HIGH VISIBILITY */}
+                    {/* Normal tube image */}
                     <Image
                         src={getAssetPath('/images/blackmatetubetrans.png')}
                         alt="AETHER System"
                         fill
-                        className={`object-contain transition-opacity duration-100 ${isXray ? 'opacity-0' : 'opacity-100'}`}
+                        className={`object-contain transition-opacity duration-150 ${isXray ? 'opacity-0' : 'opacity-100'}`}
                         priority
+                        sizes="(max-width: 768px) 90vw, 40rem"
                         style={{
-                            filter: 'drop-shadow(0 0 50px rgba(255,255,255,0.5)) brightness(1.35) contrast(1.2)'
+                            filter: 'drop-shadow(0 0 30px rgba(255,255,255,0.3)) brightness(1.2)'
                         }}
                     />
 
-                    {/* X-ray overlay with glitch effect */}
-                    <AnimatePresence>
-                        {isXray && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 1.02 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.98 }}
-                                transition={{ duration: 0.1 }}
-                                className="absolute inset-0"
-                            >
-                                <Image
-                                    src={getAssetPath('/images/backmatetubexraytrans.png')}
-                                    alt="AETHER System X-Ray"
-                                    fill
-                                    className="object-contain"
-                                    style={{
-                                        filter: 'brightness(1.2) contrast(1.1)',
-                                    }}
-                                />
-                                {/* Scanline effect during X-ray */}
-                                <div
-                                    className="absolute inset-0 pointer-events-none opacity-30"
-                                    style={{
-                                        background: `repeating-linear-gradient(
-                                            to bottom,
-                                            transparent 0px,
-                                            transparent 2px,
-                                            rgba(0, 255, 255, 0.1) 3px,
-                                            rgba(0, 255, 255, 0.1) 4px
-                                        )`
-                                    }}
-                                />
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
+                    {/* X-ray - CSS transition only, no Framer Motion */}
+                    <Image
+                        src={getAssetPath('/images/backmatetubexraytrans.png')}
+                        alt="AETHER System X-Ray"
+                        fill
+                        className={`object-contain transition-opacity duration-150 ${isXray ? 'opacity-100' : 'opacity-0'}`}
+                        sizes="(max-width: 768px) 90vw, 40rem"
+                        style={{
+                            filter: 'brightness(1.1)',
+                        }}
+                    />
                 </div>
             </motion.div>
 
@@ -135,7 +110,7 @@ export function HeroVoid() {
                         transition={{ duration: 0.8, delay: 0.4 }}
                         className="mb-8"
                     >
-                        <h1 className="font-sans text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight mb-6">
+                        <h1 className="font-headline text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight mb-6">
                             ARCHITECTURE CELLULAIRE.
                             <br />
                             <span className="text-[#E6DCC8] italic font-light tracking-wide">CONÇUE AVEC VOUS.</span>

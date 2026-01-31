@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export function SystemFailure() {
     return (
-        <section className="relative bg-black py-16 md:py-24 mt-20 md:mt-32 mb-20 md:mb-32 overflow-hidden">
+        <section id="system-failure" className="relative bg-black py-16 md:py-24 mt-20 md:mt-32 mb-20 md:mb-32 overflow-hidden">
             {/* Heavy Scanlines */}
             <div
                 className="absolute inset-0 pointer-events-none z-10 opacity-50"
@@ -49,8 +49,8 @@ export function SystemFailure() {
                     className="relative mb-10"
                 >
                     {/* Base text with intense shake */}
-                    <h2 className="font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-text-distort">
-                        /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                    <h2 className="font-headline text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-text-distort">
+                        /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
 
                     {/* Cyan glitch layer */}
@@ -58,7 +58,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-cyan-400 font-black uppercase tracking-tight opacity-80 mix-blend-screen animate-glitch-hard-1"
                         aria-hidden="true"
                     >
-                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
 
                     {/* Red glitch layer */}
@@ -66,7 +66,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-red-500 font-black uppercase tracking-tight opacity-80 mix-blend-screen animate-glitch-hard-2"
                         aria-hidden="true"
                     >
-                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 1 */}
@@ -74,7 +74,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-teleport-slice-1"
                         aria-hidden="true"
                     >
-                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 2 */}
@@ -82,7 +82,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-teleport-slice-2"
                         aria-hidden="true"
                     >
-                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 3 */}
@@ -90,7 +90,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight opacity-90 animate-teleport-slice-3"
                         aria-hidden="true"
                     >
-                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 4 */}
@@ -98,27 +98,57 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight opacity-80 animate-teleport-slice-4"
                         aria-hidden="true"
                     >
-                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
+                                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                     </h2>
                 </motion.div>
 
-                {/* Terminal Text with corruption */}
+                {/* Terminal Text - VALUE REALLOCATION */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="space-y-4 font-mono text-sm md:text-base text-left max-w-xl mx-auto"
+                    className="space-y-6 font-mono text-sm md:text-base border-l-2 border-white/10 pl-6 my-12 text-left max-w-xl mx-auto"
                 >
-                    <p className="text-gray-400 animate-line-teleport-1 relative">
-                        <span className="text-white">&gt;</span> ANALYSE : Le standard industriel (Sucre + Marge 80%) est incompatible avec l'architecture AETHER.
-                    </p>
-                    <p className="text-gray-400 animate-line-teleport-2 relative">
-                        <span className="text-white">&gt;</span> ACTION : Réécriture du code source. Suppression des intermédiaires. Priorité aux actifs.
-                    </p>
-                    <p className="text-amber-500 mt-6 font-bold text-base md:text-lg animate-emergency-flash">
-                        <span className="text-white">&gt;</span> STATUS : MISE À NIVEAU INITIALISÉE. PRIORITÉ AUX ACTIFS.
-                    </p>
+                    {/* HEADER TECHNIQUE */}
+                    <div className="text-[#E6DCC8] text-xs tracking-widest uppercase mb-4">
+                        [ M.A.J SYSTEME // EFFACEMENT DES TAXES // DIMINUTION DU PRIX ]
+                    </div>
+
+                    {/* TITRE PRINCIPAL */}
+                    <h3 className="font-headline text-2xl md:text-3xl text-white mb-6">
+                        /// TAXE MARKETING : SUPPRIMÉE ///
+                    </h3>
+
+                    {/* LE LOGICIEL DU CHANGEMENT */}
+                    <div className="space-y-4">
+                        {/* 1. LE CONSTAT */}
+                        <div className="text-white/80 animate-line-teleport-1">
+                            <span className="text-[#E6DCC8] font-bold mr-2">{'>'} ANALYSE :</span>
+                            Le marché est BRISÉ. Les leaders dominent par le budget pub, plus par la qualité. Nous payons 70% de "taxe MARKETING" pour nos produits.
+                        </div>
+
+                        {/* 1.5 LA CONSEQUENCE */}
+                        <div className="text-red-400/90 animate-line-teleport-1">
+                            <span className="text-red-500 font-bold mr-2">{'>'} CONSÉQUENCE :</span>
+                            PRIX TROP ÉLEVÉS. QUALITÉ DIMINUÉE.
+                        </div>
+
+                        {/* 2. L'ACTION CORRECTIVE */}
+                        <div className="text-white/80 animate-emergency-flash">
+                            <span className="text-[#E6DCC8] font-bold mr-2">{'>'} AMÉLIORATION :</span>
+                            SUPPRESSION DE LA TAXE MARKETING. AUGMENTATION DE L'INVESTISSEMENT DANS LA FORMULATION.
+                        </div>
+                    </div>
+
+                    {/* SPACER - Large gap before conclusion */}
+                    <div style={{ height: '200px' }} />
+
+                    {/* 3. LE RÉSULTAT (PUNCHLINE) - STABLE (glitch fixed) - OUTSIDE space-y-4 */}
+                    <div className="text-white font-bold bg-white/5 p-3 inline-block rounded-sm border border-white/10">
+                        <span className="text-[#E6DCC8] mr-2"> MISE À JOUR EFFECTUÉE:</span>
+                        Le prix est maintenant diminué. La qualité est augmentée.
+                    </div>
                 </motion.div>
             </div>
 

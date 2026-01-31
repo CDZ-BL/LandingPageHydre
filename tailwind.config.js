@@ -30,12 +30,16 @@ module.exports = {
                     yellow: '#CCFF00',
                     lime: '#39FF14',
                 },
+                // BIOLOGIC BONE - Alliance accent
+                bone: '#E6DCC8',
             },
             fontFamily: {
-                display: ['var(--font-cinzel)', 'serif'],
+                headline: ['var(--font-clash)', 'system-ui', 'sans-serif'],
+                body: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
                 data: ['var(--font-jetbrains)', 'monospace'],
                 mono: ['var(--font-jetbrains)', 'monospace'],
-                sans: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+                sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+                display: ['var(--font-clash)', 'serif'],
             },
             animation: {
                 'marquee': 'marquee 40s linear infinite',

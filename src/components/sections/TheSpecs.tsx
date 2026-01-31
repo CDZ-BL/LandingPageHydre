@@ -76,7 +76,7 @@ export function TheSpecs() {
                     className="mb-16 text-center"
                 >
                     <span className="font-mono text-neon-orange text-xs font-bold tracking-wider">COMPOSITION</span>
-                    <h2 className="font-sans text-4xl md:text-6xl text-white font-bold tracking-tight mt-2">
+                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-tight mt-2">
                         ARCHITECTURE MOLÉCULAIRE
                     </h2>
                 </motion.div>

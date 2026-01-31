@@ -1,23 +1,36 @@
 import type { Metadata, Viewport } from 'next';
-import { Cinzel, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
+import localFont from 'next/font/local';
+import { JetBrains_Mono } from 'next/font/google';
+import { GeistSans } from 'geist/font/sans';
 import './globals.css';
-import { SmoothScrollProvider } from '@/components/providers/SmoothScroll';
 
-const cinzel = Cinzel({
-    subsets: ['latin'],
-    variable: '--font-cinzel',
+// CLASH DISPLAY - Headlines (Local from Fontshare)
+const clashDisplay = localFont({
+    src: [
+        {
+            path: '../../public/fonts/ClashDisplay-Regular.woff2',
+            weight: '400',
+            style: 'normal',
+        },
+        {
+            path: '../../public/fonts/ClashDisplay-Semibold.woff2',
+            weight: '600',
+            style: 'normal',
+        },
+        {
+            path: '../../public/fonts/ClashDisplay-Bold.woff2',
+            weight: '700',
+            style: 'normal',
+        },
+    ],
+    variable: '--font-clash',
     display: 'swap',
 });
 
+// JETBRAINS MONO - Technical Data
 const jetbrains = JetBrains_Mono({
     subsets: ['latin'],
     variable: '--font-jetbrains',
-    display: 'swap',
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-    subsets: ['latin'],
-    variable: '--font-jakarta',
     display: 'swap',
 });
 
@@ -50,11 +63,9 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="en" className={`${cinzel.variable} ${jetbrains.variable} ${plusJakarta.variable}`}>
-            <body className="antialiased bg-void text-void-950">
-                <SmoothScrollProvider>
-                    {children}
-                </SmoothScrollProvider>
+        <html lang="fr" className={`${clashDisplay.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
+            <body className="antialiased bg-obsidian text-white/85">
+                {children}
             </body>
         </html>
     );

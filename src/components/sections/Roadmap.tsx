@@ -1,6 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useScramble } from '@/hooks/useScramble';
 
 const ROADMAP_ITEMS = [
     {
@@ -37,7 +39,75 @@ const ROADMAP_ITEMS = [
     }
 ];
 
+// Find the index of the ACTIVE (present) phase
+const PRESENT_INDEX = ROADMAP_ITEMS.findIndex(item => item.status === 'ACTIVE');
+
+// Decrypt title component for future phases
+function DecryptTitle({ title, isFuture }: { title: string; isFuture: boolean }) {
+    const { displayText, onMouseEnter, onMouseLeave } = useScramble(title, 30);
+
+    if (!isFuture) {
+        return <>{title}</>;
+    }
+
+    return (
+        <span
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            className="cursor-pointer"
+        >
+            {displayText}
+        </span>
+    );
+}
+
 export function Roadmap() {
+    const [activeIndex, setActiveIndex] = useState(PRESENT_INDEX);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    // Scroll to active item
+    const scrollToIndex = (index: number) => {
+        const item = itemRefs.current[index];
+        if (item) {
+            item.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            });
+        }
+        setActiveIndex(index);
+    };
+
+    // Handle wheel scroll within the roadmap
+    const handleWheel = (e: React.WheelEvent) => {
+        // Only intercept horizontal-style navigation
+        if (Math.abs(e.deltaY) > 10) {
+            e.preventDefault();
+            if (e.deltaY > 0 && activeIndex < ROADMAP_ITEMS.length - 1) {
+                scrollToIndex(activeIndex + 1);
+            } else if (e.deltaY < 0 && activeIndex > 0) {
+                scrollToIndex(activeIndex - 1);
+            }
+        }
+    };
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowDown' && activeIndex < ROADMAP_ITEMS.length - 1) {
+                scrollToIndex(activeIndex + 1);
+            } else if (e.key === 'ArrowUp' && activeIndex > 0) {
+                scrollToIndex(activeIndex - 1);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [activeIndex]);
+
+    const isOnPresent = activeIndex === PRESENT_INDEX;
+
     return (
         <section className="relative py-24 md:py-32 bg-black overflow-hidden border-t border-void-800">
             {/* Background Grid */}
@@ -49,93 +119,174 @@ export function Roadmap() {
                 }}
             />
 
-            <div className="relative z-10 w-[90%] max-w-[800px] mx-auto">
+            <div className="relative z-10 w-[90%] max-w-[900px] mx-auto">
+                {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
-                    className="mb-16 text-center md:text-left"
+                    className="mb-12 text-center"
                 >
                     <h2 className="font-mono text-cyan-400 text-sm tracking-widest mb-4">
                         [ SYSTEM_LOGS // ROADMAP ]
                     </h2>
-                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-tight">
+                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-tight mb-4">
                         VISION : LONG TERM.
                     </h3>
+                    <p className="font-mono text-xs text-gray-500 tracking-wider">
+                        SCROLL OU UTILISEZ ↑↓ POUR NAVIGUER
+                    </p>
                 </motion.div>
 
-                <div className="relative border-l border-void-700 ml-4 md:ml-8 pl-8 md:pl-12 py-4 space-y-16">
-                    {ROADMAP_ITEMS.map((item, index) => {
-                        const isCompleted = item.status === 'COMPLETED';
-                        const isActive = item.status === 'ACTIVE';
-                        const isFuture = item.status === 'UPCOMING' || item.status === 'LOCKED';
+                {/* Navigation dots */}
+                <div className="flex justify-center gap-3 mb-8">
+                    {ROADMAP_ITEMS.map((item, index) => (
+                        <button
+                            key={index}
+                            onClick={() => scrollToIndex(index)}
+                            className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${index === activeIndex
+                                    ? 'bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-125'
+                                    : index === PRESENT_INDEX
+                                        ? 'bg-amber-500/50 border-amber-500'
+                                        : 'bg-transparent border-void-500 hover:border-white/50'
+                                }`}
+                            aria-label={`Aller à ${item.phase}`}
+                        />
+                    ))}
+                </div>
 
-                        return (
-                            <motion.div
-                                key={index}
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true, margin: "-50px" }}
-                                transition={{ duration: 0.6, delay: index * 0.1 }}
-                                className={`relative group ${isCompleted ? 'opacity-50' : ''}`}
-                            >
-                                {/* Dot on timeline with visual states */}
-                                <div className={`absolute -left-[41px] md:-left-[57px] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300
-                                    ${isActive
-                                        ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)]'
-                                        : isCompleted
-                                            ? 'bg-gray-600 border-gray-600'
-                                            : 'bg-black border-void-500'
-                                    }`}
+                {/* Interactive scroll container */}
+                <div
+                    ref={containerRef}
+                    className="relative"
+                    onWheel={handleWheel}
+                >
+                    {/* Timeline line */}
+                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-px bg-void-700">
+                        {/* Progress indicator */}
+                        <motion.div
+                            className="absolute left-0 w-px bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                            initial={{ height: 0 }}
+                            animate={{
+                                height: `${((activeIndex + 1) / ROADMAP_ITEMS.length) * 100}%`
+                            }}
+                            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                        />
+                    </div>
+
+                    {/* Roadmap items */}
+                    <div className="space-y-8 pl-16 md:pl-24">
+                        {ROADMAP_ITEMS.map((item, index) => {
+                            const isActive = index === activeIndex;
+                            const distance = Math.abs(index - activeIndex);
+                            const isFuture = item.status === 'UPCOMING' || item.status === 'LOCKED';
+
+                            // Calculate styles based on distance from active
+                            const scale = isActive ? 1 : 0.85;
+                            const opacity = isActive ? 1 : distance === 1 ? 0.5 : 0.3;
+
+                            return (
+                                <motion.div
+                                    key={index}
+                                    ref={(el) => { itemRefs.current[index] = el; }}
+                                    onClick={() => scrollToIndex(index)}
+                                    animate={{
+                                        scale,
+                                        opacity,
+                                    }}
+                                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                                    className={`relative cursor-pointer origin-left ${isActive ? 'z-10' : 'z-0'}`}
                                 >
-                                    {isActive && (
-                                        <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" />
-                                    )}
-                                </div>
-
-                                {/* Content with hover reveal for future items */}
-                                <div className={`transition-all duration-500 ${isFuture ? 'blur-[2px] group-hover:blur-0' : ''}`}>
-                                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-2">
-                                        <div>
-                                            <div className="flex items-center gap-3 mb-1">
-                                                <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive
-                                                    ? 'border-white text-white bg-white/10'
-                                                    : isCompleted
-                                                        ? 'border-gray-600 text-gray-500'
-                                                        : 'border-void-600 text-gray-400'
-                                                    }`}>
-                                                    {item.phase} // {item.status}
-                                                </span>
-                                                <span className="font-mono text-xs text-gray-500">{item.date}</span>
-                                            </div>
-                                            <h4 className={`font-sans text-xl md:text-2xl font-bold tracking-tight transition-all ${isActive ? 'text-white' : isCompleted ? 'text-gray-500' : 'text-gray-400'
-                                                }`}>
-                                                {item.title}
-                                            </h4>
-                                        </div>
+                                    {/* Dot on timeline */}
+                                    <div className={`absolute -left-[52px] md:-left-[68px] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300
+                                        ${isActive
+                                            ? 'bg-white border-white shadow-[0_0_25px_rgba(255,255,255,1)]'
+                                            : index < activeIndex
+                                                ? 'bg-gray-600 border-gray-600'
+                                                : 'bg-black border-void-500'
+                                        }`}
+                                    >
+                                        {isActive && (
+                                            <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" />
+                                        )}
                                     </div>
 
-                                    <p className={`font-mono text-sm md:text-base mb-4 max-w-xl leading-relaxed ${isActive ? 'text-gray-300' : 'text-gray-500'
+                                    {/* Card */}
+                                    <div className={`p-6 border transition-all duration-300 ${isActive
+                                            ? 'border-white/30 bg-white/5 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
+                                            : 'border-void-700 bg-transparent hover:border-void-500'
                                         }`}>
-                                        {item.description}
-                                    </p>
-
-                                    <ul className="flex flex-wrap gap-2">
-                                        {item.features.map((feature, i) => (
-                                            <li key={i} className={`font-mono text-xs px-2 py-1 rounded border transition-all ${isActive
-                                                    ? 'text-white bg-white/5 border-white/20'
-                                                    : 'text-gray-600 bg-void-200 border-void-300'
+                                        {/* Header */}
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive
+                                                    ? 'border-white text-white bg-white/10'
+                                                    : 'border-void-600 text-gray-500'
                                                 }`}>
-                                                {feature}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
+                                                {item.phase} // {item.status}
+                                            </span>
+                                            <span className="font-mono text-xs text-gray-500">{item.date}</span>
+                                        </div>
+
+                                        {/* Title */}
+                                        <h4 className={`font-sans font-bold tracking-tight transition-all mb-3 ${isActive
+                                                ? 'text-2xl md:text-3xl text-white'
+                                                : 'text-lg md:text-xl text-gray-400'
+                                            }`}>
+                                            <DecryptTitle title={item.title} isFuture={isFuture} />
+                                        </h4>
+
+                                        {/* Description - only show when active */}
+                                        <AnimatePresence>
+                                            {isActive && (
+                                                <motion.div
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: 'auto', opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    className="overflow-hidden"
+                                                >
+                                                    <p className="font-mono text-sm md:text-base text-gray-300 mb-4 leading-relaxed">
+                                                        {item.description}
+                                                    </p>
+
+                                                    <ul className="flex flex-wrap gap-2">
+                                                        {item.features.map((feature, i) => (
+                                                            <li key={i} className="font-mono text-xs px-3 py-1.5 rounded border text-white bg-white/5 border-white/20">
+                                                                {feature}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
                 </div>
+
+                {/* Return to Present button */}
+                <AnimatePresence>
+                    {!isOnPresent && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            transition={{ duration: 0.3 }}
+                            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
+                        >
+                            <button
+                                onClick={() => scrollToIndex(PRESENT_INDEX)}
+                                className="px-6 py-3 bg-white text-black font-mono text-sm tracking-wider font-semibold hover:bg-amber-400 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center gap-2"
+                            >
+                                <span className="animate-pulse">●</span>
+                                RETOUR AU PRÉSENT
+                            </button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
         </section>
     );
