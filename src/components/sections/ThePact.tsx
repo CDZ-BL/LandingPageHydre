@@ -95,42 +95,68 @@ export function ThePact() {
                             // ANALYSE COMPARATIVE DES COÛTS
                         </h4>
 
-                        <div className="space-y-8">
+                        <div className="space-y-10">
                             {/* Standard Brand */}
-                            <div>
-                                <div className="flex justify-between text-xs font-mono text-gray-400 mb-2">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                viewport={{ once: false, margin: "-50px" }}
+                                transition={{ duration: 0.6 }}
+                            >
+                                <div className="flex justify-between text-xs font-mono text-gray-500 mb-3">
                                     <span>STANDARD INDUSTRY</span>
-                                    <span>PRIX : 45€</span>
+                                    <span className="text-gray-600">PRIX : 45€</span>
                                 </div>
-                                <div className="h-4 bg-void-800 w-full flex">
-                                    <div className="h-full bg-red-900/50 w-[15%]"></div> {/* Product */}
-                                    <div className="h-full bg-void-700 w-[85%] relative overflow-hidden">
-                                        <div className="absolute inset-0 flex items-center justify-center text-[8px] text-white/30 tracking-widest">MARKETING + MARGE</div>
-                                    </div>
+                                {/* Ultra-thin bar container */}
+                                <div className="h-2 bg-void-900 w-full relative overflow-hidden border border-void-700">
+                                    {/* Marketing portion - dark gray with hatching effect */}
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        whileInView={{ width: '85%' }}
+                                        viewport={{ once: false, margin: "-50px" }}
+                                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                                        className="h-full bg-red-900/40 absolute left-0"
+                                        style={{
+                                            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)'
+                                        }}
+                                    />
                                 </div>
-                                <div className="mt-1 flex justify-between text-[9px] font-mono text-gray-500">
+                                <div className="mt-2 flex justify-between text-[10px] font-mono text-gray-600">
                                     <span>PRODUIT (15%)</span>
-                                    <span>BRUIT (85%)</span>
+                                    <span className="text-gray-500">MARKETING + MARGE (85%)</span>
                                 </div>
-                            </div>
+                            </motion.div>
 
                             {/* AETHER */}
-                            <div>
-                                <div className="flex justify-between text-xs font-mono text-white mb-2">
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
+                                viewport={{ once: false, margin: "-50px" }}
+                                transition={{ duration: 0.6, delay: 0.3 }}
+                            >
+                                <div className="flex justify-between text-xs font-mono text-white mb-3">
                                     <span>AETHER ARCHITECTURE</span>
                                     <span>PRIX : 45€</span>
                                 </div>
-                                <div className="h-4 bg-void-800 w-full flex">
-                                    <div className="h-full bg-amber-500 w-[65%] relative overflow-hidden">
-                                        <div className="absolute inset-0 flex items-center justify-center text-[8px] text-black/70 font-bold tracking-widest">INGRÉDIENTS ACTIFS</div>
-                                    </div>
-                                    <div className="h-full bg-void-700 w-[35%]"></div>
+                                {/* Ultra-thin bar container */}
+                                <div className="h-2 bg-void-900 w-full relative overflow-hidden border border-void-700">
+                                    {/* Ingredients portion - solid white with glow */}
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        whileInView={{ width: '100%' }}
+                                        viewport={{ once: false, margin: "-50px" }}
+                                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+                                        className="h-full bg-white absolute left-0"
+                                        style={{
+                                            boxShadow: '0 0 15px rgba(255,255,255,0.6), inset 0 0 5px rgba(255,255,255,0.3)'
+                                        }}
+                                    />
                                 </div>
-                                <div className="mt-1 flex justify-between text-[9px] font-mono text-gray-400">
-                                    <span className="text-amber-500">PRODUIT (65%)</span>
-                                    <span>FONCTIONNEMENT (35%)</span>
+                                <div className="mt-2 flex justify-between text-[10px] font-mono">
+                                    <span className="text-white">INGRÉDIENTS ACTIFS (100%)</span>
+                                    <span className="text-gray-500">BRUIT (0%)</span>
                                 </div>
-                            </div>
+                            </motion.div>
                         </div>
 
                         <div className="mt-8 pt-6 border-t border-void-800 text-center">

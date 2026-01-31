@@ -37,7 +37,7 @@ export function SystemFailure() {
                     transition={{ duration: 0.6 }}
                     className="inline-block font-mono text-red-500 text-xs tracking-widest mb-6 animate-hard-blink"
                 >
-                    [ SYSTEM_OVERRIDE // PROTOCOL VIOLATION ]
+                    [ SYSTEM_UPDATE // STANDARD CALIBRATION ]
                 </motion.div>
 
                 {/* INTENSE Glitch Title with EXTREME TELEPORTING */}
@@ -50,7 +50,7 @@ export function SystemFailure() {
                 >
                     {/* Base text with intense shake */}
                     <h2 className="font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-text-distort">
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                        /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
 
                     {/* Cyan glitch layer */}
@@ -58,7 +58,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-cyan-400 font-black uppercase tracking-tight opacity-80 mix-blend-screen animate-glitch-hard-1"
                         aria-hidden="true"
                     >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
 
                     {/* Red glitch layer */}
@@ -66,7 +66,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-red-500 font-black uppercase tracking-tight opacity-80 mix-blend-screen animate-glitch-hard-2"
                         aria-hidden="true"
                     >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 1 */}
@@ -74,7 +74,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-teleport-slice-1"
                         aria-hidden="true"
                     >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 2 */}
@@ -82,7 +82,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight animate-teleport-slice-2"
                         aria-hidden="true"
                     >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 3 */}
@@ -90,7 +90,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight opacity-90 animate-teleport-slice-3"
                         aria-hidden="true"
                     >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
 
                     {/* EXTREME TELEPORT SLICE - Layer 4 */}
@@ -98,7 +98,7 @@ export function SystemFailure() {
                         className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight opacity-80 animate-teleport-slice-4"
                         aria-hidden="true"
                     >
-                        RÈGLES DU MARCHÉ : BRISÉES.
+                                                /// OBSOLESCENCE PROGRAMMÉE : CORRIGÉE ///
                     </h2>
                 </motion.div>
 
@@ -116,8 +116,8 @@ export function SystemFailure() {
                     <p className="text-gray-400 animate-line-teleport-2 relative">
                         <span className="text-white">&gt;</span> ACTION : Réécriture du code source. Suppression des intermédiaires. Priorité aux actifs.
                     </p>
-                    <p className="text-red-500 mt-6 font-bold text-base md:text-lg animate-emergency-flash">
-                        <span className="text-white">&gt;</span> STATUS : ANOMALIE DÉTECTÉE. NE PAS REVENIR EN ARRIÈRE.
+                    <p className="text-amber-500 mt-6 font-bold text-base md:text-lg animate-emergency-flash">
+                        <span className="text-white">&gt;</span> STATUS : MISE À NIVEAU INITIALISÉE. PRIORITÉ AUX ACTIFS.
                     </p>
                 </motion.div>
             </div>

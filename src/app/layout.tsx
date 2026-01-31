@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Cinzel, JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { SmoothScrollProvider } from '@/components/providers/SmoothScroll';
 
 const cinzel = Cinzel({
     subsets: ['latin'],
@@ -51,7 +52,9 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${cinzel.variable} ${jetbrains.variable} ${plusJakarta.variable}`}>
             <body className="antialiased bg-void text-void-950">
-                {children}
+                <SmoothScrollProvider>
+                    {children}
+                </SmoothScrollProvider>
             </body>
         </html>
     );

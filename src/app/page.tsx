@@ -2,6 +2,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HeroVoid } from '@/components/sections/Hero3D';
 import { SystemFailure } from '@/components/sections/SystemFailure';
+import { TheProblem } from '@/components/sections/TheProblem';
 import { ThePact } from '@/components/sections/ThePact';
 import { TheSpecs } from '@/components/sections/TheSpecs';
 import { ProductVision } from '@/components/sections/ProductVision';
@@ -20,6 +21,9 @@ export default function Home() {
 
             {/* Block 1.5: System Failure (The Problem) */}
             <SystemFailure />
+
+            {/* Block 1.6: The Problem (Radar + Video) */}
+            <TheProblem />
 
             {/* Block 2: The Pact (Value) */}
             <ThePact />

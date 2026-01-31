@@ -138,7 +138,7 @@ export function HeroVoid() {
                         <h1 className="font-sans text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight mb-6">
                             ARCHITECTURE CELLULAIRE.
                             <br />
-                            <span className="text-white">CONÇUE AVEC VOUS.</span>
+                            <span className="text-[#E6DCC8] italic font-light tracking-wide">CONÇUE AVEC VOUS.</span>
                         </h1>
                         <p className="font-sans text-lg md:text-xl text-white max-w-3xl mx-auto leading-relaxed tracking-wide">
                             Le premier système d'hydratation qui investit dans votre biologie, pas dans votre attention.

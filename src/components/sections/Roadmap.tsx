@@ -66,59 +66,75 @@ export function Roadmap() {
                 </motion.div>
 
                 <div className="relative border-l border-void-700 ml-4 md:ml-8 pl-8 md:pl-12 py-4 space-y-16">
-                    {ROADMAP_ITEMS.map((item, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 0.6, delay: index * 0.1 }}
-                            className="relative"
-                        >
-                            {/* Dot on timeline */}
-                            <div className={`absolute -left-[41px] md:-left-[57px] top-2 w-4 h-4 rounded-full border-2 
-                                ${item.status === 'ACTIVE'
-                                    ? 'bg-neon-orange border-neon-orange shadow-[0_0_15px_rgba(255,122,0,0.5)]'
-                                    : item.status === 'COMPLETED'
-                                        ? 'bg-void-500 border-void-500'
-                                        : 'bg-black border-void-500'
-                                }`}
+                    {ROADMAP_ITEMS.map((item, index) => {
+                        const isCompleted = item.status === 'COMPLETED';
+                        const isActive = item.status === 'ACTIVE';
+                        const isFuture = item.status === 'UPCOMING' || item.status === 'LOCKED';
+
+                        return (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                className={`relative group ${isCompleted ? 'opacity-50' : ''}`}
                             >
-                                {item.status === 'ACTIVE' && (
-                                    <div className="absolute inset-0 rounded-full bg-neon-orange animate-ping opacity-50" />
-                                )}
-                            </div>
-
-                            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-2">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-1">
-                                        <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border ${item.status === 'ACTIVE'
-                                            ? 'border-neon-orange text-neon-orange'
-                                            : 'border-void-600 text-gray-400'
-                                            }`}>
-                                            {item.phase} // {item.status}
-                                        </span>
-                                        <span className="font-mono text-xs text-gray-500">{item.date}</span>
-                                    </div>
-                                    <h4 className={`font-sans text-xl md:text-2xl font-bold tracking-tight ${item.status === 'LOCKED' ? 'text-gray-500' : 'text-white'}`}>
-                                        {item.title}
-                                    </h4>
+                                {/* Dot on timeline with visual states */}
+                                <div className={`absolute -left-[41px] md:-left-[57px] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300
+                                    ${isActive
+                                        ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)]'
+                                        : isCompleted
+                                            ? 'bg-gray-600 border-gray-600'
+                                            : 'bg-black border-void-500'
+                                    }`}
+                                >
+                                    {isActive && (
+                                        <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" />
+                                    )}
                                 </div>
-                            </div>
 
-                            <p className="font-mono text-sm md:text-base text-gray-300 mb-4 max-w-xl leading-relaxed">
-                                {item.description}
-                            </p>
+                                {/* Content with hover reveal for future items */}
+                                <div className={`transition-all duration-500 ${isFuture ? 'blur-[2px] group-hover:blur-0' : ''}`}>
+                                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-2">
+                                        <div>
+                                            <div className="flex items-center gap-3 mb-1">
+                                                <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive
+                                                    ? 'border-white text-white bg-white/10'
+                                                    : isCompleted
+                                                        ? 'border-gray-600 text-gray-500'
+                                                        : 'border-void-600 text-gray-400'
+                                                    }`}>
+                                                    {item.phase} // {item.status}
+                                                </span>
+                                                <span className="font-mono text-xs text-gray-500">{item.date}</span>
+                                            </div>
+                                            <h4 className={`font-sans text-xl md:text-2xl font-bold tracking-tight transition-all ${isActive ? 'text-white' : isCompleted ? 'text-gray-500' : 'text-gray-400'
+                                                }`}>
+                                                {item.title}
+                                            </h4>
+                                        </div>
+                                    </div>
 
-                            <ul className="flex flex-wrap gap-2">
-                                {item.features.map((feature, i) => (
-                                    <li key={i} className="font-mono text-xs text-void-800 bg-void-200 px-2 py-1 rounded border border-void-300">
-                                        {feature}
-                                    </li>
-                                ))}
-                            </ul>
-                        </motion.div>
-                    ))}
+                                    <p className={`font-mono text-sm md:text-base mb-4 max-w-xl leading-relaxed ${isActive ? 'text-gray-300' : 'text-gray-500'
+                                        }`}>
+                                        {item.description}
+                                    </p>
+
+                                    <ul className="flex flex-wrap gap-2">
+                                        {item.features.map((feature, i) => (
+                                            <li key={i} className={`font-mono text-xs px-2 py-1 rounded border transition-all ${isActive
+                                                    ? 'text-white bg-white/5 border-white/20'
+                                                    : 'text-gray-600 bg-void-200 border-void-300'
+                                                }`}>
+                                                {feature}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </motion.div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
