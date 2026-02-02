@@ -14,7 +14,7 @@ export function FounderCircle() {
                 }}
             />
 
-            <div className="relative z-10 w-[85%] max-w-[1200px] mx-auto">
+            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
                 {/* Header */}
                 <div className="text-center mb-16">
                     <motion.div

@@ -67,17 +67,19 @@ export function TheSpecs() {
             />
 
             <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
-                {/* Title */}
+                {/* Section Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
-                    className="mb-16 text-center"
+                    className="mb-16"
                 >
-                    <span className="font-mono text-neon-orange text-xs font-bold tracking-wider">COMPOSITION</span>
-                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-tight mt-2">
-                        ARCHITECTURE MOLÉCULAIRE
+                    <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
+                        [ SECTION 3 : LA FORMULE ]
+                    </span>
+                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-tight">
+                        ARCHITECTURE MOLÉCULAIRE.
                     </h2>
                 </motion.div>
 

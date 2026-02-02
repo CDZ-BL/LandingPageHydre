@@ -8,12 +8,12 @@ import { getAssetPath } from '@/lib/utils';
 export function HeroVoid() {
     const [isXray, setIsXray] = useState(false);
 
-    // X-ray blink effect: every 5 seconds, show X-ray for 0.5 seconds
+    // X-ray blink effect: every 3 seconds, show X-ray for 0.5 seconds
     useEffect(() => {
         const interval = setInterval(() => {
             setIsXray(true);
             setTimeout(() => setIsXray(false), 300); // 0.3 second blink
-        }, 5000); // Every 5 seconds
+        }, 3000); // Every 3 seconds
 
         return () => clearInterval(interval);
     }, []);
@@ -102,40 +102,53 @@ export function HeroVoid() {
 
             {/* Layer 5: Main Content - Text on top */}
             <div className="relative z-20 flex-1 flex items-center justify-center px-4">
-                <div className="text-center max-w-5xl mx-auto">
-                    {/* Headline */}
-                    <motion.div
+                <div className="relative z-10 flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+
+                    {/* 1. LE TITRE MASSIF */}
+                    <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
-                        className="mb-8"
+                        className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter text-white leading-[0.95] mb-6"
                     >
-                        <h1 className="font-headline text-5xl md:text-7xl lg:text-8xl text-white font-bold tracking-tight mb-6">
-                            ARCHITECTURE CELLULAIRE.
-                            <br />
-                            <span className="text-[#E6DCC8] italic font-light tracking-wide">CONÇUE AVEC VOUS.</span>
-                        </h1>
-                        <p className="font-sans text-lg md:text-xl text-white max-w-3xl mx-auto leading-relaxed tracking-wide">
-                            Le premier système d'hydratation qui investit dans votre biologie, pas dans votre attention.
-                            <br />
-                            <span className="text-white/60 text-base mt-2 block">Performance Hydrique V1.0 · Zéro Sucre · Co-développé par le Cercle Fondateur.</span>
-                        </p>
-                    </motion.div>
+                        L'HYDRATATION <br /> ÉPURÉE.
+                        <span className="text-[#E6DCC8] italic font-light tracking-normal block text-2xl md:text-4xl mt-3">
+                            CONÇUE AVEC VOUS.
+                        </span>
+                    </motion.h1>
 
-                    {/* CTA */}
-                    <motion.div
+                    {/* 2. LE MANIFESTE */}
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.5 }}
+                        className="text-lg md:text-xl text-white/60 font-light tracking-wide mb-10"
+                    >
+                        Pour vous. Pas pour le marketing.
+                    </motion.p>
+
+                    {/* 3. L'ACTION */}
+                    <motion.button
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
-                        className="space-y-3"
+                        className="bg-white text-black font-bold px-8 py-4 rounded-sm hover:bg-[#E6DCC8] transition-colors duration-300 tracking-widest text-xs md:text-sm uppercase"
                     >
-                        <button className="px-12 py-5 bg-white text-black font-sans text-sm font-semibold tracking-widest hover:bg-amber-400 hover:text-black transition-all duration-300 border border-white hover:border-amber-400">
-                            REJOINDRE L'ALLIANCE
-                        </button>
-                        <p className="font-mono text-xs text-amber-500/80 tracking-wider">
-                            Alliance Ouverte · Batch V1.0
-                        </p>
+                        REJOINDRE L'ALLIANCE
+                    </motion.button>
+
+                    {/* 4. ANCRAGE TECHNIQUE (DISCRET) */}
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, delay: 0.8 }}
+                        className="absolute bottom-4 flex gap-4 text-[10px] md:text-xs font-mono text-white/20 uppercase tracking-widest"
+                    >
+                        <span>[ BATCH V1.0 ]</span>
+                        <span>•</span>
+                        <span>ZÉRO SUCRE</span>
                     </motion.div>
+
                 </div>
             </div>
         </section>

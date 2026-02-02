@@ -13,16 +13,18 @@ export function Reciprocity() {
                 }}
             />
 
-            <div className="relative z-10 w-[85%] max-w-[900px] mx-auto text-center">
+            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
+                {/* === MANIFESTO SECTION === */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
+                    className=""
                 >
-                    <h2 className="font-mono text-amber-500 text-sm tracking-widest mb-4">
-                        [ SECTION 3 : LA RÉCIPROCITÉ ]
-                    </h2>
+                    <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
+                        [ SECTION 5 : LA RÉCIPROCITÉ ]
+                    </span>
                     {/* Title */}
                     <h2 className="font-headline text-white text-3xl md:text-5xl font-bold mb-12 tracking-tight">
                         NOUS SOMMES CLIENTS DE NOS CLIENTS.
@@ -45,11 +47,11 @@ export function Reciprocity() {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-2xl mx-auto">
-                            <div className="p-6 border border-void-700 bg-void-900/50 rounded">
+                            <div className="p-6 border border-white/10 bg-white/[0.02] rounded-machined">
                                 <h4 className="font-mono text-cyan-400 text-xs mb-2 uppercase tracking-widest">Notre Apport</h4>
                                 <p className="text-white text-base">Nous vous fournissons la clarté mentale et l'endurance.</p>
                             </div>
-                            <div className="p-6 border border-void-700 bg-void-900/50 rounded">
+                            <div className="p-6 border border-white/10 bg-white/[0.02] rounded-machined">
                                 <h4 className="font-mono text-amber-500 text-xs mb-2 uppercase tracking-widest">Votre Apport</h4>
                                 <p className="text-white text-base">Vous nous fournissez l'exigence et la direction.</p>
                             </div>

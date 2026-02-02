@@ -14,7 +14,7 @@ export function ProductVision() {
                 }}
             />
 
-            <div className="relative z-10 w-[85%] max-w-[1000px] mx-auto">
+            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
                     {/* Visual: Versioning Timeline/Schematic */}
@@ -76,9 +76,9 @@ export function ProductVision() {
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <h2 className="font-mono text-cyan-500 text-sm tracking-widest mb-4">
-                            [ SECTION 2 : LA VISION ]
-                        </h2>
+                        <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
+                            [ SECTION 4 : LA VISION ]
+                        </span>
                         <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-tight mb-8">
                             VERSIONING ÉVOLUTIF (V1.0).
                         </h3>

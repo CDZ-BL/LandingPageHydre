@@ -23,17 +23,17 @@ export function ThePact() {
                 <div className="absolute bottom-32 right-10 border-r border-b border-white w-16 h-16"></div>
             </div>
 
-            <div className="relative z-10 w-[85%] max-w-[1200px] mx-auto">
+            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8 }}
-                    className="mb-20 text-center"
+                    className="mb-20"
                 >
-                    <h2 className="font-mono text-amber-500 text-sm tracking-widest mb-4">
-                        [ SECTION 1 : LE PACTE DE VALEUR ]
-                    </h2>
+                    <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
+                        [ SECTION 2 : LE PACTE DE VALEUR ]
+                    </span>
                     <h3 className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight mb-8">
                         LE RETOUR DU POUVOIR D'ACHAT.
                     </h3>

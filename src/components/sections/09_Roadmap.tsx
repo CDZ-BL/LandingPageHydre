@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useScramble } from '@/hooks/useScramble';
 
 const ROADMAP_ITEMS = [
@@ -65,6 +65,8 @@ export function Roadmap() {
     const [activeIndex, setActiveIndex] = useState(PRESENT_INDEX);
     const containerRef = useRef<HTMLDivElement>(null);
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const sectionRef = useRef<HTMLElement>(null);
+    const isInView = useInView(sectionRef, { amount: "some", margin: "-100px 0px -100px 0px" });
 
     // Scroll to active item
     const scrollToIndex = (index: number) => {
@@ -109,7 +111,7 @@ export function Roadmap() {
     const isOnPresent = activeIndex === PRESENT_INDEX;
 
     return (
-        <section className="relative py-24 md:py-32 bg-black overflow-hidden border-t border-void-800">
+        <section ref={sectionRef} className="relative py-24 md:py-32 bg-black overflow-hidden border-t border-void-800">
             {/* Background Grid */}
             <div
                 className="absolute inset-0 opacity-10 pointer-events-none"
@@ -119,7 +121,7 @@ export function Roadmap() {
                 }}
             />
 
-            <div className="relative z-10 w-[90%] max-w-[900px] mx-auto">
+            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -146,10 +148,10 @@ export function Roadmap() {
                             key={index}
                             onClick={() => scrollToIndex(index)}
                             className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${index === activeIndex
-                                    ? 'bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-125'
-                                    : index === PRESENT_INDEX
-                                        ? 'bg-amber-500/50 border-amber-500'
-                                        : 'bg-transparent border-void-500 hover:border-white/50'
+                                ? 'bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-125'
+                                : index === PRESENT_INDEX
+                                    ? 'bg-amber-500/50 border-amber-500'
+                                    : 'bg-transparent border-void-500 hover:border-white/50'
                                 }`}
                             aria-label={`Aller à ${item.phase}`}
                         />
@@ -214,14 +216,14 @@ export function Roadmap() {
 
                                     {/* Card */}
                                     <div className={`p-6 border transition-all duration-300 ${isActive
-                                            ? 'border-white/30 bg-white/5 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
-                                            : 'border-void-700 bg-transparent hover:border-void-500'
+                                        ? 'border-white/30 bg-white/5 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
+                                        : 'border-void-700 bg-transparent hover:border-void-500'
                                         }`}>
                                         {/* Header */}
                                         <div className="flex items-center gap-3 mb-3">
                                             <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive
-                                                    ? 'border-white text-white bg-white/10'
-                                                    : 'border-void-600 text-gray-500'
+                                                ? 'border-white text-white bg-white/10'
+                                                : 'border-void-600 text-gray-500'
                                                 }`}>
                                                 {item.phase} // {item.status}
                                             </span>
@@ -230,8 +232,8 @@ export function Roadmap() {
 
                                         {/* Title */}
                                         <h4 className={`font-sans font-bold tracking-tight transition-all mb-3 ${isActive
-                                                ? 'text-2xl md:text-3xl text-white'
-                                                : 'text-lg md:text-xl text-gray-400'
+                                            ? 'text-2xl md:text-3xl text-white'
+                                            : 'text-lg md:text-xl text-gray-400'
                                             }`}>
                                             <DecryptTitle title={item.title} isFuture={isFuture} />
                                         </h4>
@@ -275,7 +277,7 @@ export function Roadmap() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.3 }}
-                            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
+                            className="mt-8 flex justify-center"
                         >
                             <button
                                 onClick={() => scrollToIndex(PRESENT_INDEX)}
