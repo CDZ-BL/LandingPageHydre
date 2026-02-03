@@ -34,6 +34,26 @@
   --text-muted-old: #8A8A8A;
   --border: rgba(255, 255, 255, 0.10);
   --neon-orange: #FF6B00;
+
+  /* ═══════════════════════════════════════════════════════════════════════════
+     ANIMATION TOKENS — V4.0.0-HYDRE-APEX Compliant
+  ═══════════════════════════════════════════════════════════════════════════ */
+
+  /* === EASING CURVES === */
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+  --ease-snap: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-mercury: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+
+  /* === DURATION TOKENS === */
+  --duration-micro: 150ms;
+  --duration-fast: 300ms;
+  --duration-medium: 500ms;
+  --duration-slow: 800ms;
+  --duration-cinematic: 1200ms;
+  --duration-epic: 2000ms;
 }
 
 * {
@@ -368,6 +388,99 @@ body::before {
   animation-delay: 1.5s;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATION UTILITIES
+   Classes for applying keyframe animations
+═══════════════════════════════════════════════════════════════════════════ */
+
+.animate-screen-shake {
+  animation: screen-shake 1.5s infinite;
+}
+
+.animate-text-distort {
+  animation: text-distort 2s infinite;
+}
+
+.animate-glitch-hard-1 {
+  animation: glitch-hard-1 0.8s infinite;
+}
+
+.animate-glitch-hard-2 {
+  animation: glitch-hard-2 0.6s infinite;
+}
+
+.animate-teleport-slice-1 {
+  animation: teleport-slice-1 1.2s infinite;
+}
+
+.animate-teleport-slice-2 {
+  animation: teleport-slice-2 1.4s infinite;
+}
+
+.animate-teleport-slice-3 {
+  animation: teleport-slice-3 1.1s infinite;
+}
+
+.animate-teleport-slice-4 {
+  animation: teleport-slice-4 1.3s infinite;
+}
+
+.animate-hard-blink {
+  animation: hard-blink 0.6s infinite;
+}
+
+.animate-line-teleport {
+  animation: line-teleport 2s infinite;
+}
+
+.animate-emergency-flash {
+  animation: emergency-flash 1s infinite;
+}
+
+.animate-flash-out {
+  animation: flash-out 350ms ease-out forwards;
+}
+
+.animate-glitch-intense-main {
+  animation: glitch-intense-main 1s infinite;
+}
+
+.animate-glitch-intense-cyan {
+  animation: glitch-intense-cyan 0.8s infinite;
+}
+
+.animate-glitch-intense-red {
+  animation: glitch-intense-red 0.6s infinite;
+}
+
+.animate-noise {
+  animation: noise 0.5s infinite steps(10);
+}
+
+@keyframes noise {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  10% {
+    transform: translate(-5%, -5%);
+  }
+
+  20% {
+    transform: translate(5%, 5%);
+  }
+
+  30% {
+    transform: translate(-5%, 5%);
+  }
+
+  40% {
+    transform: translate(5%, -5%);
+  }
+}
+
 /* Background Utilities */
 .bg-obsidian {
   background-color: var(--obsidian);
@@ -375,4 +488,623 @@ body::before {
 
 .bg-void {
   background-color: var(--void);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   V4.0.0-HYDRE-APEX ANIMATION KEYFRAMES
+   Standardized animations extracted from inline CSS
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Screen Shake — Subtle rumble effect */
+@keyframes screen-shake {
+
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  2% {
+    transform: translate(-3px, 2px) rotate(-0.5deg);
+  }
+
+  4% {
+    transform: translate(3px, -2px) rotate(0.5deg);
+  }
+
+  6% {
+    transform: translate(-2px, -1px) rotate(-0.3deg);
+  }
+
+  8% {
+    transform: translate(2px, 1px) rotate(0.3deg);
+  }
+
+  10% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  42% {
+    transform: translate(-4px, 3px) rotate(-0.8deg);
+  }
+
+  44% {
+    transform: translate(4px, -3px) rotate(0.8deg);
+  }
+
+  46% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Text Distortion — Glitch text effect */
+@keyframes text-distort {
+
+  0%,
+  100% {
+    transform: translate(0, 0) skewX(0deg);
+    filter: blur(0);
+  }
+
+  3% {
+    transform: translate(-5px, 0) skewX(-3deg);
+    filter: blur(1px);
+  }
+
+  6% {
+    transform: translate(5px, 0) skewX(3deg);
+    filter: blur(0);
+  }
+
+  9% {
+    transform: translate(0, 0) skewX(0deg);
+  }
+
+  50% {
+    transform: translate(0, 0) skewX(0deg);
+  }
+
+  53% {
+    transform: translate(-3px, 2px) skewX(-2deg);
+    filter: blur(2px);
+  }
+
+  56% {
+    transform: translate(3px, -2px) skewX(2deg);
+    filter: blur(0);
+  }
+
+  59% {
+    transform: translate(0, 0) skewX(0deg);
+  }
+}
+
+/* Glitch Hard 1 — Aggressive glitch layer */
+@keyframes glitch-hard-1 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+
+  5% {
+    clip-path: inset(5% 0 85% 0);
+    transform: translate(-12px, 0);
+  }
+
+  10% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(12px, 0);
+  }
+
+  15% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+
+  30% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+
+  35% {
+    clip-path: inset(40% 0 40% 0);
+    transform: translate(-8px, 0);
+  }
+
+  40% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+}
+
+/* Glitch Hard 2 — Secondary glitch layer */
+@keyframes glitch-hard-2 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+
+  8% {
+    clip-path: inset(60% 0 20% 0);
+    transform: translate(14px, 0);
+  }
+
+  12% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+
+  25% {
+    clip-path: inset(20% 0 65% 0);
+    transform: translate(-16px, 0);
+  }
+
+  30% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+}
+
+/* Teleport Slices — Screen tear effects */
+@keyframes teleport-slice-1 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  5% {
+    clip-path: inset(0% 0 85% 0);
+    transform: translate(-25vw, -60px);
+    opacity: 0.9;
+  }
+
+  8% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  25% {
+    clip-path: inset(35% 0 50% 0);
+    transform: translate(30vw, 75px);
+    opacity: 1;
+  }
+
+  28% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes teleport-slice-2 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  12% {
+    clip-path: inset(50% 0 35% 0);
+    transform: translate(32vw, -70px);
+    opacity: 1;
+  }
+
+  15% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+
+  35% {
+    clip-path: inset(10% 0 75% 0);
+    transform: translate(-30vw, 80px);
+    opacity: 0.9;
+  }
+
+  38% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes teleport-slice-3 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 0;
+  }
+
+  18% {
+    clip-path: inset(25% 0 60% 0);
+    transform: translate(-28vw, 70px) skewX(-15deg);
+    opacity: 0.85;
+  }
+
+  21% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 0;
+  }
+
+  42% {
+    clip-path: inset(70% 0 15% 0);
+    transform: translate(25vw, -80px) skewX(10deg);
+    opacity: 0.9;
+  }
+
+  45% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 0;
+  }
+}
+
+@keyframes teleport-slice-4 {
+
+  0%,
+  100% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+
+  8% {
+    clip-path: inset(40% 0 45% 0);
+    transform: translate(28vw, 85px) scale(1.2);
+    opacity: 0.75;
+  }
+
+  11% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+
+  30% {
+    clip-path: inset(80% 0 8% 0);
+    transform: translate(-26vw, -75px) scale(0.9);
+    opacity: 0.85;
+  }
+
+  33% {
+    clip-path: inset(0 0 100% 0);
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+}
+
+/* Hard Blink — Flash effect */
+@keyframes hard-blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  45% {
+    opacity: 1;
+  }
+
+  46% {
+    opacity: 0;
+  }
+
+  48% {
+    opacity: 1;
+  }
+
+  49% {
+    opacity: 0;
+  }
+
+  51% {
+    opacity: 1;
+  }
+}
+
+/* Line Teleport — Text line glitch */
+@keyframes line-teleport {
+
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+
+  15% {
+    transform: translate(30px, 0);
+    opacity: 0.3;
+  }
+
+  17% {
+    transform: translate(-50px, 0);
+    opacity: 0.8;
+  }
+
+  19% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+
+  52% {
+    transform: translate(-40px, 5px);
+    opacity: 0.2;
+  }
+
+  54% {
+    transform: translate(25px, -5px);
+    opacity: 0.9;
+  }
+
+  56% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+/* Emergency Flash — Alert pulse */
+@keyframes emergency-flash {
+
+  0%,
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 5px #ff0000;
+  }
+
+  25% {
+    opacity: 1;
+    text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000;
+  }
+
+  30% {
+    opacity: 0.3;
+    text-shadow: 0 0 5px #ff0000;
+  }
+
+  35% {
+    opacity: 1;
+    text-shadow: 0 0 20px #ff0000;
+  }
+}
+
+/* Flash Out — Teleport transition */
+@keyframes flash-out {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Header Glitch — Intense effect */
+@keyframes glitch-intense-main {
+
+  0%,
+  100% {
+    transform: translate(0, 0) skewX(0deg);
+    opacity: 1;
+  }
+
+  5% {
+    transform: translate(-4px, 0) skewX(-2deg);
+  }
+
+  10% {
+    transform: translate(4px, 0) skewX(2deg);
+  }
+
+  15% {
+    transform: translate(0, 0) skewX(0deg);
+  }
+
+  30% {
+    opacity: 0.3;
+  }
+
+  32% {
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-3px, 2px) skewX(-1deg);
+  }
+
+  55% {
+    transform: translate(3px, -2px) skewX(1deg);
+  }
+
+  60% {
+    transform: translate(0, 0) skewX(0deg);
+  }
+
+  80% {
+    opacity: 0.2;
+  }
+
+  82% {
+    opacity: 1;
+  }
+
+  90% {
+    transform: translate(-2px, 0);
+  }
+
+  95% {
+    transform: translate(2px, 0);
+  }
+}
+
+@keyframes glitch-intense-cyan {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  5% {
+    opacity: 0.8;
+    transform: translate(-8px, 0);
+  }
+
+  15% {
+    opacity: 0;
+  }
+
+  30% {
+    opacity: 0.7;
+    transform: translate(6px, 0);
+  }
+
+  40% {
+    opacity: 0;
+  }
+
+  60% {
+    opacity: 0.9;
+    transform: translate(-10px, 0);
+  }
+
+  70% {
+    opacity: 0;
+  }
+
+  85% {
+    opacity: 0.6;
+    transform: translate(5px, 0);
+  }
+
+  95% {
+    opacity: 0;
+  }
+}
+
+@keyframes glitch-intense-red {
+
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+
+  8% {
+    opacity: 0.8;
+    transform: translate(8px, 0);
+  }
+
+  18% {
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 0.7;
+    transform: translate(-6px, 0);
+  }
+
+  45% {
+    opacity: 0;
+  }
+
+  65% {
+    opacity: 0.9;
+    transform: translate(10px, 0);
+  }
+
+  75% {
+    opacity: 0;
+  }
+
+  88% {
+    opacity: 0.6;
+    transform: translate(-5px, 0);
+  }
+
+  98% {
+    opacity: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ACCESSIBILITY — Screen Reader & Focus Utilities
+═══════════════════════════════════════════════════════════════════════════ */
+
+/* Visually hidden but screen-reader accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus visible indicator for keyboard navigation */
+.focus-visible-ring:focus-visible {
+  outline: 2px solid var(--neon-orange);
+  outline-offset: 2px;
+}
+
+/* Skip navigation link for keyboard users */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 1rem 2rem;
+  background: var(--void);
+  color: var(--text-primary);
+  border: 2px solid var(--neon-orange);
+  transition: top var(--duration-fast) var(--ease-silk);
+}
+
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   REDUCED MOTION — Respect user preferences
+═══════════════════════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable noise animation in reduced motion */
+  body::before {
+    animation: none;
+  }
 }

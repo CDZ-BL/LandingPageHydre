@@ -74,17 +74,8 @@ export function SystemFailure() {
             {showFlash && (
                 <div
                     className="fixed inset-0 z-[9999] bg-white pointer-events-none animate-flash-out"
-                    style={{
-                        animation: 'flashOut 350ms ease-out forwards'
-                    }}
                 />
             )}
-            <style>{`
-                @keyframes flashOut {
-                    0% { opacity: 1; }
-                    100% { opacity: 0; }
-                }
-            `}</style>
 
             {/* ═══════════════════════════════════════════════════════════════════
                 PART 1: GLITCHED SECTION - The corrupted system
@@ -190,13 +181,13 @@ export function SystemFailure() {
                         {/* LE LOGICIEL DU CHANGEMENT */}
                         <div className="space-y-4">
                             {/* 1. LE CONSTAT */}
-                            <div className={`text-white/80 ${isHolding ? '' : 'animate-line-teleport-1'}`}>
+                            <div className={`text-white/80 ${isHolding ? '' : 'animate-line-teleport'}`}>
                                 <span className="text-[#E6DCC8] font-bold mr-2">{'>'} ANALYSE :</span>
                                 Le marché est BRISÉ. Les leaders dominent par le budget pub, plus par la qualité. Nous payons 70% de "taxe MARKETING" pour nos produits.
                             </div>
 
                             {/* 1.5 LA CONSEQUENCE */}
-                            <div className={`text-red-400/90 ${isHolding ? '' : 'animate-line-teleport-1'}`}>
+                            <div className={`text-red-400/90 ${isHolding ? '' : 'animate-line-teleport'}`}>
                                 <span className="text-red-500 font-bold mr-2">{'>'} CONSÉQUENCE :</span>
                                 PRIX TROP ÉLEVÉS. QUALITÉ DIMINUÉE.
                             </div>
@@ -296,130 +287,6 @@ export function SystemFailure() {
                     </motion.div>
                 </div>
 
-                {/* CSS Keyframes for glitch effects */}
-                <style>{`
-                    @keyframes screen-shake {
-                        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-                        2% { transform: translate(-3px, 2px) rotate(-0.5deg); }
-                        4% { transform: translate(3px, -2px) rotate(0.5deg); }
-                        6% { transform: translate(-2px, -1px) rotate(-0.3deg); }
-                        8% { transform: translate(2px, 1px) rotate(0.3deg); }
-                        10% { transform: translate(0, 0) rotate(0deg); }
-                        40% { transform: translate(0, 0) rotate(0deg); }
-                        42% { transform: translate(-4px, 3px) rotate(-0.8deg); }
-                        44% { transform: translate(4px, -3px) rotate(0.8deg); }
-                        46% { transform: translate(0, 0) rotate(0deg); }
-                    }
-
-                    @keyframes text-distort {
-                        0%, 100% { transform: translate(0, 0) skewX(0deg); filter: blur(0); }
-                        3% { transform: translate(-5px, 0) skewX(-3deg); filter: blur(1px); }
-                        6% { transform: translate(5px, 0) skewX(3deg); filter: blur(0); }
-                        9% { transform: translate(0, 0) skewX(0deg); }
-                        50% { transform: translate(0, 0) skewX(0deg); }
-                        53% { transform: translate(-3px, 2px) skewX(-2deg); filter: blur(2px); }
-                        56% { transform: translate(3px, -2px) skewX(2deg); filter: blur(0); }
-                        59% { transform: translate(0, 0) skewX(0deg); }
-                    }
-
-                    @keyframes glitch-hard-1 {
-                        0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                        5% { clip-path: inset(5% 0 85% 0); transform: translate(-12px, 0); }
-                        10% { clip-path: inset(70% 0 10% 0); transform: translate(12px, 0); }
-                        15% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                        30% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                        35% { clip-path: inset(40% 0 40% 0); transform: translate(-8px, 0); }
-                        40% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                    }
-
-                    @keyframes glitch-hard-2 {
-                        0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                        8% { clip-path: inset(60% 0 20% 0); transform: translate(14px, 0); }
-                        12% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                        25% { clip-path: inset(20% 0 65% 0); transform: translate(-16px, 0); }
-                        30% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-                    }
-
-                    @keyframes teleport-slice-1 {
-                        0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); opacity: 0; }
-                        5% { clip-path: inset(0% 0 85% 0); transform: translate(-25vw, -60px); opacity: 0.9; }
-                        8% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); opacity: 0; }
-                        25% { clip-path: inset(35% 0 50% 0); transform: translate(30vw, 75px); opacity: 1; }
-                        28% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); opacity: 0; }
-                    }
-
-                    @keyframes teleport-slice-2 {
-                        0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); opacity: 0; }
-                        12% { clip-path: inset(50% 0 35% 0); transform: translate(32vw, -70px); opacity: 1; }
-                        15% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); opacity: 0; }
-                        35% { clip-path: inset(10% 0 75% 0); transform: translate(-30vw, 80px); opacity: 0.9; }
-                        38% { clip-path: inset(0 0 100% 0); transform: translate(0, 0); opacity: 0; }
-                    }
-
-                    @keyframes teleport-slice-3 {
-                        0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0) skewX(0deg); opacity: 0; }
-                        18% { clip-path: inset(25% 0 60% 0); transform: translate(-28vw, 70px) skewX(-15deg); opacity: 0.85; }
-                        21% { clip-path: inset(0 0 100% 0); transform: translate(0, 0) skewX(0deg); opacity: 0; }
-                        42% { clip-path: inset(70% 0 15% 0); transform: translate(25vw, -80px) skewX(10deg); opacity: 0.9; }
-                        45% { clip-path: inset(0 0 100% 0); transform: translate(0, 0) skewX(0deg); opacity: 0; }
-                    }
-
-                    @keyframes teleport-slice-4 {
-                        0%, 100% { clip-path: inset(0 0 100% 0); transform: translate(0, 0) scale(1); opacity: 0; }
-                        8% { clip-path: inset(40% 0 45% 0); transform: translate(28vw, 85px) scale(1.2); opacity: 0.75; }
-                        11% { clip-path: inset(0 0 100% 0); transform: translate(0, 0) scale(1); opacity: 0; }
-                        30% { clip-path: inset(80% 0 8% 0); transform: translate(-26vw, -75px) scale(0.9); opacity: 0.85; }
-                        33% { clip-path: inset(0 0 100% 0); transform: translate(0, 0) scale(1); opacity: 0; }
-                    }
-
-                    @keyframes hard-blink {
-                        0%, 100% { opacity: 1; }
-                        45% { opacity: 1; }
-                        46% { opacity: 0; }
-                        48% { opacity: 1; }
-                        49% { opacity: 0; }
-                        51% { opacity: 1; }
-                    }
-
-                    @keyframes line-teleport-1 {
-                        0%, 100% { transform: translate(0, 0); opacity: 1; }
-                        15% { transform: translate(30px, 0); opacity: 0.3; }
-                        17% { transform: translate(-50px, 0); opacity: 0.8; }
-                        19% { transform: translate(0, 0); opacity: 1; }
-                        50% { transform: translate(0, 0); opacity: 1; }
-                        52% { transform: translate(-40px, 5px); opacity: 0.2; }
-                        54% { transform: translate(25px, -5px); opacity: 0.9; }
-                        56% { transform: translate(0, 0); opacity: 1; }
-                    }
-
-                    @keyframes emergency-flash {
-                        0%, 100% { opacity: 1; text-shadow: 0 0 5px #ff0000; }
-                        25% { opacity: 1; text-shadow: 0 0 30px #ff0000, 0 0 60px #ff0000; }
-                        30% { opacity: 0.3; text-shadow: 0 0 5px #ff0000; }
-                        35% { opacity: 1; text-shadow: 0 0 20px #ff0000; }
-                    }
-
-                    @keyframes noise {
-                        0%, 100% { transform: translate(0, 0); }
-                        10% { transform: translate(-5%, -5%); }
-                        20% { transform: translate(5%, 5%); }
-                        30% { transform: translate(-5%, 5%); }
-                        40% { transform: translate(5%, -5%); }
-                    }
-
-                    .animate-screen-shake { animation: screen-shake 1.5s infinite; }
-                    .animate-text-distort { animation: text-distort 2s infinite; }
-                    .animate-glitch-hard-1 { animation: glitch-hard-1 0.8s infinite; }
-                    .animate-glitch-hard-2 { animation: glitch-hard-2 0.6s infinite; }
-                    .animate-teleport-slice-1 { animation: teleport-slice-1 1.2s infinite; }
-                    .animate-teleport-slice-2 { animation: teleport-slice-2 1.4s infinite; }
-                    .animate-teleport-slice-3 { animation: teleport-slice-3 1.1s infinite; }
-                    .animate-teleport-slice-4 { animation: teleport-slice-4 1.3s infinite; }
-                    .animate-hard-blink { animation: hard-blink 0.6s infinite; }
-                    .animate-line-teleport-1 { animation: line-teleport-1 2s infinite; }
-                    .animate-emergency-flash { animation: emergency-flash 1s infinite; }
-                    .animate-noise { animation: noise 0.5s infinite steps(10); }
-                `}</style>
             </section>
 
             {/* ═══════════════════════════════════════════════════════════════════

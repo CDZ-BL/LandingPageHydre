@@ -5,7 +5,7 @@ import { SystemFailure } from '@/components/sections/02_SystemFailure';
 import { TheProblem } from '@/components/sections/03_TheProblem';
 import { ThePact } from '@/components/sections/04_ThePact';
 import { TheSpecs } from '@/components/sections/05_TheSpecs';
-import { ProductVision } from '@/components/sections/06_ProductVision';
+
 import { Reciprocity } from '@/components/sections/07_Reciprocity';
 import { FounderCircle } from '@/components/sections/08_FounderCircle';
 import { Roadmap } from '@/components/sections/09_Roadmap';
@@ -31,8 +31,7 @@ export default function Home() {
             {/* Block 3: The Specs (Product) */}
             <TheSpecs />
 
-            {/* Block 4: Product Vision (Versioning) */}
-            <ProductVision />
+
 
             {/* Block 5: Reciprocity (Alliance) */}
             <Reciprocity />

@@ -1,0 +1,101 @@
+[12:18:50.427] [INFO] [36mInitializing Storybook[39m
+[12:18:51.159] [DEBUG] Getting package.json info for C:/Users/Aloïs/Downloads/hydrelandingpage/package.json...
+[12:18:51.161] [DEBUG] Getting CLI versions from NPM for storybook...
+[12:18:51.161] [DEBUG] Executing command: npm info storybook version
+[12:18:52.920] [INFO] Adding Storybook version 10.2.4 to your project
+[12:18:52.922] [DEBUG] Project type detected: nextjs
+[12:18:52.923] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:18:52.928] [INFO] Framework detected: nextjs-vite
+[12:18:52.929] [DEBUG] Getting installed version for vitest...
+[12:18:52.929] [DEBUG] Executing command: npm ls --json --depth=99 2>NUL
+[12:18:54.906] [DEBUG] Executing command: npm ls --json --depth=0 2>NUL
+[12:18:56.943] [DEBUG] Error finding installations for vitest: ExecaError: Command failed with exit code 1: npm.cmd ls --json "--depth=0" "2>NUL"
+
+npm error code EINVALIDTAGNAME
+npm error Invalid tag name "2>NUL" of package "2>NUL": Tags may not have any characters that encodeURIComponent encodes.
+npm error A complete log of this run can be found in: C:\Users\Aloïs\AppData\Local\npm-cache\_logs\2026-02-03T11_18_55_347Z-debug-0.log
+
+{
+  "error": {
+    "code": "EINVALIDTAGNAME",
+    "summary": "Invalid tag name \"2>NUL\" of package \"2>NUL\": Tags may not have any characters that encodeURIComponent encodes.",
+    "detail": ""
+  }
+}
+[12:18:56.943] [DEBUG] No installations found for vitest
+[12:18:56.943] [DEBUG] Getting installed version for msw...
+[12:18:56.944] [DEBUG] Executing command: npm ls --json --depth=99 2>NUL
+[12:18:58.884] [DEBUG] Executing command: npm ls --json --depth=0 2>NUL
+[12:19:00.845] [DEBUG] Error finding installations for msw: ExecaError: Command failed with exit code 1: npm.cmd ls --json "--depth=0" "2>NUL"
+
+npm error code EINVALIDTAGNAME
+npm error Invalid tag name "2>NUL" of package "2>NUL": Tags may not have any characters that encodeURIComponent encodes.
+npm error A complete log of this run can be found in: C:\Users\Aloïs\AppData\Local\npm-cache\_logs\2026-02-03T11_18_59_311Z-debug-0.log
+
+{
+  "error": {
+    "code": "EINVALIDTAGNAME",
+    "summary": "Invalid tag name \"2>NUL\" of package \"2>NUL\": Tags may not have any characters that encodeURIComponent encodes.",
+    "detail": ""
+  }
+}
+[12:19:00.845] [DEBUG] No installations found for msw
+[12:19:00.852] [INFO] base-generator-task-start: Generating Storybook configuration
+[12:19:00.852] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:00.852] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:00.852] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:00.855] [INFO] base-generator-task: - Configuring ESLint plugin
+[12:19:00.855] [DEBUG] No ESLint config file found, configuring in package.json instead
+[12:19:00.855] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:00.856] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:00.856] [DEBUG] Using cached version for storybook...
+[12:19:00.856] [DEBUG] Getting CLI versions from NPM for @storybook/nextjs-vite...
+[12:19:00.856] [DEBUG] Executing command: npm info @storybook/nextjs-vite version
+[12:19:00.913] [DEBUG] Getting CLI versions from NPM for @chromatic-com/storybook...
+[12:19:00.913] [DEBUG] Executing command: npm info @chromatic-com/storybook version
+[12:19:00.983] [DEBUG] Getting CLI versions from NPM for @storybook/addon-vitest...
+[12:19:00.983] [DEBUG] Executing command: npm info @storybook/addon-vitest version
+[12:19:01.044] [DEBUG] Getting CLI versions from NPM for @storybook/addon-a11y...
+[12:19:01.044] [DEBUG] Executing command: npm info @storybook/addon-a11y version
+[12:19:01.115] [DEBUG] Getting CLI versions from NPM for @storybook/addon-docs...
+[12:19:01.115] [DEBUG] Executing command: npm info @storybook/addon-docs version
+[12:19:01.185] [DEBUG] Getting CLI versions from NPM for @storybook/addon-onboarding...
+[12:19:01.185] [DEBUG] Executing command: npm info @storybook/addon-onboarding version
+[12:19:01.262] [DEBUG] Getting CLI versions from NPM for vite...
+[12:19:01.262] [DEBUG] Executing command: npm info vite version
+[12:19:01.365] [DEBUG] Getting CLI versions from NPM for eslint-plugin-storybook...
+[12:19:01.365] [DEBUG] Executing command: npm info eslint-plugin-storybook version
+[12:19:04.417] [INFO] base-generator-task: - Configuring main.ts
+[12:19:04.419] [INFO] base-generator-task: - Configuring preview.ts
+[12:19:04.421] [INFO] base-generator-task: - Adding Storybook command to package.json
+[12:19:04.421] [DEBUG] Getting package.json info for C:/Users/Aloïs/Downloads/hydrelandingpage/package.json...
+[12:19:04.421] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:04.421] [DEBUG] Using cached package.json for C:\Users\Aloïs\Downloads\hydrelandingpage\package.json...
+[12:19:04.422] [INFO] base-generator-task: - Copying framework templates
+[12:19:04.472] [DEBUG] Executing command: npm config get registry -ws=false -iwr
+[12:19:05.291] [ERROR] [38;2;241;97;97mError: Cannot find @storybook\nextjs-vite\package.json, Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@storybook/nextjs-vite' imported from C:\Users\Aloïs\AppData\Local\npm-cache\_npx\6d5eaa0a4705dec7\node_modules\storybook\dist\_node-chunks\chunk-HTPZJ5O2.js
+    at Object.getPackageJSONURL (node:internal/modules/package_json_reader:316:9)
+    at packageResolve (node:internal/modules/esm/resolve:768:81)
+    at moduleResolve (node:internal/modules/esm/resolve:858:18)
+    at defaultResolve (node:internal/modules/esm/resolve:990:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:718:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:735:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:764:52)
+    at Object.resolve (node:internal/modules/esm/initialize_import_meta:37:25)
+    at importMetaResolve (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-HTPZJ5O2.js:717:48)
+    at resolvePackageDir (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-HTPZJ5O2.js:721:35)
+
+Error: EPERM: operation not permitted, mkdir 'C:\Users\Aloïs'
+    at async Module.mkdir (node:internal/fs/promises:861:10)
+    at async file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-2SLKY2SF.js:5250:5[39m
+    at getRendererDir (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-2SLKY2SF.js:5410:9)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async templatePath (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-2SLKY2SF.js:5484:19)
+    at async copyTemplateFiles (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-2SLKY2SF.js:5499:17)
+    at async baseGenerator (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/create-storybook/dist/_node-chunks/chunk-6IPEYKLS.js:1281:152)
+    at async GeneratorExecutionCommand.executeProjectGenerator (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/create-storybook/dist/_node-chunks/chunk-6IPEYKLS.js:1349:101)
+    at async GeneratorExecutionCommand.execute (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/create-storybook/dist/_node-chunks/chunk-6IPEYKLS.js:1371:27)
+    at async doInitiate (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/create-storybook/dist/_node-chunks/chunk-6IPEYKLS.js:2283:68)
+    at async file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/create-storybook/dist/_node-chunks/chunk-6IPEYKLS.js:2326:20
+    at async withTelemetry (file:///C:/Users/Alo%C3%AFs/AppData/Local/npm-cache/_npx/6d5eaa0a4705dec7/node_modules/storybook/dist/_node-chunks/chunk-BIHXZHDE.js:218:12)
+[12:19:05.296] [INFO] Storybook collects completely anonymous usage telemetry. We use it to shape Storybook's roadmap and prioritize features. You can learn more, including how to opt out, at https://storybook.js.org/telemetry

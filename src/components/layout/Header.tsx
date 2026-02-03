@@ -44,12 +44,7 @@ export function Header() {
     }, []);
 
     // Get animation class based on intensity
-    const getGlitchClass = () => {
-        switch (glitchIntensity) {
-            case 4: return 'header-glitch-intense';
-            default: return '';
-        }
-    };
+
 
     return (
         <>
@@ -65,101 +60,47 @@ export function Header() {
                         <div className="w-[85%] max-w-[1600px] mx-auto">
                             <nav className="flex items-center justify-between h-16">
                                 {/* Logo with Glitch at glitch section */}
-                                <div className={`relative font-mono text-white text-sm tracking-wider ${getGlitchClass()}`}>
-                                    <span className="header-logo-base">AETHER [LABS] | BATCH 001</span>
-                                    <span className="absolute top-0 left-0 text-cyan-400 header-logo-cyan" aria-hidden="true">AETHER [LABS] | BATCH 001</span>
-                                    <span className="absolute top-0 left-0 text-red-500 header-logo-red" aria-hidden="true">AETHER [LABS] | BATCH 001</span>
+                                <div className="relative font-mono text-white text-sm tracking-wider">
+                                    <span className={`block ${glitchIntensity === 4 ? 'animate-glitch-intense-main' : ''}`}>
+                                        AETHER [LABS] | BATCH 001
+                                    </span>
+                                    <span
+                                        className={`absolute top-0 left-0 text-cyan-400 opacity-0 mix-blend-screen ${glitchIntensity === 4 ? 'animate-glitch-intense-cyan' : ''}`}
+                                        aria-hidden="true"
+                                    >
+                                        AETHER [LABS] | BATCH 001
+                                    </span>
+                                    <span
+                                        className={`absolute top-0 left-0 text-red-500 opacity-0 mix-blend-screen ${glitchIntensity === 4 ? 'animate-glitch-intense-red' : ''}`}
+                                        aria-hidden="true"
+                                    >
+                                        AETHER [LABS] | BATCH 001
+                                    </span>
                                 </div>
 
                                 {/* Status with Glitch at glitch section */}
-                                <div className={`relative font-mono text-neon-orange text-xs tracking-wider ${getGlitchClass()}`}>
-                                    <span className="header-status-base">STATUS: AVAILABLE</span>
-                                    <span className="absolute top-0 left-0 text-cyan-400 header-status-cyan" aria-hidden="true">STATUS: AVAILABLE</span>
-                                    <span className="absolute top-0 left-0 text-red-500 header-status-red" aria-hidden="true">STATUS: AVAILABLE</span>
+                                <div className="relative font-mono text-neon-orange text-xs tracking-wider">
+                                    <span className={`block ${glitchIntensity === 4 ? 'animate-glitch-intense-main' : ''}`}>
+                                        STATUS: AVAILABLE
+                                    </span>
+                                    <span
+                                        className={`absolute top-0 left-0 text-cyan-400 opacity-0 mix-blend-screen ${glitchIntensity === 4 ? 'animate-glitch-intense-cyan' : ''}`}
+                                        aria-hidden="true"
+                                    >
+                                        STATUS: AVAILABLE
+                                    </span>
+                                    <span
+                                        className={`absolute top-0 left-0 text-red-500 opacity-0 mix-blend-screen ${glitchIntensity === 4 ? 'animate-glitch-intense-red' : ''}`}
+                                        aria-hidden="true"
+                                    >
+                                        STATUS: AVAILABLE
+                                    </span>
                                 </div>
                             </nav>
                         </div>
                     </motion.header>
                 )}
             </AnimatePresence>
-
-            <style>{`
-                /* Base hidden state for ghost texts - STATUS */
-                .header-status-cyan,
-                .header-status-red {
-                    opacity: 0;
-                    mix-blend-mode: screen;
-                }
-
-                /* Base hidden state for ghost texts - LOGO */
-                .header-logo-cyan,
-                .header-logo-red {
-                    opacity: 0;
-                    mix-blend-mode: screen;
-                }
-
-                /* ===== INTENSE GLITCH (only at glitch section 50-65%) ===== */
-                
-                /* STATUS animations */
-                .header-glitch-intense .header-status-base {
-                    animation: glitch-intense-main 1s infinite;
-                }
-                .header-glitch-intense .header-status-cyan {
-                    animation: glitch-intense-cyan 0.8s infinite;
-                }
-                .header-glitch-intense .header-status-red {
-                    animation: glitch-intense-red 0.6s infinite;
-                }
-
-                /* LOGO animations - same as status */
-                .header-glitch-intense .header-logo-base {
-                    animation: glitch-intense-main 1s infinite;
-                }
-                .header-glitch-intense .header-logo-cyan {
-                    animation: glitch-intense-cyan 0.8s infinite;
-                }
-                .header-glitch-intense .header-logo-red {
-                    animation: glitch-intense-red 0.6s infinite;
-                }
-
-                @keyframes glitch-intense-main {
-                    0%, 100% { transform: translate(0, 0) skewX(0deg); opacity: 1; }
-                    5% { transform: translate(-4px, 0) skewX(-2deg); }
-                    10% { transform: translate(4px, 0) skewX(2deg); }
-                    15% { transform: translate(0, 0) skewX(0deg); }
-                    30% { opacity: 0.3; }
-                    32% { opacity: 1; }
-                    50% { transform: translate(-3px, 2px) skewX(-1deg); }
-                    55% { transform: translate(3px, -2px) skewX(1deg); }
-                    60% { transform: translate(0, 0) skewX(0deg); }
-                    80% { opacity: 0.2; }
-                    82% { opacity: 1; }
-                    90% { transform: translate(-2px, 0); }
-                    95% { transform: translate(2px, 0); }
-                }
-                @keyframes glitch-intense-cyan {
-                    0%, 100% { opacity: 0; transform: translate(0, 0); }
-                    5% { opacity: 0.8; transform: translate(-8px, 0); }
-                    15% { opacity: 0; }
-                    30% { opacity: 0.7; transform: translate(6px, 0); }
-                    40% { opacity: 0; }
-                    60% { opacity: 0.9; transform: translate(-10px, 0); }
-                    70% { opacity: 0; }
-                    85% { opacity: 0.6; transform: translate(5px, 0); }
-                    95% { opacity: 0; }
-                }
-                @keyframes glitch-intense-red {
-                    0%, 100% { opacity: 0; transform: translate(0, 0); }
-                    8% { opacity: 0.8; transform: translate(8px, 0); }
-                    18% { opacity: 0; }
-                    35% { opacity: 0.7; transform: translate(-6px, 0); }
-                    45% { opacity: 0; }
-                    65% { opacity: 0.9; transform: translate(10px, 0); }
-                    75% { opacity: 0; }
-                    88% { opacity: 0.6; transform: translate(-5px, 0); }
-                    98% { opacity: 0; }
-                }
-            `}</style>
         </>
     );
 }
