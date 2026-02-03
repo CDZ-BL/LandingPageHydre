@@ -131,7 +131,7 @@ export function Roadmap() {
                     className="mb-12 text-center"
                 >
                     <h2 className="font-mono text-cyan-400 text-sm tracking-widest mb-4">
-                        [ SYSTEM_LOGS // ROADMAP ]
+                        [ SYSTEM_LOGS {'//'} ROADMAP ]
                     </h2>
                     <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-tight mb-4">
                         VISION : LONG TERM.
@@ -225,7 +225,7 @@ export function Roadmap() {
                                                 ? 'border-white text-white bg-white/10'
                                                 : 'border-void-600 text-gray-500'
                                                 }`}>
-                                                {item.phase} // {item.status}
+                                                {item.phase} {'//'} {item.status}
                                             </span>
                                             <span className="font-mono text-xs text-gray-500">{item.date}</span>
                                         </div>

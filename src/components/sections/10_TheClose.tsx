@@ -37,14 +37,14 @@ export function TheClose() {
                             SÉCURISEZ VOTRE ALLOCATION.
                         </h2>
                         <p className="font-sans text-lg text-white leading-relaxed max-w-2xl">
-                            Le Batch 001 est en quantité restreinte. Rejoindre AETHER aujourd'hui, c'est intégrer le "Founder's Circle".
+                            Le Batch 001 est en quantité restreinte. Rejoindre AETHER aujourd&apos;hui, c&apos;est intégrer le &quot;Founder&apos;s Circle&quot;.
                         </p>
                     </div>
 
                     {/* Benefits */}
                     <div className="mb-12 border border-void-300 p-8">
                         <div className="font-mono text-neon-orange text-xs font-bold tracking-wider mb-6">
-                            [FOUNDER'S CIRCLE] — AVANTAGES
+                            [FOUNDER&apos;S CIRCLE] — AVANTAGES
                         </div>
                         <div className="space-y-4 font-sans text-white">
                             <div className="flex items-start gap-3">
@@ -53,11 +53,11 @@ export function TheClose() {
                             </div>
                             <div className="flex items-start gap-3">
                                 <span className="text-neon-orange text-xl font-bold">→</span>
-                                <span>Protocole d'hydratation tactique (PDF) inclus</span>
+                                <span>Protocole d&apos;hydratation tactique (PDF) inclus</span>
                             </div>
                             <div className="flex items-start gap-3">
                                 <span className="text-neon-orange text-xl font-bold">→</span>
-                                <span>Carte Founder's Edition numérotée</span>
+                                <span>Carte Founder&apos;s Edition numérotée</span>
                             </div>
                             <div className="flex items-start gap-3">
                                 <span className="text-neon-orange text-xl font-bold">→</span>

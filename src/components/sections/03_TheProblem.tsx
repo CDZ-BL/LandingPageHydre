@@ -60,7 +60,7 @@ export function TheProblem() {
                     <p className="font-sans text-lg md:text-xl text-white/80 leading-relaxed max-w-3xl">
                         La plupart des produits que vous consommez sont composés majoritairement de remplissage
                         (sucre, eau, arômes). Nous avons analysé les leaders du marché pour révéler la
-                        <span className="text-white font-semibold"> densité réelle d'actifs par euro investi</span>.
+                        <span className="text-white font-semibold"> densité réelle d&apos;actifs par euro investi</span>.
                         Comparez les standards actuels au protocole Aether :
                     </p>
                 </motion.div>
@@ -84,9 +84,8 @@ export function TheProblem() {
                         <div className="flex-1 h-[1px] bg-white/10" />
                     </div>
 
-                    {/* Two-column layout: Selector + Table on left, Radar on right */}
+                    {/* Two-column layout */}
                     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                        {/* Left Column: Selector + Table */}
                         <div className="lg:col-span-5 space-y-8">
                             <CompetitorSelector
                                 selectedId={selectedCompetitor.id}
@@ -95,7 +94,6 @@ export function TheProblem() {
                             <ComparisonTable competitor={selectedCompetitor} />
                         </div>
 
-                        {/* Right Column: Radar Chart */}
                         <div className="lg:col-span-7 flex items-center justify-center">
                             <div className="w-full max-w-md">
                                 <RadarChart competitor={selectedCompetitor} />
@@ -179,7 +177,7 @@ export function TheProblem() {
                     </div>
 
                     <p className="font-mono text-void-500 text-sm mt-8 tracking-wider">
-                        [DATA] : DISSOLUTION TIME &lt; 45s // RESIDUE : 0.00%
+                        [DATA] : DISSOLUTION TIME &lt; 45s {'//'} RESIDUE : 0.00%
                     </p>
                 </motion.div>
             </div>

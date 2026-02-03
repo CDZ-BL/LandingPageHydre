@@ -21,7 +21,7 @@ const meta: Meta<typeof FlavorTablet> = {
     argTypes: {
         flavor: {
             control: 'select',
-            options: ['PINEAPPLE', 'COCONUT', 'CHERRY', 'MINT'],
+            options: ['yuzu-ginger', 'berry-mint', 'electric-lime'],
         },
         taps: { control: { type: 'range', min: 0, max: 20 } },
         isCompleted: { control: 'boolean' },
@@ -34,7 +34,7 @@ type Story = StoryObj<typeof FlavorTablet>;
 
 export const Default: Story = {
     args: {
-        flavor: 'PINEAPPLE',
+        flavor: 'yuzu-ginger',
         position: [0, 0, 0],
         taps: 0,
         maxTaps: 10,
@@ -46,7 +46,7 @@ export const Default: Story = {
 
 export const Completed: Story = {
     args: {
-        flavor: 'CHERRY',
+        flavor: 'berry-mint',
         position: [0, 0, 0],
         taps: 10,
         maxTaps: 10,
