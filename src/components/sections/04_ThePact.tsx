@@ -34,7 +34,7 @@ export function ThePact() {
                     <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
                         [ SECTION 2 : LE PACTE DE VALEUR ]
                     </span>
-                    <h3 className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight mb-8">
+                    <h3 className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-widest mb-8">
                         LE RETOUR DU POUVOIR D'ACHAT.
                     </h3>
                     <p className="font-sans text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
@@ -58,7 +58,7 @@ export function ThePact() {
                                 MATIÈRE PREMIÈRE &gt; MARKETING
                             </h4>
                             <p className="font-mono text-sm md:text-base text-gray-400 leading-relaxed">
-                                Nous avons supprimé les intermédiaires et la publicité de masse. Chaque euro que vous dépensez va directement dans la qualité des ingrédients (Magnésium Bisglycinate, Arômes réels).
+                                Suppression des intermédiaires et de la publicité. Chaque euro finance la qualité.
                             </p>
                         </div>
 
@@ -67,13 +67,7 @@ export function ThePact() {
                                 TRANSPARENCE RADICALE
                             </h4>
                             <p className="font-mono text-sm md:text-base text-gray-400 leading-relaxed text-justify">
-                                Nous ne cachons pas nos coûts. Nous sommes fiers de vous montrer que notre coût de production est <span className="text-amber-500">4x supérieur</span> à la moyenne du marché.
-                            </p>
-                        </div>
-
-                        <div className="relative pl-8 border-l border-amber-500/50">
-                            <p className="font-sans text-lg text-white font-medium italic">
-                                "Nous ne cherchons pas à vous extraire de la valeur, mais à vous en apporter. C'est la seule base saine pour une relation durable."
+                                Analyse labo et production avec les membres.
                             </p>
                         </div>
                     </motion.div>
@@ -105,10 +99,9 @@ export function ThePact() {
                                 transition={{ duration: 0.6 }}
                             >
                                 <div className="flex justify-between items-center text-xs font-mono text-gray-500 mb-3">
-                                    <span>STANDARD INDUSTRY</span>
+                                    <span>CONCURRENT PREMIUIM</span>
                                     <div className="flex items-center gap-3">
-                                        <NumberTicker value={85} delay={0.3} />
-                                        <span className="text-gray-600">PRIX : 45€</span>
+                                        <span className="text-gray-600">PRIX TOTAL : 9.99€</span>
                                     </div>
                                 </div>
                                 {/* Ultra-thin bar container */}
@@ -139,10 +132,9 @@ export function ThePact() {
                                 transition={{ duration: 0.6, delay: 0.3 }}
                             >
                                 <div className="flex justify-between items-center text-xs font-mono text-white mb-3">
-                                    <span>AETHER ARCHITECTURE</span>
+                                    <span>AETHER PROTOCOLE</span>
                                     <div className="flex items-center gap-3">
-                                        <NumberTicker value={100} delay={0.5} />
-                                        <span>PRIX : 45€</span>
+                                        <span>PRIX TOTAL : 5.90€</span>
                                     </div>
                                 </div>
                                 {/* Ultra-thin bar container */}

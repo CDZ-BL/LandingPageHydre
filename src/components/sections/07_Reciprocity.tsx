@@ -26,35 +26,19 @@ export function Reciprocity() {
                         [ SECTION 5 : LA RÉCIPROCITÉ ]
                     </span>
                     {/* Title */}
-                    <h2 className="font-headline text-white text-3xl md:text-5xl font-bold mb-12 tracking-tight">
-                        NOUS SOMMES CLIENTS DE NOS CLIENTS.
+                    <h2 className="font-headline text-white text-3xl md:text-5xl font-bold mb-12 tracking-widest">
+                        MEMBRES ≠ CLIENTS.
                     </h2>
 
-                    {/* Manifesto Text */}
-                    <div className="font-sans text-gray-300 text-lg md:text-xl leading-relaxed space-y-8">
-                        <p>
-                            AETHER n'est pas une marque qui regarde ses clients de haut. Nos membres sont des entrepreneurs, des athlètes, des créateurs, des développeurs. <span className="text-white font-semibold">Vous bâtissez l'avenir.</span>
-                        </p>
-
-                        <div className="py-8 relative">
-                            {/* Decorative Divider */}
-                            <div className="absolute left-1/2 -translate-x-1/2 top-0 w-20 h-[1px] bg-amber-500/50"></div>
-                            <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-20 h-[1px] bg-amber-500/50"></div>
-
-                            <p className="italic text-white font-medium max-w-2xl mx-auto">
-                                "Notre mission est humble mais critique : Assurer votre infrastructure biologique. Pour que vous puissiez performer, nous devons performer."
-                            </p>
+                    {/* Minimalist Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-2xl text-sm">
+                        <div className="p-6 border-l border-cyan-500 bg-white/[0.02]">
+                            <h4 className="font-mono text-cyan-400 text-xs mb-2 uppercase tracking-widest">AETHER</h4>
+                            <p className="text-white">Infrastructure biologique. Clarté mentale. Endurance.</p>
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-2xl mx-auto">
-                            <div className="p-6 border border-white/10 bg-white/[0.02] rounded-machined">
-                                <h4 className="font-mono text-cyan-400 text-xs mb-2 uppercase tracking-widest">Notre Apport</h4>
-                                <p className="text-white text-base">Nous vous fournissons la clarté mentale et l'endurance.</p>
-                            </div>
-                            <div className="p-6 border border-white/10 bg-white/[0.02] rounded-machined">
-                                <h4 className="font-mono text-amber-500 text-xs mb-2 uppercase tracking-widest">Votre Apport</h4>
-                                <p className="text-white text-base">Vous nous fournissez l'exigence et la direction.</p>
-                            </div>
+                        <div className="p-6 border-l border-amber-500 bg-white/[0.02]">
+                            <h4 className="font-mono text-amber-500 text-xs mb-2 uppercase tracking-widest">VOUS</h4>
+                            <p className="text-white">Exigence. Direction R&D. Feedback terrain.</p>
                         </div>
                     </div>
                 </motion.div>

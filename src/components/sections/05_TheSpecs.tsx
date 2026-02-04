@@ -78,7 +78,7 @@ export function TheSpecs() {
                     <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
                         [ SECTION 3 : LA FORMULE ]
                     </span>
-                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-tight">
+                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-widest">
                         ARCHITECTURE MOLÉCULAIRE.
                     </h2>
                 </motion.div>
@@ -113,7 +113,7 @@ export function TheSpecs() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8 }}
-                        className="space-y-6"
+                        className="space-y-4"
                     >
                         {INGREDIENTS.map((ingredient, i) => (
                             <motion.div
@@ -123,18 +123,15 @@ export function TheSpecs() {
                                 viewport={{ once: false }}
                                 transition={{ duration: 0.6, delay: i * 0.1 }}
                                 onClick={() => setSelectedIngredient(ingredient)}
-                                className="border border-void-300 p-6 hover:border-neon-orange transition-colors cursor-pointer"
+                                className="group border border-void-300 p-6 hover:border-neon-orange hover:bg-neon-orange/5 transition-all cursor-pointer flex items-center justify-between"
                             >
-                                <div className="font-mono text-neon-orange text-sm mb-3">
-                                    // {ingredient.number}. {ingredient.name} ({ingredient.amount})
+                                <div className="font-mono text-white group-hover:text-neon-orange transition-colors duration-300">
+                                    <span className="mr-4 text-xs opacity-50">{ingredient.number}</span>
+                                    <span className="text-sm font-bold">{ingredient.name}</span>
+                                    <span className="ml-3 text-xs opacity-70">({ingredient.amount})</span>
                                 </div>
-                                <div className="space-y-2 font-mono text-sm text-white">
-                                    <div>
-                                        <span className="text-white">Fonction :</span> {ingredient.function}
-                                    </div>
-                                    <div>
-                                        <span className="text-white">Spécificité :</span> {ingredient.specificity}
-                                    </div>
+                                <div className="text-neon-orange opacity-0 group-hover:opacity-100 transition-opacity text-xl">
+                                    +
                                 </div>
                             </motion.div>
                         ))}

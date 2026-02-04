@@ -32,7 +32,7 @@ export function FounderCircle() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: false, margin: "-100px" }}
                         transition={{ duration: 0.8, delay: 0.1 }}
-                        className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-tight"
+                        className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-widest"
                     >
                         PRENEZ PLACE AU CONSEIL.
                     </motion.h2>

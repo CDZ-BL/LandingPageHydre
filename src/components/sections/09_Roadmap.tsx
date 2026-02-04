@@ -133,7 +133,7 @@ export function Roadmap() {
                     <h2 className="font-mono text-cyan-400 text-sm tracking-widest mb-4">
                         [ SYSTEM_LOGS {'//'} ROADMAP ]
                     </h2>
-                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-tight mb-4">
+                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-widest mb-4">
                         VISION : LONG TERM.
                     </h3>
                     <p className="font-mono text-xs text-gray-500 tracking-wider">
@@ -164,17 +164,20 @@ export function Roadmap() {
                     className="relative"
                     onWheel={handleWheel}
                 >
-                    {/* Timeline line */}
-                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-px bg-void-700">
+                    {/* Premium Liquid Timeline Track */}
+                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1.5 md:w-2 bg-void-100/50 rounded-full border border-white/10 shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] overflow-hidden transform -translate-x-1/2 z-0">
                         {/* Progress indicator */}
                         <motion.div
-                            className="absolute left-0 w-px bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                            className="absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-void-500 via-gray-400 to-white shadow-[0_0_15px_rgba(255,255,255,0.8)]"
                             initial={{ height: 0 }}
                             animate={{
                                 height: `${((activeIndex + 1) / ROADMAP_ITEMS.length) * 100}%`
                             }}
-                            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                        />
+                            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                            {/* Fluid Tip */}
+                            <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent opacity-80" />
+                        </motion.div>
                     </div>
 
                     {/* Roadmap items */}
@@ -200,13 +203,15 @@ export function Roadmap() {
                                     transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                                     className={`relative cursor-pointer origin-left ${isActive ? 'z-10' : 'z-0'}`}
                                 >
-                                    {/* Dot on timeline */}
-                                    <div className={`absolute -left-[52px] md:-left-[68px] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300
+                                    {/* Dot on timeline (Aligned to center of left-8/left-12) */}
+                                    {/* left-8 (32px) - pl-16 (64px) = -32px offset. Dot center at -32px. Dot w-4 (16). Left = -32 - 8 = -40px */}
+                                    {/* md:left-12 (48px) - pl-24 (96px) = -48px offset. Left = -48 - 8 = -56px */}
+                                    <div className={`absolute -left-[40px] md:-left-[56px] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300 z-20
                                         ${isActive
-                                            ? 'bg-white border-white shadow-[0_0_25px_rgba(255,255,255,1)]'
+                                            ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)] scale-125'
                                             : index < activeIndex
-                                                ? 'bg-gray-600 border-gray-600'
-                                                : 'bg-black border-void-500'
+                                                ? 'bg-gray-400 border-gray-400 opacity-50'
+                                                : 'bg-black border-void-600'
                                         }`}
                                     >
                                         {isActive && (
@@ -269,26 +274,7 @@ export function Roadmap() {
                     </div>
                 </div>
 
-                {/* Return to Present button */}
-                <AnimatePresence>
-                    {!isOnPresent && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: 20 }}
-                            transition={{ duration: 0.3 }}
-                            className="mt-8 flex justify-center"
-                        >
-                            <button
-                                onClick={() => scrollToIndex(PRESENT_INDEX)}
-                                className="px-6 py-3 bg-white text-black font-mono text-sm tracking-wider font-semibold hover:bg-amber-400 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center gap-2"
-                            >
-                                <span className="animate-pulse">●</span>
-                                RETOUR AU PRÉSENT
-                            </button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+
             </div>
         </section>
     );

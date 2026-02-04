@@ -41,7 +41,7 @@ export function TheProblem() {
                     <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
                         [ SECTION 1 : TRANSPARENCE ]
                     </span>
-                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-tight">
+                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-widest">
                         AUDIT DE FORMULATION.
                     </h2>
                     <p className="font-mono text-lg md:text-xl text-white/60 mt-4 tracking-wide">
@@ -55,14 +55,9 @@ export function TheProblem() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: false, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.2 }}
-                    className="mb-16"
+                    className="mb-12"
                 >
-                    <p className="font-sans text-lg md:text-xl text-white/80 leading-relaxed max-w-3xl">
-                        La plupart des produits que vous consommez sont composés majoritairement de remplissage
-                        (sucre, eau, arômes). Nous avons analysé les leaders du marché pour révéler la
-                        <span className="text-white font-semibold"> densité réelle d&apos;actifs par euro investi</span>.
-                        Comparez les standards actuels au protocole Aether :
-                    </p>
+                    {/* Paragraph removed for minimalism */}
                 </motion.div>
 
                 {/* ═══════════════════════════════════════════════════════════════════

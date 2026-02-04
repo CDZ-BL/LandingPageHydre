@@ -125,13 +125,13 @@ export function SystemFailure() {
                         className="relative mb-10"
                     >
                         {/* Base text with intense shake */}
-                        <h2 className={`font-headline text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-tight ${isHolding ? '' : 'animate-text-distort'}`}>
+                        <h2 className={`font-headline text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-widest ${isHolding ? '' : 'animate-text-distort'}`}>
                             /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                         </h2>
 
                         {/* Cyan glitch layer - hidden when holding */}
                         <h2
-                            className={`absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-cyan-400 font-black uppercase tracking-tight mix-blend-screen transition-opacity duration-300 ${isHolding ? 'opacity-0' : 'opacity-80 animate-glitch-hard-1'}`}
+                            className={`absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-cyan-400 font-black uppercase tracking-widest mix-blend-screen transition-opacity duration-300 ${isHolding ? 'opacity-0' : 'opacity-80 animate-glitch-hard-1'}`}
                             aria-hidden="true"
                         >
                             /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
@@ -174,8 +174,8 @@ export function SystemFailure() {
                         </div>
 
                         {/* TITRE PRINCIPAL */}
-                        <h3 className="font-headline text-2xl md:text-3xl text-white mb-6">
-                            /// TAXE MARKETING : SUPPRIMÉE ///
+                        <h3 className="font-headline text-2xl md:text-3xl text-white mb-6 tracking-widest">
+                            /// DANGER TAXE MARKETING ///
                         </h3>
 
                         {/* LE LOGICIEL DU CHANGEMENT */}
@@ -183,19 +183,19 @@ export function SystemFailure() {
                             {/* 1. LE CONSTAT */}
                             <div className={`text-white/80 ${isHolding ? '' : 'animate-line-teleport'}`}>
                                 <span className="text-[#E6DCC8] font-bold mr-2">{'>'} ANALYSE :</span>
-                                Le marché est BRISÉ. Les leaders dominent par le budget pub, plus par la qualité. Nous payons 70% de "taxe MARKETING" pour nos produits.
+                                70% DU PRIX = MARKETING. (Standard Industrie)
                             </div>
 
                             {/* 1.5 LA CONSEQUENCE */}
                             <div className={`text-red-400/90 ${isHolding ? '' : 'animate-line-teleport'}`}>
-                                <span className="text-red-500 font-bold mr-2">{'>'} CONSÉQUENCE :</span>
-                                PRIX TROP ÉLEVÉS. QUALITÉ DIMINUÉE.
+                                <span className="text-red-500 font-bold mr-2">{'>'} CONSÉQUENCES :</span>
+                                PRIX ÉLEVÉ.
                             </div>
 
                             {/* 2. L'ACTION CORRECTIVE */}
                             <div className={`text-white/80 ${isHolding ? '' : 'animate-emergency-flash'}`}>
-                                <span className="text-[#E6DCC8] font-bold mr-2">{'>'} AMÉLIORATION :</span>
-                                SUPPRESSION DE LA TAXE MARKETING. AUGMENTATION DE L'INVESTISSEMENT DANS LA FORMULATION.
+                                <span className="text-[#E6DCC8] font-bold mr-2">{'>'} CORRECTIF :</span>
+                                SUPPRESSION TAXE MARKETING.
                             </div>
                         </div>
                     </motion.div>
