@@ -11,6 +11,9 @@ const nextConfig = {
     // Only apply basePath in production (for GitHub Pages)
     basePath: isProd ? '/LandingPageHydre' : '',
     assetPrefix: isProd ? '/LandingPageHydre/' : '',
+    env: {
+        BASE_PATH: isProd ? '/LandingPageHydre' : '',
+    },
     reactStrictMode: true,
     // Enable experimental features for better 3D performance
     experimental: {

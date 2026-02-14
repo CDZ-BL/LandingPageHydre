@@ -29,7 +29,7 @@ export function HeroVoid() {
                     className="h-auto w-auto max-h-[120%] max-w-[150%] object-contain scale-150 pointer-events-none"
                     style={{ willChange: 'transform' }}
                 >
-                    <source src="/videos/0001-0092.mp4" type="video/mp4" />
+                    <source src={`${process.env.BASE_PATH || ''}/videos/0001-0092.mp4`} type="video/mp4" />
                 </video>
             </div>
 
