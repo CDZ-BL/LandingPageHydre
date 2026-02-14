@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useInView } from 'framer-motion';
-import { useScramble } from '@/hooks/useScramble';
+import { useState, useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { useLenis } from 'lenis/react';
+import { useScramble } from '@/hooks/useScramble'; // Ensure this path is correct
 
 const ROADMAP_ITEMS = [
     {
@@ -39,23 +41,14 @@ const ROADMAP_ITEMS = [
     }
 ];
 
-// Find the index of the ACTIVE (present) phase
 const PRESENT_INDEX = ROADMAP_ITEMS.findIndex(item => item.status === 'ACTIVE');
 
-// Decrypt title component for future phases
 function DecryptTitle({ title, isFuture }: { title: string; isFuture: boolean }) {
     const { displayText, onMouseEnter, onMouseLeave } = useScramble(title, 30);
-
-    if (!isFuture) {
-        return <>{title}</>;
-    }
+    if (!isFuture) return <>{title}</>;
 
     return (
-        <span
-            onMouseEnter={onMouseEnter}
-            onMouseLeave={onMouseLeave}
-            className="cursor-pointer"
-        >
+        <span onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} className="cursor-pointer">
             {displayText}
         </span>
     );
@@ -63,218 +56,184 @@ function DecryptTitle({ title, isFuture }: { title: string; isFuture: boolean })
 
 export function Roadmap() {
     const [activeIndex, setActiveIndex] = useState(PRESENT_INDEX);
-    const containerRef = useRef<HTMLDivElement>(null);
-    const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const sectionRef = useRef<HTMLElement>(null);
-    const isInView = useInView(sectionRef, { amount: "some", margin: "-100px 0px -100px 0px" });
+    const lenis = useLenis();
 
-    // Scroll to active item
-    const scrollToIndex = (index: number) => {
-        const item = itemRefs.current[index];
-        if (item) {
-            item.scrollIntoView({
-                behavior: 'smooth',
-                block: 'center',
-                inline: 'center'
-            });
-        }
+    // The Unified Scroll & State Action
+    const handleEngagePhase = (index: number) => {
+        if (activeIndex === index) return;
+
         setActiveIndex(index);
-    };
 
-    // Handle wheel scroll within the roadmap
-    const handleWheel = (e: React.WheelEvent) => {
-        // Only intercept horizontal-style navigation
-        if (Math.abs(e.deltaY) > 10) {
-            e.preventDefault();
-            if (e.deltaY > 0 && activeIndex < ROADMAP_ITEMS.length - 1) {
-                scrollToIndex(activeIndex + 1);
-            } else if (e.deltaY < 0 && activeIndex > 0) {
-                scrollToIndex(activeIndex - 1);
+        // Lenis hardware-accelerated scroll integration
+        if (lenis) {
+            const cards = gsap.utils.toArray('.roadmap-card', sectionRef.current) as HTMLElement[];
+            if (cards[index]) {
+                lenis.scrollTo(cards[index], { offset: -400, duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
             }
         }
     };
 
-    // Keyboard navigation
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowDown' && activeIndex < ROADMAP_ITEMS.length - 1) {
-                scrollToIndex(activeIndex + 1);
-            } else if (e.key === 'ArrowUp' && activeIndex > 0) {
-                scrollToIndex(activeIndex - 1);
+    // The Unified Physics Engine
+    useGSAP(() => {
+        const cards = gsap.utils.toArray('.roadmap-card') as HTMLElement[];
+        const contentWrappers = gsap.utils.toArray('.card-content-wrapper') as HTMLElement[];
+
+        // 1. Update Timeline Progress
+        gsap.to('.timeline-progress', {
+            height: `${((activeIndex + 1) / ROADMAP_ITEMS.length) * 100}%`,
+            duration: 0.8,
+            ease: "expo.out"
+        });
+
+        // 2. Iterate and mutate DOM
+        cards.forEach((card, index) => {
+            const isActive = index === activeIndex;
+            const content = contentWrappers[index];
+
+            // Select the new light engine layers
+            const physicsWrapper = card.querySelector('.card-physics-wrapper');
+            const surface = card.querySelector('.card-surface');
+            const ambientGlow = card.querySelector('.ambient-glow');
+            const kineticBorder = card.querySelector('.kinetic-border');
+            const rotatingBeam = card.querySelector('.rotating-beam');
+
+            gsap.killTweensOf([card, content, physicsWrapper, surface, ambientGlow, kineticBorder, rotatingBeam]);
+
+            if (isActive) {
+                // Expand Height
+                gsap.to(content, { height: 'auto', opacity: 1, duration: 0.5, ease: "power3.out" });
+
+                // Spin the inner light beam continuously
+                gsap.to(rotatingBeam, { rotation: 360, duration: 3, repeat: -1, ease: 'linear' });
+
+                // Turn on the lights (Opacity)
+                gsap.to([ambientGlow, kineticBorder], { opacity: 0.4, duration: 0.8 });
+
+                // Levitation Matrix (Applied to the whole wrapper)
+                gsap.to(physicsWrapper, {
+                    y: -15,
+                    scale: 1.05,
+                    zIndex: 10,
+                    duration: 1.2,
+                    ease: 'elastic.out(1, 0.7)',
+                    boxShadow: '0 30px 60px -15px rgba(0, 0, 0, 0.9)'
+                });
+
+                // Remove the static CSS border when active so the light shines through
+                gsap.to(surface, { borderColor: 'transparent', duration: 0.3 });
+
+            } else {
+                // Collapse Height
+                gsap.to(content, { height: 0, opacity: 0, duration: 0.4, ease: "power3.inOut" });
+
+                // CRITICAL: Stop the infinite rotation when hidden
+                gsap.killTweensOf(rotatingBeam);
+                gsap.set(rotatingBeam, { rotation: 0 }); // Reset position
+
+                // Turn off the lights
+                gsap.to([ambientGlow, kineticBorder], { opacity: 0, duration: 0.5 });
+
+                // Slam to grid
+                const distance = Math.abs(index - activeIndex);
+                gsap.to(physicsWrapper, {
+                    y: 0,
+                    scale: index < activeIndex ? 0.98 : 1,
+                    zIndex: 0,
+                    duration: 0.5,
+                    ease: 'power3.out',
+                    boxShadow: '0 0px 0px 0px rgba(0,0,0,0)'
+                });
+
+                // Restore static border
+                gsap.to(surface, { borderColor: '#111', duration: 0.3 });
             }
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [activeIndex]);
-
-    const isOnPresent = activeIndex === PRESENT_INDEX;
+        });
+    }, { scope: sectionRef, dependencies: [activeIndex] });
 
     return (
-        <section ref={sectionRef} className="relative py-24 md:py-32 bg-black overflow-hidden border-t border-void-800">
+        <section ref={sectionRef} className="relative py-24 md:py-32 bg-[#050505] overflow-hidden border-t border-[#111]">
+
             {/* Background Grid */}
-            <div
-                className="absolute inset-0 opacity-10 pointer-events-none"
-                style={{
-                    backgroundSize: '30px 30px',
-                    backgroundImage: 'linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px)'
-                }}
-            />
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundSize: '30px 30px', backgroundImage: 'linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px)' }} />
 
             <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-100px" }}
-                    transition={{ duration: 0.8 }}
-                    className="mb-12 text-center"
-                >
-                    <h2 className="font-mono text-cyan-400 text-sm tracking-widest mb-4">
-                        [ SYSTEM_LOGS {'//'} ROADMAP ]
-                    </h2>
-                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-widest mb-4">
-                        VISION : LONG TERM.
-                    </h3>
-                    <p className="font-mono text-xs text-gray-500 tracking-wider">
-                        SCROLL OU UTILISEZ ↑↓ POUR NAVIGUER
-                    </p>
-                </motion.div>
 
-                {/* Navigation dots */}
-                <div className="flex justify-center gap-3 mb-8">
-                    {ROADMAP_ITEMS.map((item, index) => (
-                        <button
-                            key={index}
-                            onClick={() => scrollToIndex(index)}
-                            className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${index === activeIndex
-                                ? 'bg-white border-white shadow-[0_0_15px_rgba(255,255,255,0.8)] scale-125'
-                                : index === PRESENT_INDEX
-                                    ? 'bg-amber-500/50 border-amber-500'
-                                    : 'bg-transparent border-void-500 hover:border-white/50'
-                                }`}
-                            aria-label={`Aller à ${item.phase}`}
-                        />
-                    ))}
+                {/* Header (Simplified GSAP target to avoid Framer) */}
+                <div className="mb-12 text-center">
+                    <h2 className="font-mono text-[#00E5FF] text-sm tracking-widest mb-4 uppercase">[ System_Logs // Roadmap ]</h2>
+                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-widest mb-4">NOTRE PROJET</h3>
                 </div>
 
-                {/* Interactive scroll container */}
-                <div
-                    ref={containerRef}
-                    className="relative"
-                    onWheel={handleWheel}
-                >
-                    {/* Premium Liquid Timeline Track */}
-                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1.5 md:w-2 bg-void-100/50 rounded-full border border-white/10 shadow-[inset_0_0_10px_rgba(0,0,0,0.8)] overflow-hidden transform -translate-x-1/2 z-0">
-                        {/* Progress indicator */}
-                        <motion.div
-                            className="absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-void-500 via-gray-400 to-white shadow-[0_0_15px_rgba(255,255,255,0.8)]"
-                            initial={{ height: 0 }}
-                            animate={{
-                                height: `${((activeIndex + 1) / ROADMAP_ITEMS.length) * 100}%`
-                            }}
-                            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                        >
-                            {/* Fluid Tip */}
+                {/* Navigation Nodes */}
+                {/* Core Interactive Area (RESTORED ARCHITECTURE) */}
+                <div className="relative">
+
+                    {/* The Timeline Track */}
+                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1.5 bg-[#111] rounded-full border border-white/5 transform -translate-x-1/2 z-0 overflow-hidden">
+                        {/* The GSAP Timeline Progress */}
+                        <div className="timeline-progress absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-[#111] via-gray-400 to-white shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent opacity-80" />
-                        </motion.div>
+                        </div>
                     </div>
 
-                    {/* Roadmap items */}
-                    <div className="space-y-8 pl-16 md:pl-24">
+                    {/* Nodes Wrapper (Restores the left padding so the dots align with the track) */}
+                    <div className="space-y-6 pl-16 md:pl-24">
                         {ROADMAP_ITEMS.map((item, index) => {
-                            const isActive = index === activeIndex;
-                            const distance = Math.abs(index - activeIndex);
                             const isFuture = item.status === 'UPCOMING' || item.status === 'LOCKED';
-
-                            // Calculate styles based on distance from active
-                            const scale = isActive ? 1 : 0.85;
-                            const opacity = isActive ? 1 : distance === 1 ? 0.5 : 0.3;
+                            const isActive = index === activeIndex;
 
                             return (
-                                <motion.div
-                                    key={index}
-                                    ref={(el) => { itemRefs.current[index] = el; }}
-                                    onClick={() => scrollToIndex(index)}
-                                    animate={{
-                                        scale,
-                                        opacity,
-                                    }}
-                                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                                    className={`relative cursor-pointer origin-left ${isActive ? 'z-10' : 'z-0'}`}
-                                >
-                                    {/* Dot on timeline (Aligned to center of left-8/left-12) */}
-                                    {/* left-8 (32px) - pl-16 (64px) = -32px offset. Dot center at -32px. Dot w-4 (16). Left = -32 - 8 = -40px */}
-                                    {/* md:left-12 (48px) - pl-24 (96px) = -48px offset. Left = -48 - 8 = -56px */}
-                                    <div className={`absolute -left-[40px] md:-left-[56px] top-2 w-4 h-4 rounded-full border-2 transition-all duration-300 z-20
-                                        ${isActive
-                                            ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)] scale-125'
-                                            : index < activeIndex
-                                                ? 'bg-gray-400 border-gray-400 opacity-50'
-                                                : 'bg-black border-void-600'
-                                        }`}
-                                    >
-                                        {isActive && (
-                                            <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" />
-                                        )}
+                                <div key={`card-${index}`} onClick={() => handleEngagePhase(index)} className="relative cursor-pointer origin-left roadmap-card">
+
+                                    {/* Connection Point (Left Dot) */}
+                                    <div className={`absolute -left-[40px] md:-left-[56px] top-4 w-4 h-4 rounded-full border-2 transition-all duration-300 z-20 ${isActive ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)] scale-125' : index < activeIndex ? 'bg-gray-600 border-gray-600 opacity-50' : 'bg-[#050505] border-[#333]'}`}>
+                                        {isActive && <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" />}
                                     </div>
 
-                                    {/* Card */}
-                                    <div className={`p-6 border transition-all duration-300 ${isActive
-                                        ? 'border-white/30 bg-white/5 shadow-[0_0_30px_rgba(255,255,255,0.1)]'
-                                        : 'border-void-700 bg-transparent hover:border-void-500'
-                                        }`}>
-                                        {/* Header */}
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive
-                                                ? 'border-white text-white bg-white/10'
-                                                : 'border-void-600 text-gray-500'
-                                                }`}>
-                                                {item.phase} {'//'} {item.status}
-                                            </span>
-                                            <span className="font-mono text-xs text-gray-500">{item.date}</span>
+                                    {/* THE LIGHT ENGINE STRUCTURE */}
+                                    <div className="card-physics-wrapper relative rounded-xl w-full">
+                                        <div className="ambient-glow absolute -inset-2 bg-[#00E5FF] rounded-xl blur-2xl opacity-0 z-0 pointer-events-none" />
+                                        <div className="kinetic-border absolute -inset-[1px] rounded-xl overflow-hidden opacity-0 z-0 pointer-events-none">
+                                            <div className="rotating-beam absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[conic-gradient(from_0deg,transparent_70%,rgba(0,229,255,1)_95%,transparent_100%)]" />
                                         </div>
 
-                                        {/* Title */}
-                                        <h4 className={`font-sans font-bold tracking-tight transition-all mb-3 ${isActive
-                                            ? 'text-2xl md:text-3xl text-white'
-                                            : 'text-lg md:text-xl text-gray-400'
-                                            }`}>
-                                            <DecryptTitle title={item.title} isFuture={isFuture} />
-                                        </h4>
+                                        <div className="card-surface relative z-10 p-6 md:p-8 bg-[#050505] border border-[#111] rounded-xl transition-colors duration-300">
 
-                                        {/* Description - only show when active */}
-                                        <AnimatePresence>
-                                            {isActive && (
-                                                <motion.div
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                    transition={{ duration: 0.3 }}
-                                                    className="overflow-hidden"
-                                                >
-                                                    <p className="font-mono text-sm md:text-base text-gray-300 mb-4 leading-relaxed">
+                                            <div className="flex items-center gap-3 mb-4">
+                                                <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive ? 'border-[#00E5FF] text-[#00E5FF] bg-[#00E5FF]/10' : 'border-[#333] text-gray-500'}`}>
+                                                    {item.phase} {'//'} {item.status}
+                                                </span>
+                                                <span className="font-mono text-xs text-gray-600">{item.date}</span>
+                                            </div>
+
+                                            <h4 className={`font-sans font-bold tracking-tight transition-all mb-2 ${isActive ? 'text-2xl md:text-3xl text-white' : 'text-lg text-gray-500'}`}>
+                                                <DecryptTitle title={item.title} isFuture={isFuture} />
+                                            </h4>
+
+                                            <div className="card-content-wrapper overflow-hidden" style={{ height: isActive ? 'auto' : 0, opacity: isActive ? 1 : 0 }}>
+                                                <div className="pt-4 border-t border-white/5 mt-4">
+                                                    <p className="font-mono text-sm md:text-base text-gray-400 mb-6 leading-relaxed">
                                                         {item.description}
                                                     </p>
-
                                                     <ul className="flex flex-wrap gap-2">
                                                         {item.features.map((feature, i) => (
-                                                            <li key={i} className="font-mono text-xs px-3 py-1.5 rounded border text-white bg-white/5 border-white/20">
+                                                            <li key={i} className="font-mono text-xs px-3 py-1.5 rounded border text-gray-300 bg-white/5 border-white/10">
                                                                 {feature}
                                                             </li>
                                                         ))}
                                                     </ul>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </motion.div>
+                                </div>
                             );
                         })}
                     </div>
                 </div>
 
-
+                {/* END OF ROADMAP */}
             </div>
         </section>
     );

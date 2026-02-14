@@ -38,7 +38,7 @@ export function TheClose() {
                 }}
             />
 
-            <div className="relative z-10 w-[90%] max-w-[1200px] mx-auto">
+            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}

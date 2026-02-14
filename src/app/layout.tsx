@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { JetBrains_Mono } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
+import { LenisProvider } from '@/components/providers/LenisProvider';
 import './globals.css';
 
 // CLASH DISPLAY - Headlines (Local from Fontshare)
@@ -65,7 +66,9 @@ export default function RootLayout({
     return (
         <html lang="fr" className={`${clashDisplay.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
             <body className="antialiased bg-obsidian text-white/85">
-                {children}
+                <LenisProvider>
+                    {children}
+                </LenisProvider>
             </body>
         </html>
     );

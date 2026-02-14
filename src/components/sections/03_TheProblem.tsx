@@ -113,68 +113,7 @@ export function TheProblem() {
                     </motion.div>
                 </motion.div>
 
-                {/* Video Evidence Section */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-100px" }}
-                    transition={{ duration: 0.8, delay: 0.7 }}
-                    className="mt-16 text-center"
-                >
-                    <h3 className="font-sans text-2xl md:text-4xl text-white font-bold tracking-tight mb-8">
-                        DISSOLUTION TOTALE. ZÉRO RÉSIDU.
-                    </h3>
 
-                    {/* Cinematic Portal Video Container */}
-                    <div
-                        className="relative overflow-hidden bg-black"
-                        style={{
-                            width: '100vw',
-                            height: '85vh',
-                            marginLeft: 'calc(-50vw + 50%)',
-                            marginRight: 'calc(-50vw + 50%)'
-                        }}
-                    >
-                        {/* Gradient Overlay */}
-                        <div
-                            className="absolute inset-0 z-10 pointer-events-none"
-                            style={{
-                                background: `linear-gradient(
-                                    to bottom,
-                                    #050505 0%,
-                                    transparent 15%,
-                                    transparent 85%,
-                                    #050505 100%
-                                )`
-                            }}
-                        />
-
-                        {/* Video */}
-                        <video
-                            autoPlay
-                            loop
-                            muted
-                            playsInline
-                            className="w-full h-full object-cover"
-                            style={{
-                                opacity: 0.9,
-                                filter: 'contrast(1.1)'
-                            }}
-                        >
-                            <source src={getAssetPath('/videos/tabletteeffervescence.mp4')} type="video/mp4" />
-                            Your browser does not support the video tag.
-                        </video>
-
-                        {/* Floating Data Overlay */}
-                        <div className="absolute bottom-8 right-8 z-20 font-mono text-white/50 text-xs tracking-widest">
-                            [ REACTIVE_POWER ] : MAXIMUM
-                        </div>
-                    </div>
-
-                    <p className="font-mono text-void-500 text-sm mt-8 tracking-wider">
-                        [DATA] : DISSOLUTION TIME &lt; 45s {'//'} RESIDUE : 0.00%
-                    </p>
-                </motion.div>
             </div>
         </section>
     );

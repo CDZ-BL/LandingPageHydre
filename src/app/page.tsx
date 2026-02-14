@@ -5,9 +5,7 @@ import { SystemFailure } from '@/components/sections/02_SystemFailure';
 import { TheProblem } from '@/components/sections/03_TheProblem';
 import { ThePact } from '@/components/sections/04_ThePact';
 import { TheSpecs } from '@/components/sections/05_TheSpecs';
-
-import { Reciprocity } from '@/components/sections/07_Reciprocity';
-import { FounderCircle } from '@/components/sections/08_FounderCircle';
+import { Alliance } from '@/components/sections/07_Alliance';
 import { Roadmap } from '@/components/sections/09_Roadmap';
 import { TheClose } from '@/components/sections/10_TheClose';
 
@@ -19,31 +17,37 @@ export default function Home() {
             {/* Block 1: Architecture Hero */}
             <HeroVoid />
 
-            {/* Block 1.5: System Failure (The Problem) */}
+            {/* Visual Spacer for Aeration */}
+            <div className="h-32 bg-void" />
+
+            {/* Block 2: System Failure (Glitch) */}
             <SystemFailure />
 
-            {/* Block 1.6: The Problem (Radar + Video) */}
+            {/* Block 3: The Problem (Radar + Competitors) */}
             <TheProblem />
 
-            {/* Block 2: The Pact (Value) */}
+            {/* Block 4: The Pact (Value) */}
             <ThePact />
 
-            {/* Block 3: The Specs (Product) */}
-            <TheSpecs />
+            {/* Block 5: The Specs (Product) */}
+            <section id="specs">
+                <TheSpecs />
+            </section>
 
+            {/* Block 6: Alliance (Reciprocity + Founder Circle) */}
+            <section id="alliance">
+                <Alliance />
+            </section>
 
-
-            {/* Block 5: Reciprocity (Alliance) */}
-            <Reciprocity />
-
-            {/* Block 6: Founder Circle (Co-Creation) */}
-            <FounderCircle />
-
-            {/* Block 7: Detailed Roadmap */}
-            <Roadmap />
+            {/* Block 7: Roadmap */}
+            <section id="roadmap">
+                <Roadmap />
+            </section>
 
             {/* Block 8: The Close */}
-            <TheClose />
+            <section id="close">
+                <TheClose />
+            </section>
 
             <Footer />
         </main>

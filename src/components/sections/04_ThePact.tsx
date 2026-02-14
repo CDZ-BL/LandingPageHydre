@@ -99,7 +99,7 @@ export function ThePact() {
                                 transition={{ duration: 0.6 }}
                             >
                                 <div className="flex justify-between items-center text-xs font-mono text-gray-500 mb-3">
-                                    <span>CONCURRENT PREMIUIM</span>
+                                    <span>CONCURRENT PREMIUM</span>
                                     <div className="flex items-center gap-3">
                                         <span className="text-gray-600">PRIX TOTAL : 9.99€</span>
                                     </div>
