@@ -42,8 +42,7 @@ declare module '@react-three/fiber' {
  * TabletModel — Premium 3D tablet with Mercury Glass effects
  */
 export function TabletModel({
-    isExploding,
-    explosionProgress,
+    explosionRef,
     color = '#FFFAF0',
     glowColor = '#FF6B35',
     interactive = true,
@@ -53,6 +52,12 @@ export function TabletModel({
 }: TabletModelProps) {
     const tabletRef = useRef<THREE.Group>(null);
     const meshRef = useRef<THREE.Mesh>(null);
+    const topCapRef = useRef<THREE.Mesh>(null);
+    const bottomCapRef = useRef<THREE.Mesh>(null);
+    const logoRef = useRef<THREE.Mesh>(null);
+    const ringRef = useRef<THREE.Mesh>(null);
+
+    // We keep hover state in React because it doesn't happen 60fps
     const [hovered, setHovered] = useState(false);
 
     // Accessibility
@@ -82,36 +87,63 @@ export function TabletModel({
     useFrame((state) => {
         if (!tabletRef.current) return;
 
-        // Update shader material uniforms if using custom shader
+        const explosionProgress = explosionRef.current;
+        const isExploding = explosionProgress > 0.01;
+
+        // Calculate dynamic values imperatively to avoid React renders
+        const tabletOpacity = isExploding ? Math.max(0, 1 - explosionProgress * 2) : 1;
+
+        // 1. Update Mercury Shader Uniforms
         if (meshRef.current && meshRef.current.material) {
             const mat = meshRef.current.material as THREE.ShaderMaterial;
             if (mat.uniforms) {
                 mat.uniforms.u_time.value = state.clock.elapsedTime;
                 mat.uniforms.u_dissolveProgress.value = explosionProgress;
+                mat.uniforms.u_opacity.value = tabletOpacity;
             }
         }
 
-        // Rotation animation (skip if reduced motion preferred)
+        // 2. Update Standard Materials Opacity imperatively
+        const updateOpacity = (mesh: THREE.Mesh | null) => {
+            if (mesh && mesh.material) {
+                const mat = mesh.material as THREE.Material;
+                // Check if opacity needs update to avoid unnecessary sets (though likely cheap)
+                if (mat.opacity !== tabletOpacity) {
+                    mat.opacity = tabletOpacity;
+                    // No need for needsUpdate = true for simple opacity change on transparent material
+                }
+            }
+        };
+
+        updateOpacity(topCapRef.current);
+        updateOpacity(bottomCapRef.current);
+        updateOpacity(logoRef.current);
+        updateOpacity(ringRef.current);
+
+        // 3. Rotation animation (skip if reduced motion preferred)
         if (!prefersReducedMotion && !isExploding) {
             tabletRef.current.rotation.y = state.clock.elapsedTime * 0.3;
             tabletRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
+        }
+
+        // 4. Manual imperative scale
+        const currentScale = isExploding
+            ? scale * (1 + explosionProgress * 0.5)
+            : scale * (hovered ? 1.05 : 1);
+
+        if (tabletRef.current.scale.x !== currentScale) {
+            tabletRef.current.scale.setScalar(currentScale);
         }
     });
 
     // Register mesh for disposal
     useEffect(() => {
-        if (meshRef.current) {
-            registerResource(meshRef.current);
-        }
+        if (meshRef.current) registerResource(meshRef.current);
+        if (topCapRef.current) registerResource(topCapRef.current);
+        if (bottomCapRef.current) registerResource(bottomCapRef.current);
+        if (logoRef.current) registerResource(logoRef.current);
+        if (ringRef.current) registerResource(ringRef.current);
     }, [registerResource]);
-
-    // Calculate dynamic scale
-    const dynamicScale = isExploding
-        ? scale * (1 + explosionProgress * 0.5)
-        : scale * (hovered ? 1.05 : 1);
-
-    // Calculate opacity
-    const tabletOpacity = isExploding ? Math.max(0, 1 - explosionProgress * 2) : 1;
 
     // Float wrapper (disabled for reduced motion)
     const FloatWrapper = prefersReducedMotion ? 'group' : Float;
@@ -127,7 +159,7 @@ export function TabletModel({
             <group
                 ref={tabletRef}
                 position={position}
-                scale={dynamicScale}
+                scale={scale} // Initial scale, updated imperatively
                 onPointerOver={handlePointerOver}
                 onPointerOut={handlePointerOut}
             >
@@ -138,10 +170,10 @@ export function TabletModel({
                         u_time={0}
                         u_color={baseColor}
                         u_secondaryColor={secondaryColor}
-                        u_dissolveProgress={explosionProgress}
+                        u_dissolveProgress={0}
                         u_fresnelPower={3.0}
                         u_chromaticStrength={1.0}
-                        u_opacity={tabletOpacity}
+                        u_opacity={1}
                         u_noiseScale={2.0}
                         u_noiseStrength={1.0}
                         transparent
@@ -151,7 +183,7 @@ export function TabletModel({
                 </mesh>
 
                 {/* Top rounded cap */}
-                <mesh position={[0, 0.2, 0]}>
+                <mesh ref={topCapRef} position={[0, 0.2, 0]}>
                     <sphereGeometry args={[0.8, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
                     <meshPhysicalMaterial
                         color={color}
@@ -160,12 +192,12 @@ export function TabletModel({
                         clearcoat={0.8}
                         clearcoatRoughness={0.2}
                         transparent
-                        opacity={tabletOpacity}
+                        opacity={1}
                     />
                 </mesh>
 
                 {/* Bottom rounded cap */}
-                <mesh position={[0, -0.2, 0]} rotation={[Math.PI, 0, 0]}>
+                <mesh ref={bottomCapRef} position={[0, -0.2, 0]} rotation={[Math.PI, 0, 0]}>
                     <sphereGeometry args={[0.8, 64, 32, 0, Math.PI * 2, 0, Math.PI / 2]} />
                     <meshPhysicalMaterial
                         color={color}
@@ -174,31 +206,31 @@ export function TabletModel({
                         clearcoat={0.8}
                         clearcoatRoughness={0.2}
                         transparent
-                        opacity={tabletOpacity}
+                        opacity={1}
                     />
                 </mesh>
 
                 {/* "H" embossed logo */}
-                <mesh position={[0, 0, 0.82]} rotation={[Math.PI / 2, 0, 0]}>
+                <mesh ref={logoRef} position={[0, 0, 0.82]} rotation={[Math.PI / 2, 0, 0]}>
                     <torusGeometry args={[0.2, 0.05, 16, 32]} />
                     <meshPhysicalMaterial
                         color={glowColor}
                         metalness={0.3}
                         roughness={0.4}
                         transparent
-                        opacity={tabletOpacity}
+                        opacity={1}
                         emissive={glowColor}
                         emissiveIntensity={0.3}
                     />
                 </mesh>
 
                 {/* Inner glow ring */}
-                <mesh position={[0, 0, 0]}>
+                <mesh ref={ringRef} position={[0, 0, 0]}>
                     <torusGeometry args={[0.85, 0.03, 16, 64]} />
                     <meshBasicMaterial
                         color={glowColor}
                         transparent
-                        opacity={tabletOpacity * 0.6}
+                        opacity={0.6}
                     />
                 </mesh>
             </group>

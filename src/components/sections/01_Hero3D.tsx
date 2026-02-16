@@ -1,36 +1,22 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { Scene3D } from '@/components/three/Scene/Scene';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 // --- HERO ---
 export function HeroVoid() {
     const { scrollY } = useScroll();
     const textY = useTransform(scrollY, [0, 500], [0, -100]);
-    const videoRef = useRef<HTMLVideoElement>(null);
 
-    useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.playbackRate = 0.6;
-        }
-    }, []);
+    // We remove videoRef logic as video is gone
+    // Keeping useEffect empty for now or removing it entirely if unused
+    // Actually, videoRef was used for playbackRate. Since we remove video, we can remove the ref and effect.
 
     return (
         <section className="relative h-screen bg-void text-white overflow-hidden">
-            {/* Product Video */}
+            {/* Product 3D Scene - Replaces Video */}
             <div className="absolute top-0 right-0 bottom-0 w-1/2 z-0 flex items-center justify-center">
-                <video
-                    ref={videoRef}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    preload="auto"
-                    className="h-auto w-auto max-h-[120%] max-w-[150%] object-contain scale-150 pointer-events-none"
-                    style={{ willChange: 'transform' }}
-                >
-                    <source src={`${process.env.BASE_PATH || ''}/videos/0001-0092.mp4`} type="video/mp4" />
-                </video>
+                <Scene3D className="w-full h-full" />
             </div>
 
             {/* Gradient */}

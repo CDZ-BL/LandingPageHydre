@@ -27,29 +27,53 @@ const LABEL_POSITIONS = [
  * Floating ingredient labels that appear during explosion
  */
 export function IngredientLabels({
-    isVisible,
+    explosionRef,
     parentPosition = [0, 0, 0],
 }: IngredientLabelsProps) {
     const groupRef = useRef<THREE.Group>(null);
     const prefersReducedMotion = usePrefersReducedMotion();
 
     useFrame((state) => {
-        if (groupRef.current && isVisible && !prefersReducedMotion) {
+        if (!groupRef.current || prefersReducedMotion) return;
+
+        const progress = explosionRef.current;
+        const isVisible = progress > 0.3;
+
+        // Visibility toggle to save GPU
+        if (groupRef.current.visible !== isVisible) {
+            groupRef.current.visible = isVisible;
+        }
+
+        if (isVisible) {
             groupRef.current.rotation.y = state.clock.elapsedTime * 0.2;
+
+            // Optional: Animate opacity of children if they supported it, 
+            // but right now they are meshBasicMaterial.
+            // We could iterate children to fade them in.
+            groupRef.current.children.forEach((child) => {
+                if (child instanceof THREE.Mesh) {
+                    const mat = child.material as THREE.Material;
+                    // Fade in logic: map progress 0.3->0.5 to opacity 0->0.8
+                    const targetOpacity = Math.min(0.8, (progress - 0.3) * 4);
+                    if (mat.opacity !== targetOpacity) {
+                        mat.opacity = targetOpacity;
+                    }
+                }
+            });
         }
     });
 
-    if (!isVisible) return null;
+    if (prefersReducedMotion) return null;
 
     return (
-        <group ref={groupRef} position={parentPosition}>
+        <group ref={groupRef} position={parentPosition} visible={false}>
             {LABEL_POSITIONS.map((item, index) => (
                 <mesh key={index} position={item.pos}>
                     <sphereGeometry args={[0.2, 32, 32]} />
                     <meshBasicMaterial
                         color={item.color}
                         transparent
-                        opacity={0.8}
+                        opacity={0} // Start invisible
                     />
                 </mesh>
             ))}

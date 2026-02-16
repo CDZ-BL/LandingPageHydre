@@ -8,11 +8,8 @@ import type * as THREE from 'three';
  * Props for the TabletModel component
  */
 export interface TabletModelProps {
-    /** Whether the tablet is currently exploding/dissolving */
-    isExploding: boolean;
-
-    /** Explosion/dissolution progress [0, 1] */
-    explosionProgress: number;
+    /** Ref containing the explosion progress [0, 1] */
+    explosionRef: React.MutableRefObject<number>;
 
     /** Primary color for the tablet */
     color?: THREE.ColorRepresentation;

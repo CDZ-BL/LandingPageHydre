@@ -8,11 +8,8 @@ import type * as THREE from 'three';
  * Props for the ParticleSystem component
  */
 export interface ParticleSystemProps {
-    /** Whether the particle system is active */
-    isActive: boolean;
-
-    /** Animation progress [0, 1] */
-    progress: number;
+    /** Ref containing the explosion progress [0, 1] */
+    explosionRef: React.MutableRefObject<number>;
 
     /** Number of particles (will be scaled by quality settings) */
     baseParticleCount?: number;
@@ -25,8 +22,8 @@ export interface ParticleSystemProps {
  * Props for ingredient labels overlay
  */
 export interface IngredientLabelsProps {
-    /** Whether labels are visible */
-    isVisible: boolean;
+    /** Ref containing the explosion progress [0, 1] */
+    explosionRef: React.MutableRefObject<number>;
 
     /** Parent position for offset calculations */
     parentPosition?: [number, number, number];

@@ -25,8 +25,7 @@ const DEFAULT_BASE_PARTICLE_COUNT = 200;
  * ParticleSystem — Explosion particle effect
  */
 export function ParticleSystem({
-    isActive,
-    progress,
+    explosionRef,
     baseParticleCount = DEFAULT_BASE_PARTICLE_COUNT,
     position = [0, 0, 0],
 }: ParticleSystemProps) {
@@ -48,17 +47,42 @@ export function ParticleSystem({
 
     // Animate particles
     useFrame((state, delta) => {
-        if (!particlesRef.current || !isActive || prefersReducedMotion) return;
+        if (!particlesRef.current || prefersReducedMotion) return;
+
+        // Floating point safety threshold for strict culling
+        // If explosion is basically zero, hide the system entirely to save GPU
+        if (explosionRef.current < 0.001) {
+            if (particlesRef.current.visible) {
+                particlesRef.current.visible = false;
+            }
+            return; // Kill the math loop entirely
+        }
+
+        // Wake up if valid
+        if (!particlesRef.current.visible) {
+            particlesRef.current.visible = true;
+        }
 
         const positionAttribute = particlesRef.current.geometry.attributes.position as THREE.BufferAttribute;
-        updateParticles(positionAttribute, delta, progress, state.clock.elapsedTime);
+
+        // Pass the ref value to the update function
+        updateParticles(positionAttribute, delta, explosionRef.current, state.clock.elapsedTime);
+
+        // Update opacity material uniform/prop if it exists
+        const mat = particlesRef.current.material as THREE.PointsMaterial;
+        if (mat) {
+            const newOpacity = Math.max(0, 1 - explosionRef.current * 0.5);
+            if (mat.opacity !== newOpacity) {
+                mat.opacity = newOpacity;
+            }
+        }
     });
 
-    // Don't render if inactive or reduced motion preferred
-    if (!isActive || prefersReducedMotion) return null;
+    // If reduced motion, we still render but empty/hidden, or just return null
+    if (prefersReducedMotion) return null;
 
     return (
-        <points ref={particlesRef} position={position}>
+        <points ref={particlesRef} position={position} visible={false}>
             <bufferGeometry>
                 <bufferAttribute
                     attach="attributes-position"
@@ -83,7 +107,7 @@ export function ParticleSystem({
                 size={0.1}
                 vertexColors
                 transparent
-                opacity={1 - progress * 0.5}
+                opacity={1}
                 sizeAttenuation
                 blending={THREE.AdditiveBlending}
                 depthWrite={false}

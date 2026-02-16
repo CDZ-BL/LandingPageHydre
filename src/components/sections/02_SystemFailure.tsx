@@ -28,13 +28,25 @@ export function SystemFailure() {
     const lenis = useLenis();
 
     // ─────────────────────────────────────────────────────────────────────
-    //  TELEPORT — The Visual Rupture (REVERSE PUNCTURE PROTOCOL)
+    //  TELEPORT — The Visual Rupture (KINETIC KILL-SWITCH PROTOCOL)
     // ─────────────────────────────────────────────────────────────────────
     const executeTeleport = () => {
         if (teleportedRef.current) return;
         teleportedRef.current = true;
 
+        // 1. ENGINE SHUTDOWN
         if (lenis) lenis.stop();
+
+        // 2. THE KINETIC KILL-SWITCH
+        // Physically destroy hardware momentum from Apple trackpads/touch screens
+        const killInertia = (e: Event) => e.preventDefault();
+        window.addEventListener('wheel', killInertia, { passive: false });
+        window.addEventListener('touchmove', killInertia, { passive: false });
+
+        // 3. THE FARADAY CAGE
+        // Lock both body AND html to prevent iOS Safari bleed
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
 
         const trigger = ScrollTrigger.getById("failure-runway-st");
         if (trigger) trigger.kill();
@@ -43,9 +55,10 @@ export function SystemFailure() {
             (el as HTMLElement).style.animation = 'none';
         });
 
-        // 1. INJECT 3D CAMERA PHYSICS
+        // 1. MASSIVE DEPTH OF FIELD
+        // We push the camera back to 4000px so nothing clips behind the user's head.
         gsap.set('.sticky-core', {
-            perspective: 1000,
+            perspective: 4000,
             transformStyle: "preserve-3d",
             willChange: 'transform, opacity'
         });
@@ -54,43 +67,36 @@ export function SystemFailure() {
             willChange: 'transform, opacity'
         });
 
-        // ═══════════════════════════════════════════════════════════════
-        //  THE DEPARTURE — DIFFERENTIAL VELOCITY TIMELINE
-        // ═══════════════════════════════════════════════════════════════
         const punctureTl = gsap.timeline({
             onComplete: () => {
 
-                // THE VIEWPORT LOCK
                 gsap.set('#stable-section', { position: 'fixed', top: 0, left: 0, width: '100%', height: '100dvh', zIndex: 9999 });
 
                 const stableEl = stableContentRef.current;
                 if (!stableEl) return;
 
-                // Unhide the wrapper so we can animate the children natively
-                gsap.set(stableEl, { opacity: 1, perspective: 1500, transformStyle: "preserve-3d" });
+                // Sync the arrival camera to the same 4000px depth
+                gsap.set(stableEl, { opacity: 1, perspective: 4000, transformStyle: "preserve-3d" });
 
-                // 2. ISOLATE DOM NODES FOR REASSEMBLY
                 const arrivalElements = [
-                    stableEl.querySelector('h3'), // The Headline
-                    stableEl.querySelector('p'),  // The Body Text
-                    stableEl.querySelector('.inline-flex'), // The Badge
-                    stableEl.querySelector('.absolute.-bottom-16') // The Shadow
+                    stableEl.querySelector('h3'),
+                    stableEl.querySelector('p'),
+                    stableEl.querySelector('.inline-flex'),
+                    stableEl.querySelector('.absolute.-bottom-16')
                 ];
 
-                // 3. THE REVERSE PUNCTURE (KINETIC REASSEMBLY)
-                // We scatter the elements into deep Z-space and randomize their rotations, 
-                // then pull them violently into their CSS-defined grid.
+                // 2. CINEMATIC REASSEMBLY MATH
                 gsap.fromTo(arrivalElements,
                     {
-                        z: 2000, // Starting WAY in front of the screen
-                        scale: 8,
+                        z: 2800, // Very deep, but safely IN FRONT of the 4000px camera
+                        scale: 3, // Reduced from 8 to prevent GPU frame dropping
                         opacity: 0,
-                        filter: 'blur(40px)',
-                        rotationX: () => gsap.utils.random(-60, 60), // Tumbling through space
-                        rotationY: () => gsap.utils.random(-60, 60),
-                        rotationZ: () => gsap.utils.random(-20, 20),
-                        x: () => gsap.utils.random(-window.innerWidth, window.innerWidth),
-                        y: () => gsap.utils.random(-window.innerHeight, window.innerHeight),
+                        filter: 'blur(20px)', // Reduced from 40px to guarantee 60FPS on mobile
+                        rotationX: () => gsap.utils.random(-45, 45),
+                        rotationY: () => gsap.utils.random(-45, 45),
+                        rotationZ: () => gsap.utils.random(-15, 15),
+                        x: () => gsap.utils.random(-window.innerWidth * 0.6, window.innerWidth * 0.6),
+                        y: () => gsap.utils.random(-window.innerHeight * 0.6, window.innerHeight * 0.6),
                         willChange: 'transform, opacity, filter'
                     },
                     {
@@ -103,11 +109,10 @@ export function SystemFailure() {
                         rotationZ: 0,
                         x: 0,
                         y: 0,
-                        duration: 1.8,
-                        stagger: 0.15, // Elements hit the screen sequentially
-                        ease: 'expo.out', // Extremely fast start, very smooth deceleration
+                        duration: 2.2, // Extended from 1.5s to 2.2s for majesty
+                        stagger: 0.15,
+                        ease: 'power3.out', // Changed from expo.out. Power3 is cinematic and smooth, not aggressive.
                         onComplete: () => {
-                            // DOM RECONSTRUCTION
                             if (containerRef.current) containerRef.current.style.display = 'none';
                             setIsComplete(true);
 
@@ -121,13 +126,20 @@ export function SystemFailure() {
                             if (target) {
                                 const targetY = target.getBoundingClientRect().top + window.scrollY;
                                 window.scrollTo(0, targetY);
+
+                                // 4. DISENGAGE KILL-SWITCH & FARADAY CAGE
+                                // Only release the locks once the new coordinates are absolute
+                                document.body.style.overflow = '';
+                                document.documentElement.style.overflow = '';
+                                window.removeEventListener('wheel', killInertia);
+                                window.removeEventListener('touchmove', killInertia);
+
                                 if (lenis) {
-                                    lenis.start();
                                     lenis.scrollTo(targetY, { immediate: true, force: true });
+                                    lenis.start();
                                 }
                             }
 
-                            // Clear all inline matrices to hand control back to Tailwind
                             gsap.set([stableEl, ...arrivalElements], { clearProps: 'transform, filter, willChange' });
                         }
                     }
@@ -138,17 +150,18 @@ export function SystemFailure() {
         // ═══════════════════════════════════════════════════════════════
         //  EXECUTE THE 3D TEAR (DEPARTURE)
         // ═══════════════════════════════════════════════════════════════
+        // Pushed z targets back so they don't clip through the new 4000px camera too early
         punctureTl.to('.sticky-core', { scale: 5, opacity: 0, duration: 1.2, ease: 'expo.in' }, 0);
-        punctureTl.to('.space-y-6.font-mono', { y: 200, z: -500, scale: 0.5, opacity: 0, duration: 1.0, ease: 'power3.in' }, 0);
-        punctureTl.to('.animate-text-distort', { scale: 60, z: 800, rotationZ: 15, opacity: 0, duration: 1.2, ease: 'expo.in' }, 0);
+        punctureTl.to('.space-y-6.font-mono', { y: 200, z: -800, scale: 0.5, opacity: 0, duration: 1.0, ease: 'power3.in' }, 0);
+        punctureTl.to('.animate-text-distort', { scale: 30, z: 2500, rotationZ: 15, opacity: 0, duration: 1.2, ease: 'expo.in' }, 0);
 
         punctureTl.to('.animate-glitch-hard-1', {
-            scale: 120, z: 1200, x: -window.innerWidth * 0.8, y: window.innerHeight * 0.5,
+            scale: 60, z: 3000, x: -window.innerWidth * 0.8, y: window.innerHeight * 0.5,
             rotationZ: -35, opacity: 0, duration: 1.1, ease: 'expo.in'
         }, 0);
 
         punctureTl.to('.animate-glitch-hard-2', {
-            scale: 100, z: 1500, x: window.innerWidth * 0.8, y: -window.innerHeight * 0.5,
+            scale: 50, z: 3500, x: window.innerWidth * 0.8, y: -window.innerHeight * 0.5,
             rotationZ: 45, opacity: 0, duration: 0.9, ease: 'expo.in'
         }, 0);
     };
@@ -296,7 +309,7 @@ export function SystemFailure() {
                 {/* THE FIX: Dynamic opacity class bounds to React state */}
                 <div
                     ref={stableContentRef}
-                    className={`relative w-[85%] max-w-[1400px] mx-auto transition-opacity duration-300 ${isComplete ? 'opacity-100' : 'opacity-0'}`}
+                    className={`relative w-[85%] max-w-[1400px] mx-auto ${isComplete ? 'opacity-100' : 'opacity-0'}`}
                 >
                     <div className="text-center relative">
                         <div ref={stableCenterRef} className="relative inline-block">

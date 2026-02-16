@@ -22,11 +22,8 @@ export interface Scene3DProps {
  * Props for internal SceneContent component
  */
 export interface SceneContentProps {
-    /** Whether tablet is exploding */
-    isExploding: boolean;
-
-    /** Explosion animation progress [0, 1] */
-    explosionProgress: number;
+    /** Enable click-to-explode interaction */
+    interactive?: boolean;
 }
 
 /**
