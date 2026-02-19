@@ -28,3 +28,10 @@ export type {
 // FlavorTablet module
 export { FlavorTablet } from './FlavorTablet/FlavorTablet';
 export type { FlavorTabletProps, FlavorTabletRef } from './FlavorTablet/FlavorTablet.types';
+
+// HydreCoreAssembly module — Declarative Scene Graph Destructuring
+export { HydreCoreAssembly } from './HydreCoreAssembly';
+export type { HydreCoreAssemblyProps, HydreSceneNodes } from './HydreCoreAssembly';
+
+// HydreProductSection module — Canvas Environmental Wrapper
+export { HydreProductSection } from './HydreProductSection';

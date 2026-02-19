@@ -90,6 +90,8 @@ body::after {
 */
 
 /* Film Grain Noise (3-4% opacity) */
+/* Film Grain Noise (3-4% opacity) */
+/* 
 body::before {
   content: '';
   position: fixed;
@@ -100,9 +102,11 @@ body::before {
   opacity: 0.035;
   pointer-events: none;
   z-index: 9999;
-  animation: noise-shift 0.5s steps(5) infinite;
+  animation: noise-shift 0.5s steps(5) infinite; 
 }
+*/
 
+/* 
 @keyframes noise-shift {
   0% {
     transform: translate(0, 0);
@@ -127,8 +131,8 @@ body::before {
   100% {
     transform: translate(0, 0);
   }
-}
-
+} 
+*/
 /* ═══════════════════════════════════════════════════════════════════════════
    INDUSTRIAL SCROLLBAR
 ═══════════════════════════════════════════════════════════════════════════ */
