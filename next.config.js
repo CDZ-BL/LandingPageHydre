@@ -28,7 +28,7 @@ const nextConfig = {
                             "font-src 'self' https://fonts.gstatic.com",
                             "img-src 'self' data: blob: https:",
                             "media-src 'self' blob:",
-                            "connect-src 'self' https://*.supabase.co https://*.upstash.io https://api.resend.com",
+                            "connect-src 'self' blob: https://*.supabase.co https://*.upstash.io https://api.resend.com https://raw.githack.com",
                             "worker-src 'self' blob:",
                             "frame-src 'none'",
                         ].join('; '),
