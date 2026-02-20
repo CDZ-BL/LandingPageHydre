@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { Environment, PresentationControls } from '@react-three/drei';
 import { HydreCoreAssembly } from '@/components/three/HydreCoreAssembly';
+import { LiquidPlane } from '@/components/three/LiquidHero';
 
 // ─────────────────────────────────────────────────────────────
 // CAMERA CONFIGURATION
@@ -26,17 +27,46 @@ export function HeroVoid() {
             {/* Sticky viewport — pins both text + 3D while scroll drives the unscrew */}
             <div className="sticky top-0 h-screen flex">
 
-                {/* ━━━ VIDEO BACKGROUND ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
-                >
-                    <source src="/videos/Slow_Liquid_Surface_Animation.mp4" type="video/mp4" />
-                </video>
+                {/* ━━━ UNIFIED WEBGL CANVAS — Full viewport background ━━━━ */}
+                <div className="absolute inset-0 z-0">
+                    <Canvas
+                        dpr={[1, 1.5]}
+                        camera={{
+                            position: CAMERA_POSITION,
+                            fov: CAMERA_FOV,
+                        }}
+                        gl={{
+                            antialias: true,
+                            alpha: false,
+                            powerPreference: 'high-performance',
+                            logarithmicDepthBuffer: false,
+                        }}
+                    >
+                        <color attach="background" args={['#030303']} />
+
+                        {/* Lightweight procedural IBL — 256px cubemap, no HDR file load */}
+                        <Environment preset="city" resolution={256} background={false} />
+                        <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
+                        <ambientLight intensity={0.15} />
+
+                        <Suspense fallback={null}>
+                            {/* HYDRE Liquid Core — Abyssal mercury surface */}
+                            <LiquidPlane position={[0, -2, -3]} />
+
+                            {/* Product Assembly — Tube + Lid + Tablet */}
+                            <PresentationControls
+                                global
+                                config={{ mass: 2, tension: 500 }}
+                                snap={{ mass: 4, tension: 1500 }}
+                                rotation={[0, 0, 0]}
+                                polar={[-Math.PI / 3, Math.PI / 3]}
+                                azimuth={[-Math.PI / 1.4, Math.PI / 2]}
+                            >
+                                <HydreCoreAssembly scale={2.75} position={[0, -0.3, 0]} />
+                            </PresentationControls>
+                        </Suspense>
+                    </Canvas>
+                </div>
 
                 {/* LEFT TEXT */}
                 <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-1/2">
@@ -85,49 +115,12 @@ export function HeroVoid() {
                     </motion.div>
                 </motion.div>
 
-                {/* RIGHT: 3D CANVAS — Hardened HydreCoreAssembly */}
-                <div className="relative w-1/2 h-full">
-                    {/* Status bar (right side) */}
+                {/* RIGHT: Status indicator */}
+                <div className="relative w-1/2 h-full pointer-events-none">
                     <div className="absolute top-8 right-8 font-mono text-right text-xs tracking-wider opacity-80 z-30 mix-blend-difference">
                         <span className="block">STATUS</span>
                         <span className="block text-neon-orange font-semibold mt-1 animate-pulse">AVAILABLE</span>
                     </div>
-
-                    <Canvas
-                        dpr={[1, 2]}
-                        camera={{
-                            position: CAMERA_POSITION,
-                            fov: CAMERA_FOV,
-                        }}
-                        gl={{
-                            antialias: true,
-                            alpha: false,
-                            powerPreference: 'high-performance',
-                            logarithmicDepthBuffer: false,
-                        }}
-                        style={{ background: 'transparent' }}
-                    >
-                        <color attach="background" args={['#050505']} />
-                        <ambientLight intensity={0.2} />
-
-                        <Suspense fallback={null}>
-                            <Environment
-                                files="/models/studio_small_08_1k.hdr"
-                                environmentIntensity={0.8}
-                            />
-
-                            <PresentationControls
-                                global
-                                config={{ mass: 2, tension: 500 }}
-                                snap={{ mass: 4, tension: 1500 }}
-                                rotation={[0, 0, 0]}
-                                polar={[-Math.PI / 3, Math.PI / 3]}
-                                azimuth={[-Math.PI / 1.4, Math.PI / 2]}
-                            >
-                                <HydreCoreAssembly scale={2.75} position={[0, -0.3, 0]} />
-                            </PresentationControls>
-                        </Suspense>
-                    </Canvas>
                 </div>
 
                 {/* Bottom gradient */}
