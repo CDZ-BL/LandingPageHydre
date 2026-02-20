@@ -53,8 +53,7 @@ export function debounce<T extends (...args: unknown[]) => void>(
     };
 }
 
-// Get asset path with basePath for GitHub Pages
+// Get asset path — Vercel serves from root, no basePath needed
 export function getAssetPath(path: string): string {
-    const basePath = process.env.NODE_ENV === 'production' ? '/LandingPageHydre' : '';
-    return `${basePath}${path}`;
+    return path;
 }
