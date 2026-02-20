@@ -3,7 +3,7 @@
 import { Suspense } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
-import { Environment, PresentationControls } from '@react-three/drei';
+import { Environment, Lightformer, PresentationControls } from '@react-three/drei';
 import { HydreCoreAssembly } from '@/components/three/HydreCoreAssembly';
 import { LiquidPlane } from '@/components/three/LiquidHero';
 
@@ -44,8 +44,45 @@ export function HeroVoid() {
                     >
                         <color attach="background" args={['#030303']} />
 
-                        {/* Lightweight procedural IBL — 256px cubemap, no HDR file load */}
-                        <Environment preset="city" resolution={256} background={false} />
+                        {/* ── PROCEDURAL IBL — Zero fetch, zero file ──────── */}
+                        {/* Lightformers generate a cubemap at runtime.       */}
+                        {/* roughness: 0.02 on the liquid smooths artifacts.  */}
+                        <Environment resolution={256} background={false}>
+                            {/* Key light — sharp chrome reflections */}
+                            <Lightformer
+                                form="rect"
+                                intensity={3}
+                                position={[5, 5, -5]}
+                                rotation-y={Math.PI / 4}
+                                scale={[10, 4, 1]}
+                                color="#ffffff"
+                            />
+                            {/* Fill — subtle blue to add depth */}
+                            <Lightformer
+                                form="ring"
+                                intensity={0.8}
+                                position={[-5, 3, 2]}
+                                scale={[8, 8, 1]}
+                                color="#4060ff"
+                            />
+                            {/* Rim — silhouette emphasis from behind */}
+                            <Lightformer
+                                form="rect"
+                                intensity={2}
+                                position={[0, 4, -8]}
+                                scale={[20, 2, 1]}
+                                color="#ffffff"
+                            />
+                            {/* Ground bounce — warm subtle uplighting */}
+                            <Lightformer
+                                form="rect"
+                                intensity={0.4}
+                                position={[0, -3, 0]}
+                                rotation-x={-Math.PI / 2}
+                                scale={[20, 20, 1]}
+                                color="#1a1208"
+                            />
+                        </Environment>
                         <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
                         <ambientLight intensity={0.15} />
 
