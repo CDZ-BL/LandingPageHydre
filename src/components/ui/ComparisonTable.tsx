@@ -151,93 +151,95 @@ export function ComparisonTable({ competitor }: ComparisonTableProps) {
     ];
 
     return (
-        <div className="relative overflow-hidden rounded-machined border border-white/10 bg-black/40 backdrop-blur-sm">
-            {/* Header */}
-            <div className="grid grid-cols-4 gap-4 px-4 py-4 bg-white/[0.03] border-b border-white/10 items-center">
-                <div className="font-data text-[10px] text-tertiary tracking-widest uppercase">MÉTRIQUE</div>
-                <div className="font-data text-[10px] text-white font-bold tracking-widest text-center flex flex-col items-center gap-1">
-                    <span>AETHER</span>
-                    <div className="w-12 h-[1px] bg-white/50" />
+        <div className="relative overflow-x-auto rounded-machined border border-white/10 bg-black/40 backdrop-blur-sm custom-scrollbar">
+            <div className="min-w-[550px]">
+                {/* Header */}
+                <div className="grid grid-cols-4 gap-4 px-4 py-4 bg-white/[0.03] border-b border-white/10 items-center">
+                    <div className="font-data text-[10px] text-tertiary tracking-widest uppercase">MÉTRIQUE</div>
+                    <div className="font-data text-[10px] text-white font-bold tracking-widest text-center flex flex-col items-center gap-1">
+                        <span>AETHER</span>
+                        <div className="w-12 h-[1px] bg-white/50" />
+                    </div>
+                    <div className="font-data text-[10px] text-orange-500/80 tracking-widest text-center truncate flex flex-col items-center gap-1">
+                        <span>{competitor.codeName}</span>
+                        <div className="w-12 h-[1px] bg-orange-500/30" />
+                    </div>
+                    <div className="font-data text-[10px] text-tertiary tracking-widest text-center">ANALYSE</div>
                 </div>
-                <div className="font-data text-[10px] text-orange-500/80 tracking-widest text-center truncate flex flex-col items-center gap-1">
-                    <span>{competitor.codeName}</span>
-                    <div className="w-12 h-[1px] bg-orange-500/30" />
-                </div>
-                <div className="font-data text-[10px] text-tertiary tracking-widest text-center">ANALYSE</div>
-            </div>
 
-            {/* Rows */}
-            <AnimatePresence mode="wait">
-                <motion.div
-                    key={competitor.id}
-                    initial={{ opacity: 0.5, filter: 'blur(2px)' }}
-                    animate={{ opacity: 1, filter: 'blur(0px)' }}
-                    transition={{ duration: 0.3 }}
-                >
-                    {rows.map((row, i) => (
-                        <div
-                            key={row.label}
-                            className={`
+                {/* Rows */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={competitor.id}
+                        initial={{ opacity: 0.5, filter: 'blur(2px)' }}
+                        animate={{ opacity: 1, filter: 'blur(0px)' }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {rows.map((row, i) => (
+                            <div
+                                key={row.label}
+                                className={`
                                 grid grid-cols-4 gap-4 px-4 py-3 items-center border-b border-white/[0.02]
                                 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.01] hover:bg-white/[0.02]'}
                                 transition-colors duration-200 group
                             `}
-                        >
-                            {/* Label */}
-                            <div className="font-mono text-[10px] text-tertiary tracking-wider group-hover:text-white transition-colors">
-                                {row.label}
-                            </div>
+                            >
+                                {/* Label */}
+                                <div className="font-mono text-[10px] text-tertiary tracking-wider group-hover:text-white transition-colors">
+                                    {row.label}
+                                </div>
 
-                            {/* AETHER value (Highlighted) */}
-                            <div className="font-data text-xs text-white text-center font-bold bg-white/[0.03] py-1 rounded-sm mx-2">
-                                {row.isText ? (
-                                    <span className="text-emerald-400 text-[10px]">{row.aether}</span>
-                                ) : (
-                                    <AnimatedValue
-                                        value={row.aether as number}
-                                        suffix={row.suffix}
-                                        decimals={row.decimals}
-                                    />
-                                )}
-                            </div>
+                                {/* AETHER value (Highlighted) */}
+                                <div className="font-data text-xs text-white text-center font-bold bg-white/[0.03] py-1 rounded-sm mx-2">
+                                    {row.isText ? (
+                                        <span className="text-emerald-400 text-[10px]">{row.aether}</span>
+                                    ) : (
+                                        <AnimatedValue
+                                            value={row.aether as number}
+                                            suffix={row.suffix}
+                                            decimals={row.decimals}
+                                        />
+                                    )}
+                                </div>
 
-                            {/* Competitor value */}
-                            <div className="font-data text-xs text-white/40 text-center">
-                                {row.isText ? (
-                                    <span className="text-[10px]">{row.competitor}</span>
-                                ) : (
-                                    <AnimatedValue
-                                        value={row.competitor as number}
-                                        suffix={row.suffix}
-                                        decimals={row.decimals}
-                                    />
-                                )}
-                            </div>
+                                {/* Competitor value */}
+                                <div className="font-data text-xs text-white/40 text-center">
+                                    {row.isText ? (
+                                        <span className="text-[10px]">{row.competitor}</span>
+                                    ) : (
+                                        <AnimatedValue
+                                            value={row.competitor as number}
+                                            suffix={row.suffix}
+                                            decimals={row.decimals}
+                                        />
+                                    )}
+                                </div>
 
-                            {/* DELTA / STATUS PILL */}
-                            <div className="flex justify-center">
-                                {row.isText ? (
-                                    <TextComparison
-                                        aether={row.aether as string}
-                                        competitor={row.competitor as string}
-                                    />
-                                ) : (
-                                    <DeltaPill
-                                        aether={row.aether as number}
-                                        competitor={row.competitor as number}
-                                        inverted={row.inverted}
-                                    />
-                                )}
+                                {/* DELTA / STATUS PILL */}
+                                <div className="flex justify-center">
+                                    {row.isText ? (
+                                        <TextComparison
+                                            aether={row.aether as string}
+                                            competitor={row.competitor as string}
+                                        />
+                                    ) : (
+                                        <DeltaPill
+                                            aether={row.aether as number}
+                                            competitor={row.competitor as number}
+                                            inverted={row.inverted}
+                                        />
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </motion.div>
-            </AnimatePresence>
+                        ))}
+                    </motion.div>
+                </AnimatePresence>
 
-            {/* Footer / Summary */}
-            <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[9px] font-mono text-white/30">
-                <span>[ AUTO-GENERATED REPORT ]</span>
-                <span>CONFIDENCE: 99.9%</span>
+                {/* Footer / Summary */}
+                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[9px] font-mono text-white/30">
+                    <span>[ AUTO-GENERATED REPORT ]</span>
+                    <span>CONFIDENCE: 99.9%</span>
+                </div>
             </div>
         </div>
     );

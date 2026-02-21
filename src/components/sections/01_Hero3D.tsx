@@ -27,7 +27,7 @@ export function HeroVoid() {
                 />
 
                 {/* ━━━ LEFT TEXT OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-                <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-1/2">
+                <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-full lg:w-1/2">
 
                     {/* Status bar */}
                     <div className="absolute top-8 left-0 right-0 flex justify-between items-start mix-blend-difference">
@@ -74,7 +74,7 @@ export function HeroVoid() {
                 </motion.div>
 
                 {/* RIGHT: Status indicator */}
-                <div className="relative w-1/2 h-full pointer-events-none">
+                <div className="absolute inset-0 lg:relative lg:w-1/2 h-full pointer-events-none">
                     <div className="absolute top-8 right-8 font-mono text-right text-xs tracking-wider opacity-80 z-30 mix-blend-difference">
                         <span className="block">STATUS</span>
                         <span className="block text-neon-orange font-semibold mt-1 animate-pulse">AVAILABLE</span>
