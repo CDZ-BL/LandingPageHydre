@@ -23,12 +23,12 @@ const nextConfig = {
                         key: 'Content-Security-Policy',
                         value: [
                             "default-src 'self'",
-                            "script-src 'self' 'unsafe-eval' 'unsafe-inline'",  // Three.js GLSL compiler needs eval
+                            "script-src 'self' 'unsafe-eval' 'unsafe-inline' blob: https://vercel.live",  // Fixed: added blob: for workers
                             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
                             "font-src 'self' https://fonts.gstatic.com",
                             "img-src 'self' data: blob: https:",
-                            "media-src 'self' blob:",
-                            "connect-src 'self' blob: https://*.supabase.co https://*.upstash.io https://api.resend.com https://raw.githack.com",
+                            "media-src 'self' blob: https:", // Added https: for remote videos
+                            "connect-src 'self' blob: https://*.supabase.co https://*.upstash.io https://api.resend.com https://raw.githack.com https://*.vercel.app",
                             "worker-src 'self' blob:",
                             "frame-src 'none'",
                         ].join('; '),
