@@ -23,9 +23,9 @@
 'use client';
 
 import * as THREE from 'three';
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture } from '@react-three/drei';
+import { useGLTF, useTexture, Decal } from '@react-three/drei';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -65,6 +65,8 @@ const TUBE_SHOWCASE_ROTATION = Math.PI * 0.6;
 // decode pipeline in a Web Worker immediately.
 // ─────────────────────────────────────────────────────────────
 useGLTF.preload(MODEL_PATH);
+const ETIQUETTE_PATH = '/images/etiquette.png';
+useTexture.preload(ETIQUETTE_PATH);
 
 // ─────────────────────────────────────────────────────────────
 // MATERIAL DEFINITION — Matte White Plastic Lid
@@ -98,14 +100,34 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
     // R3F's useGLTF returns the full glTF result. We extract
     // only `nodes` — the flattened map of named meshes.
     const { nodes } = useGLTF(MODEL_PATH) as any;
+    const etiquetteTexture = useTexture(ETIQUETTE_PATH);
 
-    // ── 1.5. LOAD DEBOSSED NORMAL MAP ──────────────────────
-    // Tangent-space normal map simulating CNC-milled logo
-    // and injection micro-scratches. Zero-poly detail.
-    // TODO: Re-enable once /textures/hydre-tube-normal.webp is available
-    // const [tubeNormalMap] = useTexture(['/textures/hydre-tube-normal.webp']);
-    // tubeNormalMap.wrapS = tubeNormalMap.wrapT = THREE.ClampToEdgeWrapping;
-    // tubeNormalMap.colorSpace = THREE.NoColorSpace;
+    // ── 1.5. COMPUTE EXACT PHYSICAL DIMENSIONS ─────────────
+    // The user requested a 1:1 map with the physical 146mm tube limit.
+    // Instead of guessing the scale, we mathematically extract the 
+    // exact bounding box height and radius from the glTF geometry.
+    const { smoothedTubeGeometry, tubeDimensions } = useMemo(() => {
+        if (!nodes.Mesh_Tube?.geometry) return { smoothedTubeGeometry: null, tubeDimensions: null };
+
+        const geom = nodes.Mesh_Tube.geometry.clone();
+        geom.computeVertexNormals();
+
+        // Calculate exact bounding box
+        geom.computeBoundingBox();
+        const bbox = geom.boundingBox as THREE.Box3;
+
+        // Physical dimensions in world space
+        const height = bbox.max.y - bbox.min.y;
+        // Radius is half the width on the X or Z axis
+        const radius = (bbox.max.x - bbox.min.x) / 2;
+        // Y-Center of the tube
+        const centerY = bbox.min.y + (height / 2);
+
+        return {
+            smoothedTubeGeometry: geom,
+            tubeDimensions: { height, radius, centerY }
+        };
+    }, [nodes.Mesh_Tube]);
 
     // ── 2. KINEMATIC POINTERS FOR GSAP ─────────────────────
     // Exclusive refs per mesh for surgical animation control.
@@ -205,7 +227,7 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                  *  Receives the luxury deep chrome material.
                  */}
                 <mesh
-                    geometry={nodes.Mesh_Tube.geometry}
+                    geometry={smoothedTubeGeometry || nodes.Mesh_Tube.geometry}
                 >
                     <meshPhysicalMaterial
                         color="#030303"
@@ -214,11 +236,35 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                         clearcoat={1.0}
                         clearcoatRoughness={0.05}
                         envMapIntensity={2.5}
-                    // THE 0.1% INJECTION
-                    // TODO: Re-enable with tubeNormalMap
-                    // normalMap={tubeNormalMap}
-                    // normalScale={new THREE.Vector2(0.5, 0.5)}
                     />
+                    {/* The Decal projects the etiquette exactly 1:1 onto the tube surface. */}
+                    {tubeDimensions && (
+                        <Decal
+                            position={[
+                                Math.sin(-TUBE_SHOWCASE_ROTATION) * tubeDimensions.radius,
+                                tubeDimensions.centerY, // Exactly vertically centered
+                                Math.cos(-TUBE_SHOWCASE_ROTATION) * tubeDimensions.radius
+                            ]}
+                            rotation={[0, -TUBE_SHOWCASE_ROTATION, 0]}
+                            // X: Wraps half the circumference (PI * r)
+                            // Y: Matches the exact physical height of the tube bounding box
+                            // Z: Projection depth
+                            scale={[
+                                Math.PI * tubeDimensions.radius * 1.5, // 1.5x arc to allow slight wrapping overflow
+                                tubeDimensions.height, // 100% exact height mapping
+                                tubeDimensions.radius * 2 // Deep enough to hit the surface
+                            ]}
+                        >
+                            <meshPhysicalMaterial
+                                map={etiquetteTexture}
+                                transparent={true}
+                                polygonOffset={true}
+                                polygonOffsetFactor={-1}
+                                roughness={0.6} // Matte finish for the label
+                                metalness={0.1}
+                            />
+                        </Decal>
+                    )}
                 </mesh>
 
                 {/* ━━━ LID: Unscrewing scroll timeline target ━━━━━━━━━━

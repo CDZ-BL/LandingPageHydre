@@ -34,15 +34,28 @@ const CAMERA_FOV = 35;
 export function FixedProductCanvas() {
     const wrapperRef = useRef<HTMLDivElement>(null);
 
-    // ── GSAP: Fade out at end of section 2 ──────────────────
+    // ── GSAP: Pin the product and fade out as System Failure arrives ────────────────
     useEffect(() => {
         if (!wrapperRef.current) return;
 
         const ctx = gsap.context(() => {
+            // 1. PIN THE PRODUCT TO THE VIEWPORT (behaves like 'fixed')
+            // It will unpin specifically when System Failure reaches the top,
+            // allowing it to naturally scroll up and away with the rest of the page.
             ScrollTrigger.create({
-                trigger: '#stable-section',
-                start: 'top 80%',
-                end: 'bottom top',
+                trigger: wrapperRef.current,
+                start: 'top top',
+                endTrigger: '#system-failure-section',
+                end: 'top top',
+                pin: true,
+                pinSpacing: false, // Critical: prevents GSAP from adding padding that pushes UI down
+            });
+
+            // 2. FADE OUT OPACITY (Phantom transition)
+            ScrollTrigger.create({
+                trigger: '#system-failure-section',
+                start: 'top 60%', // Start fading when System Failure crosses mid-screen
+                end: 'top top',   // Fully disappeared when it reaches the very top
                 scrub: 1,
                 onUpdate: (self) => {
                     if (wrapperRef.current) {
@@ -68,15 +81,7 @@ export function FixedProductCanvas() {
     return (
         <div
             ref={wrapperRef}
-            style={{
-                position: 'fixed',
-                top: 0,
-                right: 0,
-                width: '50%',
-                height: '100vh',
-                zIndex: 50,
-                pointerEvents: 'none',
-            }}
+            className="absolute top-0 right-0 w-full lg:w-1/2 h-screen z-50 pointer-events-none"
         >
             <Canvas
                 dpr={[1, 1.5]}

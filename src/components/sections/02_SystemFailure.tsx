@@ -228,6 +228,7 @@ export function SystemFailure() {
                 SCROLL RUNWAY — Dies permanently when isComplete is true
             ════════════════════════════════════════════════════════════════ */}
             <section
+                id="system-failure-section"
                 ref={containerRef}
                 className={`relative w-full bg-black ${isComplete ? 'hidden' : 'block'}`}
                 style={{ height: isComplete ? '0px' : '1180dvh' }}
