@@ -55,6 +55,8 @@ const LID_ROTATION_RADIANS = Math.PI * 3;
 const SCROLL_DEPTH_PX = 800;
 /** GSAP scrub lag in seconds — simulates physical friction */
 const SCRUB_LAG_SECONDS = 1;
+/** Scroll-driven Y-rotation — spins the tube to showcase the label */
+const TUBE_SHOWCASE_ROTATION = Math.PI * 0.6;
 
 // ─────────────────────────────────────────────────────────────
 // PRELOAD DIRECTIVE
@@ -65,17 +67,23 @@ const SCRUB_LAG_SECONDS = 1;
 useGLTF.preload(MODEL_PATH);
 
 // ─────────────────────────────────────────────────────────────
-// MATERIAL DEFINITION — Dark Chrome & Brushed Metal
-// 0.1% Deep Chrome Polymer with micro-rough clearcoat
+// MATERIAL DEFINITION — Matte White Plastic Lid
+// Zero metalness — this is injection-molded plastic.
 // ─────────────────────────────────────────────────────────────
-// Tube material now defined dynamically inside component for texture binding.
-
-const LUXURY_LID_MATERIAL = new THREE.MeshPhysicalMaterial({
-    color: new THREE.Color('#080808'),
-    metalness: 0.9,
-    roughness: 0.2,                    // Smoother than the tube
-    envMapIntensity: 2.0,
+const LUXURY_LID_MATERIAL = new THREE.MeshStandardMaterial({
+    color: new THREE.Color('#f2f2f2'),
+    metalness: 0.0,
+    roughness: 0.55,
+    envMapIntensity: 0.8,
 });
+
+// ─────────────────────────────────────────────────────────────
+// ORBITING TABLETS CONFIGURATION
+// ─────────────────────────────────────────────────────────────
+const ORBITING_TABLET_COUNT = 6;
+const ORBIT_RADIUS = 0.06;
+const ORBIT_SPEED = 0.4;
+const ORBIT_Y_SPREAD = 0.04;
 
 /**
  * HydreCoreAssembly — Premium 3D product assembly
@@ -105,15 +113,7 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
     const tabletRef = useRef<THREE.Mesh>(null);
     const assemblyGroupRef = useRef<THREE.Group>(null);
     const floatingRef = useRef<THREE.Group>(null);
-
-    // ── 3. DISSOLVE UNIFORM REFS ───────────────────────────
-    // Mutable uniform object — GSAP mutates .value directly,
-    // CSM reads it every frame. Zero React re-renders.
-    const dissolveUniforms = useRef({
-        uProgress: { value: 0.0 },
-        uEdgeColor: { value: new THREE.Color('#00F0FF') },
-        uThickness: { value: 0.04 },
-    });
+    const orbitingTabletsRef = useRef<THREE.Group>(null);
 
     // ── 4. SCROLL-DRIVEN UNSCREWING + DISSOLVE MATRIX ──────
     // Binds lid kinematics and tablet dissolve to the DOM
@@ -127,7 +127,7 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
     // 3. Tablet rotates to face camera
     // 4. Tablet dissolves (Atomization)
     useGSAP(() => {
-        if (!lidRef.current || !tabletRef.current) return;
+        if (!lidRef.current || !tabletRef.current || !assemblyGroupRef.current) return;
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -137,6 +137,12 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                 scrub: SCRUB_LAG_SECONDS,
             },
         });
+
+        // Phase 0: Showcase rotation — spins the tube to reveal the label
+        tl.to(assemblyGroupRef.current.rotation, {
+            y: TUBE_SHOWCASE_ROTATION,
+            ease: 'power1.inOut',
+        }, 0);
 
         // Phase A & B: Lift and Spin the Lid (Starts at timeline 0)
         tl.to(lidRef.current.position, { y: `+=${LID_LIFT_DISTANCE}`, ease: 'power2.out' }, 0);
@@ -160,31 +166,34 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
             ease: 'power1.inOut'
         }, 0.3);
 
-        // Phase D: The Apex Dissolve
-        // Starts at 0.6, after the tablet is floating in macro-focus
-        tl.to(dissolveUniforms.current.uProgress, {
-            value: 1.0,
-            ease: 'power2.in',
-        }, 0.6);
+        // Phase D reserved for future dissolve effect
 
     }, { dependencies: [] });
 
-    // ── 5. AMBIENT BREATHING LOOP ──────────────────────────
-    // Sub-millimeter floating motion to simulate zero-gravity
-    // suspension. Breaks the rigid "3D model on a web page" feel.
-    // Applied to inner group to preserve parent styling/position.
+    // ── 5. AMBIENT BREATHING + ORBITING TABLETS LOOP ───────
     useFrame((state) => {
-        if (!floatingRef.current) return;
-
-        // Elapsed time from the Three.js clock
         const t = state.clock.elapsedTime;
 
-        // Sub-millimeter translation: A * sin(freq * t)
-        floatingRef.current.position.y = Math.sin(t * 1.5) * 0.002;
+        // Breathing on the inner group
+        if (floatingRef.current) {
+            floatingRef.current.position.y = Math.sin(t * 1.5) * 0.002;
+            floatingRef.current.rotation.x = Math.sin(t * 0.8) * 0.02;
+            floatingRef.current.rotation.y = Math.cos(t * 1.2) * 0.02;
+        }
 
-        // Micro-rotation for environmental light catching
-        floatingRef.current.rotation.x = Math.sin(t * 0.8) * 0.02;
-        floatingRef.current.rotation.y = Math.cos(t * 1.2) * 0.02;
+        // Orbiting tablets — each child orbits at a unique phase
+        if (orbitingTabletsRef.current) {
+            orbitingTabletsRef.current.children.forEach((child, i) => {
+                const phase = (i / ORBITING_TABLET_COUNT) * Math.PI * 2;
+                const angle = t * ORBIT_SPEED + phase;
+                child.position.x = Math.cos(angle) * ORBIT_RADIUS;
+                child.position.z = Math.sin(angle) * ORBIT_RADIUS;
+                child.position.y = Math.sin(angle * 0.7 + phase) * ORBIT_Y_SPREAD;
+                // Self-rotation for visual interest
+                child.rotation.x = t * 0.5 + phase;
+                child.rotation.z = t * 0.3 + phase;
+            });
+        }
     });
 
     return (
@@ -225,10 +234,8 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                     rotation={nodes.Mesh_Lid.rotation}
                 />
 
-                {/* ━━━ TABLET HERO: Apex Dissolve via CSM ━━━━━━━━━━━━━
-                 *  CustomShaderMaterial extends MeshPhysicalMaterial's
-                 *  shader AST — preserves the full PBR lighting pipeline
-                 *  while injecting our 3D simplex noise dissolve.
+                {/* ━━━ TABLET HERO: Compressed Powder ━━━━━━━━━━━━━━━━━
+                 *  Non-metallic, matte — compressed powder aesthetic.
                  */}
                 <mesh
                     ref={tabletRef}
@@ -236,21 +243,36 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                     position={nodes.Mesh_Tablet_Hero.position}
                     rotation={nodes.Mesh_Tablet_Hero.rotation}
                 >
-                    <CustomShaderMaterial
-                        baseMaterial={THREE.MeshPhysicalMaterial}
-                        vertexShader={dissolveVertex}
-                        fragmentShader={dissolveFragment}
-                        uniforms={dissolveUniforms.current}
-                        transparent
-                        // Luxury PBR properties
-                        color="#1a1a1a"
-                        roughness={0.15}
-                        metalness={0.8}
-                        clearcoat={1.0}
-                        clearcoatRoughness={0.1}
-                        envMapIntensity={2.5}
+                    <meshStandardMaterial
+                        color="#e8e8e8"
+                        roughness={0.7}
+                        metalness={0.0}
+                        envMapIntensity={0.5}
+                        side={THREE.DoubleSide}
                     />
                 </mesh>
+
+                {/* ━━━ ORBITING TABLETS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+                 *  Cloned tablet geometry orbiting perpetually.
+                 *  useFrame drives their positions each tick.
+                 */}
+                <group ref={orbitingTabletsRef} position={[0, 0.02, 0]}>
+                    {Array.from({ length: ORBITING_TABLET_COUNT }).map((_, i) => (
+                        <mesh
+                            key={i}
+                            geometry={nodes.Mesh_Tablet_Hero.geometry}
+                            scale={0.6}
+                        >
+                            <meshStandardMaterial
+                                color="#e8e8e8"
+                                roughness={0.7}
+                                metalness={0.0}
+                                envMapIntensity={0.5}
+                                side={THREE.DoubleSide}
+                            />
+                        </mesh>
+                    ))}
+                </group>
 
             </group>
         </group>

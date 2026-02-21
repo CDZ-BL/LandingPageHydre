@@ -8,11 +8,16 @@ import { TheSpecs } from '@/components/sections/05_TheSpecs';
 import { Alliance } from '@/components/sections/07_Alliance';
 import { Roadmap } from '@/components/sections/09_Roadmap';
 import { TheClose } from '@/components/sections/10_TheClose';
+import { FixedProductCanvas } from '@/components/three/FixedProductCanvas';
 
 export default function Home() {
     return (
         <main className="min-h-screen bg-void">
             <Header />
+
+            {/* ━━━ VIEWPORT-FIXED 3D PRODUCT OVERLAY ━━━━━━━━━━━━━━━━ */}
+            {/* Pinned to right 50%, persists through sections 1-2 */}
+            <FixedProductCanvas />
 
             {/* Block 1: Architecture Hero */}
             <HeroVoid />

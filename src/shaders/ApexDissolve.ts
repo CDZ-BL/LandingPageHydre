@@ -89,26 +89,29 @@ export const dissolveFragment = `
   }
 
   void main() {
-    // 1. Generate noise mapped to the object's physical size.
-    //    150.0 multiplier scales the dissolve chunk granularity.
-    float noiseVal = snoise(vLocalPosition * 150.0);
-    
-    // Remap noise from [-1, 1] to [0, 1]
-    noiseVal = noiseVal * 0.5 + 0.5;
+    // Only activate dissolve when animation has started
+    if (uProgress > 0.0) {
+      // 1. Generate noise mapped to the object's physical size.
+      //    150.0 multiplier scales the dissolve chunk granularity.
+      float noiseVal = snoise(vLocalPosition * 150.0);
+      
+      // Remap noise from [-1, 1] to [0, 1]
+      noiseVal = noiseVal * 0.5 + 0.5;
 
-    // 2. The Disintegration Cut
-    //    Pad progress slightly to ensure complete disappearance at uProgress = 1.0
-    float threshold = uProgress * 1.2 - 0.1; 
-    
-    if (noiseVal < threshold) {
-      discard; // Kill the pixel immediately. Zero VRAM overhead.
+      // 2. The Disintegration Cut
+      //    Pad progress slightly to ensure complete disappearance at uProgress = 1.0
+      float threshold = uProgress * 1.2 - 0.1; 
+      
+      if (noiseVal < threshold) {
+        discard; // Kill the pixel immediately. Zero VRAM overhead.
+      }
+
+      // 3. The Emissive Plasma Edge
+      //    Isolate a band right on the edge of the threshold
+      float edgeMask = 1.0 - smoothstep(threshold, threshold + uThickness, noiseVal);
+      
+      // INJECT into CSM's native emissive chunk
+      csm_Emissive += uEdgeColor * edgeMask * 8.0;
     }
-
-    // 3. The Emissive Plasma Edge
-    //    Isolate a band right on the edge of the threshold
-    float edgeMask = 1.0 - smoothstep(threshold, threshold + uThickness, noiseVal);
-    
-    // INJECT into CSM's native emissive chunk
-    csm_Emissive += uEdgeColor * edgeMask * 8.0; 
   }
 `;

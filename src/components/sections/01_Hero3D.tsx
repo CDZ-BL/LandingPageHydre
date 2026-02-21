@@ -1,17 +1,6 @@
 'use client';
 
-import { Suspense } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { Environment, Lightformer, PresentationControls } from '@react-three/drei';
-import { HydreCoreAssembly } from '@/components/three/HydreCoreAssembly';
-import { LiquidPlane } from '@/components/three/LiquidHero';
-
-// ─────────────────────────────────────────────────────────────
-// CAMERA CONFIGURATION
-// ─────────────────────────────────────────────────────────────
-const CAMERA_POSITION: [number, number, number] = [0, 0, 1.0];
-const CAMERA_FOV = 35;
 
 // --- HERO ---
 export function HeroVoid() {
@@ -24,88 +13,20 @@ export function HeroVoid() {
             className="relative bg-void text-white overflow-hidden"
             style={{ height: '200vh' }}
         >
-            {/* Sticky viewport — pins both text + 3D while scroll drives the unscrew */}
+            {/* Sticky viewport — pins text while scroll drives the product */}
             <div className="sticky top-0 h-screen flex">
 
-                {/* ━━━ UNIFIED WEBGL CANVAS — Full viewport background ━━━━ */}
-                <div className="absolute inset-0 z-0">
-                    <Canvas
-                        dpr={[1, 1.5]}
-                        camera={{
-                            position: CAMERA_POSITION,
-                            fov: CAMERA_FOV,
-                        }}
-                        gl={{
-                            antialias: true,
-                            alpha: false,
-                            powerPreference: 'high-performance',
-                            logarithmicDepthBuffer: false,
-                        }}
-                    >
-                        <color attach="background" args={['#030303']} />
+                {/* ━━━ FULLSCREEN VIDEO BACKGROUND ━━━━━━━━━━━━━━━━━━ */}
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover z-0"
+                    src="/videos/Backgroundvideo3Dhero.webm"
+                />
 
-                        {/* ── PROCEDURAL IBL — Zero fetch, zero file ──────── */}
-                        {/* Lightformers generate a cubemap at runtime.       */}
-                        {/* roughness: 0.02 on the liquid smooths artifacts.  */}
-                        <Environment resolution={256} background={false}>
-                            {/* Key light — sharp chrome reflections */}
-                            <Lightformer
-                                form="rect"
-                                intensity={3}
-                                position={[5, 5, -5]}
-                                rotation-y={Math.PI / 4}
-                                scale={[10, 4, 1]}
-                                color="#ffffff"
-                            />
-                            {/* Fill — subtle blue to add depth */}
-                            <Lightformer
-                                form="ring"
-                                intensity={0.8}
-                                position={[-5, 3, 2]}
-                                scale={[8, 8, 1]}
-                                color="#4060ff"
-                            />
-                            {/* Rim — silhouette emphasis from behind */}
-                            <Lightformer
-                                form="rect"
-                                intensity={2}
-                                position={[0, 4, -8]}
-                                scale={[20, 2, 1]}
-                                color="#ffffff"
-                            />
-                            {/* Ground bounce — warm subtle uplighting */}
-                            <Lightformer
-                                form="rect"
-                                intensity={0.4}
-                                position={[0, -3, 0]}
-                                rotation-x={-Math.PI / 2}
-                                scale={[20, 20, 1]}
-                                color="#1a1208"
-                            />
-                        </Environment>
-                        <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
-                        <ambientLight intensity={0.15} />
-
-                        <Suspense fallback={null}>
-                            {/* HYDRE Liquid Core — Abyssal mercury surface */}
-                            <LiquidPlane position={[0, -2, -3]} />
-
-                            {/* Product Assembly — Tube + Lid + Tablet */}
-                            <PresentationControls
-                                global
-                                config={{ mass: 2, tension: 500 }}
-                                snap={{ mass: 4, tension: 1500 }}
-                                rotation={[0, 0, 0]}
-                                polar={[-Math.PI / 3, Math.PI / 3]}
-                                azimuth={[-Math.PI / 1.4, Math.PI / 2]}
-                            >
-                                <HydreCoreAssembly scale={2.75} position={[0, -0.3, 0]} />
-                            </PresentationControls>
-                        </Suspense>
-                    </Canvas>
-                </div>
-
-                {/* LEFT TEXT */}
+                {/* ━━━ LEFT TEXT OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
                 <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-1/2">
 
                     {/* Status bar */}
