@@ -4,7 +4,9 @@ import { Suspense, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment, Lightformer } from '@react-three/drei';
 import { HydreCoreAssembly } from '@/components/three/HydreCoreAssembly';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import * as THREE from 'three';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -12,8 +14,43 @@ gsap.registerPlugin(ScrollTrigger);
 // ─────────────────────────────────────────────────────────────
 // CAMERA CONFIGURATION
 // ─────────────────────────────────────────────────────────────
-const CAMERA_POSITION: [number, number, number] = [0, 0, 1.0];
-const CAMERA_FOV = 35;
+const CAMERA_POSITION: [number, number, number] = [0, 0, 1.4];
+const CAMERA_FOV = 38;
+
+// ─────────────────────────────────────────────────────────────
+// EMERGENCY LIGHTING - Scroll-triggered lighting effect
+// ─────────────────────────────────────────────────────────────
+function EmergencyLighting() {
+    const lightRef = useRef<THREE.PointLight>(null);
+
+    useGSAP(() => {
+        if (!lightRef.current) return;
+        
+        // The light intensifies as we approach the System Failure section
+        gsap.to(lightRef.current, {
+            intensity: 15,
+            distance: 10,
+            ease: 'power2.in',
+            scrollTrigger: {
+                trigger: '#hydre-product-section',
+                start: 'bottom bottom',
+                endTrigger: '#system-failure-section',
+                end: 'top 40%', 
+                scrub: 1,
+            },
+        });
+    }, []);
+
+    return (
+        <pointLight 
+            ref={lightRef} 
+            position={[0, -2, -1]} 
+            color="#ff0033" 
+            intensity={0} 
+            distance={0} 
+        />
+    );
+}
 
 /**
  * FixedProductCanvas — Viewport-Pinned 3D Product Overlay
@@ -51,11 +88,23 @@ export function FixedProductCanvas() {
                 pinSpacing: false, // Critical: prevents GSAP from adding padding that pushes UI down
             });
 
-            // 2. FADE OUT OPACITY (Phantom transition)
+            // 1.5. LOWER THE TUBE by 15vh during hero scroll to reveal lid animation
+            gsap.to(wrapperRef.current, {
+                y: '15vh',
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '#hydre-product-section',
+                    start: 'top top',
+                    end: '+=800',
+                    scrub: 1,
+                },
+            });
+
+            // 2. FADE OUT as System Failure arrives
             ScrollTrigger.create({
                 trigger: '#system-failure-section',
-                start: 'top 60%', // Start fading when System Failure crosses mid-screen
-                end: 'top top',   // Fully disappeared when it reaches the very top
+                start: 'top 60%',
+                end: 'top top',
                 scrub: 1,
                 onUpdate: (self) => {
                     if (wrapperRef.current) {
@@ -81,7 +130,7 @@ export function FixedProductCanvas() {
     return (
         <div
             ref={wrapperRef}
-            className="absolute top-0 right-0 w-full lg:w-1/2 h-screen z-50 pointer-events-none"
+            className="absolute top-[10vh] right-0 w-full lg:w-1/2 h-screen z-50 pointer-events-none"
         >
             <Canvas
                 dpr={[1, 1.5]}
@@ -137,9 +186,12 @@ export function FixedProductCanvas() {
                 <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
                 <ambientLight intensity={0.15} />
 
+                {/* THE SURPRISE: A dormant red emergency light that GSAP wakes up */}
+                <EmergencyLighting />
+
                 {/* 100% GSAP scroll-driven — no PresentationControls */}
                 <Suspense fallback={null}>
-                    <HydreCoreAssembly scale={2.75} position={[0, -0.15, 0]} />
+                    <HydreCoreAssembly scale={3.1} position={[0, -0.15, 0]} />
                 </Suspense>
             </Canvas>
         </div>

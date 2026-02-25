@@ -162,7 +162,7 @@ export function Roadmap() {
                 {/* Header (Simplified GSAP target to avoid Framer) */}
                 <div className="mb-12 text-center">
                     <h2 className="font-mono text-[#00E5FF] text-sm tracking-widest mb-4 uppercase">[ System_Logs // Roadmap ]</h2>
-                    <h3 className="font-sans text-3xl md:text-5xl text-white font-bold tracking-widest mb-4">NOTRE PROJET</h3>
+                    <h3 className="font-sans text-h1 text-white font-bold tracking-widest mb-4">NOTRE PROJET</h3>
                 </div>
 
                 {/* Navigation Nodes */}

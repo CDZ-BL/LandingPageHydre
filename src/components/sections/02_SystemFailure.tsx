@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -24,39 +24,46 @@ export function SystemFailure() {
 
     // We only use React state for the "complete" flag — it controls structural DOM changes
     const [isComplete, setIsComplete] = useState(false);
+    const [isAnimating, setIsAnimating] = useState(false);
 
     const lenis = useLenis();
 
     // ─────────────────────────────────────────────────────────────────────
+    //  GLOBAL FAILSAFE — If this component unmounts mid-animation
+    //  (back button, route change), release ALL global DOM locks.
+    // ─────────────────────────────────────────────────────────────────────
+    useEffect(() => {
+        return () => {
+            document.documentElement.style.overflow = '';
+            if (lenis) lenis.start();
+        };
+    }, [lenis]);
+
+    // ─────────────────────────────────────────────────────────────────────
     //  TELEPORT — The Visual Rupture (KINETIC KILL-SWITCH PROTOCOL)
     // ─────────────────────────────────────────────────────────────────────
-    const executeTeleport = () => {
+    const executeTeleport = useCallback(() => {
         if (teleportedRef.current) return;
         teleportedRef.current = true;
 
-        // 1. ENGINE SHUTDOWN
-        if (lenis) lenis.stop();
+        // ═══════════════════════════════════════════════════════════
+        //  STEP 1: THE HARD LOCK
+        // ═══════════════════════════════════════════════════════════
+        if (lenis) lenis.stop(); // Kills virtual interpolation
 
-        // 2. THE KINETIC KILL-SWITCH
-        // Physically destroy hardware momentum from Apple trackpads/touch screens
-        const killInertia = (e: Event) => e.preventDefault();
-        window.addEventListener('wheel', killInertia, { passive: false });
-        window.addEventListener('touchmove', killInertia, { passive: false });
-
-        // 3. THE FARADAY CAGE
-        // Lock both body AND html to prevent iOS Safari bleed
-        document.body.style.overflow = 'hidden';
+        // Annihilates the OS-level scrollbar entirely.
+        // The user physically cannot drag the page now.
         document.documentElement.style.overflow = 'hidden';
 
-        const trigger = ScrollTrigger.getById("failure-runway-st");
-        if (trigger) trigger.kill();
+        setIsAnimating(true); // Triggers touch shield
+
+        // DO NOT KILL THE SCROLLTRIGGER HERE.
+        // It must hold the 1180dvh DOM structure together during the animation.
 
         document.querySelectorAll('.sticky-core [class*="animate-"]').forEach((el) => {
             (el as HTMLElement).style.animation = 'none';
         });
 
-        // 1. MASSIVE DEPTH OF FIELD
-        // We push the camera back to 4000px so nothing clips behind the user's head.
         gsap.set('.sticky-core', {
             perspective: 4000,
             transformStyle: "preserve-3d",
@@ -75,7 +82,6 @@ export function SystemFailure() {
                 const stableEl = stableContentRef.current;
                 if (!stableEl) return;
 
-                // Sync the arrival camera to the same 4000px depth
                 gsap.set(stableEl, { opacity: 1, perspective: 4000, transformStyle: "preserve-3d" });
 
                 const arrivalElements = [
@@ -85,13 +91,12 @@ export function SystemFailure() {
                     stableEl.querySelector('.absolute.-bottom-16')
                 ];
 
-                // 2. CINEMATIC REASSEMBLY MATH
                 gsap.fromTo(arrivalElements,
                     {
-                        z: 2800, // Very deep, but safely IN FRONT of the 4000px camera
-                        scale: 3, // Reduced from 8 to prevent GPU frame dropping
+                        z: 2800,
+                        scale: 3,
                         opacity: 0,
-                        filter: 'blur(20px)', // Reduced from 40px to guarantee 60FPS on mobile
+                        filter: 'blur(20px)',
                         rotationX: () => gsap.utils.random(-45, 45),
                         rotationY: () => gsap.utils.random(-45, 45),
                         rotationZ: () => gsap.utils.random(-15, 15),
@@ -109,38 +114,61 @@ export function SystemFailure() {
                         rotationZ: 0,
                         x: 0,
                         y: 0,
-                        duration: 2.2, // Extended from 1.5s to 2.2s for majesty
+                        duration: 2.2,
                         stagger: 0.15,
-                        ease: 'power3.out', // Changed from expo.out. Power3 is cinematic and smooth, not aggressive.
+                        ease: 'power3.out',
+
                         onComplete: () => {
+                            // ═══════════════════════════════════════════
+                            //  STEP 2: THE SYNCHRONOUS DOM ASSASSINATION
+                            // ═══════════════════════════════════════════
+
+                            // 1. NOW we kill the trigger — animation is done,
+                            //    safe to release the 1180dvh pin spacer.
+                            const trigger = ScrollTrigger.getById("failure-runway-st");
+                            if (trigger) trigger.kill();
+
+                            // 2. Shrink the DOM
                             if (containerRef.current) containerRef.current.style.display = 'none';
                             setIsComplete(true);
 
+                            // 3. Strip all temporary GSAP fixed positioning
+                            gsap.set('#stable-section', { clearProps: 'position, top, left, width, height, zIndex' });
+                            gsap.set([stableEl, ...arrivalElements], { clearProps: 'transform, filter, willChange' });
+
+                            // 4. Force immediate layout recalculation
                             void document.body.offsetHeight;
                             ScrollTrigger.refresh();
                             if (lenis) lenis.resize();
 
-                            gsap.set('#stable-section', { clearProps: 'position, top, left, width, height, zIndex' });
-
+                            // ═══════════════════════════════════════════
+                            //  STEP 3: TARGET ACQUISITION & TELEPORT
+                            //  DOM has collapsed. Calculate the definitive coordinate.
+                            // ═══════════════════════════════════════════
                             const target = document.querySelector('#stable-section');
                             if (target) {
-                                const targetY = target.getBoundingClientRect().top + window.scrollY;
-                                window.scrollTo(0, targetY);
+                                const finalTargetY = target.getBoundingClientRect().top + window.scrollY;
 
-                                // 4. DISENGAGE KILL-SWITCH & FARADAY CAGE
-                                // Only release the locks once the new coordinates are absolute
-                                document.body.style.overflow = '';
-                                document.documentElement.style.overflow = '';
-                                window.removeEventListener('wheel', killInertia);
-                                window.removeEventListener('touchmove', killInertia);
+                                // Force native browser Y coordinate
+                                window.scrollTo(0, finalTargetY);
 
                                 if (lenis) {
-                                    lenis.scrollTo(targetY, { immediate: true, force: true });
-                                    lenis.start();
+                                    // Align virtual engine with native engine
+                                    lenis.scrollTo(finalTargetY, { immediate: true, force: true });
                                 }
                             }
 
-                            gsap.set([stableEl, ...arrivalElements], { clearProps: 'transform, filter, willChange' });
+                            // ═══════════════════════════════════════════
+                            //  STEP 4: RESURRECTION
+                            // ═══════════════════════════════════════════
+                            requestAnimationFrame(() => {
+                                // Unlock OS Scrollbar
+                                document.documentElement.style.overflow = '';
+                                // Drop the shield
+                                setIsAnimating(false);
+                                // Restart the engine
+                                if (lenis) lenis.start();
+                            });
                         }
                     }
                 );
@@ -150,7 +178,6 @@ export function SystemFailure() {
         // ═══════════════════════════════════════════════════════════════
         //  EXECUTE THE 3D TEAR (DEPARTURE)
         // ═══════════════════════════════════════════════════════════════
-        // Pushed z targets back so they don't clip through the new 4000px camera too early
         punctureTl.to('.sticky-core', { scale: 5, opacity: 0, duration: 1.2, ease: 'expo.in' }, 0);
         punctureTl.to('.space-y-6.font-mono', { y: 200, z: -800, scale: 0.5, opacity: 0, duration: 1.0, ease: 'power3.in' }, 0);
         punctureTl.to('.animate-text-distort', { scale: 30, z: 2500, rotationZ: 15, opacity: 0, duration: 1.2, ease: 'expo.in' }, 0);
@@ -164,7 +191,7 @@ export function SystemFailure() {
             scale: 50, z: 3500, x: window.innerWidth * 0.8, y: -window.innerHeight * 0.5,
             rotationZ: 45, opacity: 0, duration: 0.9, ease: 'expo.in'
         }, 0);
-    };
+    }, [lenis]);
 
     // ─────────────────────────────────────────────────────────────────────
     //  GSAP SCROLL ENGINE — Hardware-accelerated, SSR-safe, auto-cleanup
@@ -225,12 +252,32 @@ export function SystemFailure() {
     return (
         <>
             {/* ═══════════════════════════════════════════════════════════════
+                EVENT GHOSTING OVERLAY — Physical touch/wheel shield.
+                Rendered ONLY during animation. Intercepts ALL pointer events
+                so no rogue iOS Safari gestures can leak through.
+            ════════════════════════════════════════════════════════════════ */}
+            {isAnimating && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        inset: 0,
+                        zIndex: 99999,
+                        touchAction: 'none',
+                        overscrollBehavior: 'none',
+                        pointerEvents: 'all',
+                        background: 'transparent',
+                    }}
+                    onWheel={(e) => e.preventDefault()}
+                    onTouchMove={(e) => e.preventDefault()}
+                />
+            )}
+            {/* ═══════════════════════════════════════════════════════════════
                 SCROLL RUNWAY — Dies permanently when isComplete is true
             ════════════════════════════════════════════════════════════════ */}
             <section
                 id="system-failure-section"
                 ref={containerRef}
-                className={`relative w-full bg-black ${isComplete ? 'hidden' : 'block'}`}
+                className={`relative z-[60] w-full bg-black ${isComplete ? 'hidden' : 'block'}`}
                 style={{ height: isComplete ? '0px' : '1180dvh' }}
             >
                 <div className="sticky-core sticky top-0 h-[100dvh] w-full flex flex-col items-center justify-center overflow-hidden">
@@ -246,13 +293,13 @@ export function SystemFailure() {
                         </div>
 
                         <div className="relative mb-8">
-                            <h2 className="font-headline text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-widest animate-text-distort will-change-transform">
+                            <h2 className="font-headline text-h1 text-white font-black uppercase tracking-widest animate-text-distort will-change-transform">
                                 /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                             </h2>
-                            <h2 className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-neon-orange font-black uppercase tracking-widest mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform" aria-hidden="true">
+                            <h2 className="absolute top-0 left-0 right-0 font-sans text-h1 text-neon-orange font-black uppercase tracking-widest mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform" aria-hidden="true">
                                 /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                             </h2>
-                            <h2 className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-bone font-black uppercase tracking-tight mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform" aria-hidden="true">
+                            <h2 className="absolute top-0 left-0 right-0 font-sans text-h1 text-bone font-black uppercase tracking-tight mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform" aria-hidden="true">
                                 /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                             </h2>
                         </div>
@@ -261,7 +308,7 @@ export function SystemFailure() {
                             <div className="text-[#E6DCC8] text-sm md:text-base tracking-widest uppercase mb-4 font-bold">
                                 [ M.A.J SYSTEME // EFFACEMENT DES TAXES // DIMINUTION DU PRIX ]
                             </div>
-                            <h3 className="font-headline text-3xl md:text-5xl text-white mb-6 tracking-widest leading-tight">
+                            <h3 className="font-headline text-h2 text-white mb-6 tracking-widest leading-tight">
                                 /// DANGER TAXE MARKETING ///
                             </h3>
                             <div className="space-y-4">
@@ -322,11 +369,11 @@ export function SystemFailure() {
                                 </span>
                             </div>
 
-                            <h3 className="font-headline text-3xl md:text-5xl text-white font-bold mb-6">
+                            <h3 className="font-headline text-h2 text-white font-bold mb-6">
                                 <span className="text-[#E6DCC8]">MISE À JOUR EFFECTUÉE :</span>
                             </h3>
 
-                            <p className="font-sans text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-relaxed">
+                            <p className="font-sans text-h3 text-[#D9D9D9] max-w-2xl mx-auto leading-relaxed">
                                 Le prix est maintenant <span className="text-emerald-400 font-semibold">diminué</span>.<br />
                                 La qualité est <span className="text-emerald-400 font-semibold">augmentée</span>.
                             </p>

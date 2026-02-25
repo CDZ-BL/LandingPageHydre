@@ -2,51 +2,55 @@
 
 import { useRef, Suspense } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, ContactShadows } from '@react-three/drei';
+import { useGLTF, ContactShadows, TrackballControls } from '@react-three/drei';
+import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { getAssetPath } from '@/lib/utils';
 
+useGLTF.preload(getAssetPath('/models/cardmodel.glb'));
+
+// ═══════════════════════════════════════════════════════════════
+// CARD MODEL
+// Default rotation: 90° on Y → card shows edge-on at first load
+// Levitation on Y only — rotation is free via TrackballControls
+// ═══════════════════════════════════════════════════════════════
 function CardModel() {
     const groupRef = useRef<THREE.Group>(null);
     const { scene } = useGLTF(getAssetPath('/models/cardmodel.glb'));
 
-    // Levitation animation — slow, organic float
     useFrame((state) => {
-        if (groupRef.current) {
-            const t = state.clock.elapsedTime;
-            groupRef.current.rotation.y = Math.sin(t * 0.5) * 0.3;
-            groupRef.current.rotation.x = Math.sin(t * 0.3) * 0.08 - 0.05;
-            groupRef.current.position.y = Math.sin(t * 0.8) * 0.08;
-        }
+        if (!groupRef.current) return;
+        const t = state.clock.elapsedTime;
+        groupRef.current.position.y = Math.sin(t * 0.8) * 0.08;
     });
 
     return (
-        <group ref={groupRef}>
+        <group ref={groupRef} rotation={[0, Math.PI / 2, 0]}>
             <primitive object={scene} scale={62.5} />
         </group>
     );
 }
 
+// ═══════════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════════
 export function FounderCard3D() {
     return (
         <div className="relative w-full h-full overflow-visible">
-            {/* Levitation glow — intense multi-layer */}
+            {/* Levitation glow — multi-layer */}
             <div className="absolute inset-0 -z-10 pointer-events-none" style={{ transform: 'scale(1.6)' }}>
-                {/* Core glow — bright cyan center */}
                 <div
                     className="absolute inset-0 blur-[80px] opacity-70"
                     style={{
                         background: 'radial-gradient(circle at 50% 55%, rgba(0, 220, 255, 0.5) 0%, transparent 50%)',
                     }}
                 />
-                {/* Mid glow — wider spread */}
                 <div
                     className="absolute inset-0 blur-[120px] opacity-50"
                     style={{
                         background: 'radial-gradient(ellipse at 50% 60%, rgba(0, 150, 255, 0.35) 0%, transparent 60%)',
                     }}
                 />
-                {/* Ground reflection — beneath the card */}
                 <div
                     className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-1/3 blur-[60px] opacity-40"
                     style={{
@@ -65,57 +69,53 @@ export function FounderCard3D() {
                 }}
             />
 
+            {/* Holographic scan line */}
+            <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
+                <motion.div
+                    className="absolute left-0 right-0 h-[1px]"
+                    style={{
+                        background:
+                            'linear-gradient(90deg, transparent 0%, rgba(0,220,255,0.5) 25%, rgba(0,220,255,0.9) 50%, rgba(0,220,255,0.5) 75%, transparent 100%)',
+                        boxShadow: '0 0 8px rgba(0,220,255,0.5), 0 0 24px rgba(0,220,255,0.15)',
+                    }}
+                    animate={{ top: ['-2%', '102%'] }}
+                    transition={{ duration: 3.5, ease: 'linear', repeat: Infinity, repeatDelay: 2 }}
+                />
+            </div>
+
+            {/* Corner classification labels */}
+            <div className="absolute top-3 left-3 z-20 pointer-events-none">
+                <span className="font-mono text-[9px] text-cyan-400/50 tracking-widest">BATCH 001</span>
+            </div>
+            <div className="absolute top-3 right-3 z-20 pointer-events-none">
+                <span className="font-mono text-[9px] text-cyan-400/50 tracking-widest">FOUNDER ACCESS</span>
+            </div>
+            <div className="absolute bottom-3 left-3 z-20 pointer-events-none">
+                <span className="font-mono text-[9px] text-gray-600 tracking-widest">HYDRE × AETHER</span>
+            </div>
+            <div className="absolute bottom-3 right-3 z-20 pointer-events-none">
+                <span className="font-mono text-[9px] text-gray-600 tracking-widest">// PIONEER</span>
+            </div>
+
+            {/* Camera at z=11 + fov 38 — no clipping at any rotation angle */}
             <Canvas
-                camera={{ position: [0, 0, 8], fov: 40 }}
+                camera={{ position: [0, 0, 11], fov: 38 }}
                 style={{ background: 'transparent' }}
                 gl={{ antialias: true, alpha: true }}
             >
-                {/* Ambient base — low to let directional lights sculpt */}
                 <ambientLight intensity={0.6} />
-
-                {/* Key light — strong warm from top-right for specular highlights */}
                 <directionalLight position={[4, 6, 5]} intensity={4} color="#fff5e6" />
-
-                {/* Fill light — cool blue from left */}
                 <directionalLight position={[-5, 2, 4]} intensity={2} color="#a0c4ff" />
-
-                {/* Rim lights — cyan halo on edges for premium silhouette */}
-                <spotLight
-                    position={[4, 0, -5]}
-                    intensity={8}
-                    color="#00ccff"
-                    angle={0.5}
-                    penumbra={0.8}
-                />
-                <spotLight
-                    position={[-4, 0, -5]}
-                    intensity={8}
-                    color="#00ccff"
-                    angle={0.5}
-                    penumbra={0.8}
-                />
-
-                {/* Top spotlight — makes card surface pop */}
-                <spotLight
-                    position={[0, 8, 2]}
-                    intensity={5}
-                    color="#ffffff"
-                    angle={0.4}
-                    penumbra={1}
-                    castShadow
-                />
-
-                {/* Under-glow — levitation light bouncing from below */}
+                <spotLight position={[4, 0, -5]} intensity={8} color="#00ccff" angle={0.5} penumbra={0.8} />
+                <spotLight position={[-4, 0, -5]} intensity={8} color="#00ccff" angle={0.5} penumbra={0.8} />
+                <spotLight position={[0, 8, 2]} intensity={5} color="#ffffff" angle={0.4} penumbra={1} castShadow />
                 <pointLight position={[0, -4, 2]} intensity={3} color="#00aaff" />
-
-                {/* Front fill — so the face is always readable */}
                 <pointLight position={[0, 0, 5]} intensity={1.5} color="#e0f0ff" />
 
                 <Suspense fallback={null}>
                     <CardModel />
                 </Suspense>
 
-                {/* Contact shadow — grounds the levitation illusion */}
                 <ContactShadows
                     position={[0, -1.5, 0]}
                     opacity={0.4}
@@ -125,13 +125,11 @@ export function FounderCard3D() {
                     color="#00ccff"
                 />
 
-                <OrbitControls
-                    enableZoom={false}
-                    enablePan={false}
-                    autoRotate={false}
-                    target={[0, 0, 0]}
-                    minPolarAngle={0}
-                    maxPolarAngle={Math.PI}
+                {/* TrackballControls: true free rotation on X/Y/Z — no polar lock, no gimbal */}
+                <TrackballControls
+                    noZoom
+                    noPan
+                    rotateSpeed={2.5}
                 />
             </Canvas>
         </div>

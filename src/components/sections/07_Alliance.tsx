@@ -85,7 +85,7 @@ function VoteBar({
                         style={isSelected ? { backgroundColor: option.color, borderColor: option.color } : {}}
                     />
                     <span className="font-mono text-xs text-white tracking-widest">{option.label}</span>
-                    <span className="font-mono text-[10px] text-gray-600">— {option.subtitle}</span>
+                    <span className="font-mono text-[10px] text-white/30">— {option.subtitle}</span>
                 </div>
                 <span
                     className={`font-mono text-xs tabular-nums transition-opacity duration-300 ${hasVoted ? 'opacity-100' : 'opacity-0'}`}
@@ -127,13 +127,13 @@ function CommunityCounter() {
                     >
                         {COMMUNITY_CURRENT.toLocaleString('fr-FR')}
                     </motion.span>
-                    <span className="font-mono text-sm text-gray-600">/</span>
-                    <span className="font-mono text-sm text-gray-500">
+                    <span className="font-mono text-sm text-white/30">/</span>
+                    <span className="font-mono text-sm text-white/40">
                         {COMMUNITY_TARGET.toLocaleString('fr-FR')}
                     </span>
-                    <span className="font-mono text-[10px] text-gray-600 tracking-wider ml-2">FONDATEURS</span>
+                    <span className="font-mono text-[10px] text-white/30 tracking-wider ml-2">FONDATEURS</span>
                 </div>
-                <span className="font-mono text-[10px] text-gray-600 tracking-wider">AN 1</span>
+                <span className="font-mono text-[10px] text-white/30 tracking-wider">AN 1</span>
             </div>
 
             {/* Progress bar */}
@@ -151,7 +151,7 @@ function CommunityCounter() {
             </div>
 
             <div className="flex justify-end mt-2">
-                <span className="font-mono text-[10px] text-gray-600 tracking-wider">
+                <span className="font-mono text-[10px] text-white/25 tracking-wider">
                     {(COMMUNITY_TARGET - COMMUNITY_CURRENT).toLocaleString('fr-FR')} RESTANTES
                 </span>
             </div>
@@ -200,16 +200,20 @@ export function Alliance() {
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: '-100px' }}
+                    viewport={{ once: true, margin: '-100px' }}
                     transition={{ duration: 0.8 }}
-                    className="mb-12"
+                    className="mb-12 max-w-3xl"
                 >
-                    <span className="font-mono text-[10px] text-cyan-400/70 tracking-widest mb-3 block">
-                        // BATCH 001 : ACCÈS PIONNIER
+                    <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
+                        [ 04 — L'ALLIANCE ]
                     </span>
-                    <h2 className="font-sans text-3xl md:text-4xl lg:text-5xl text-white font-bold tracking-widest mb-4">
-                        CONSTRUISONS ENSEMBLE LA MARQUE QUE L'INDUSTRIE N'A JAMAIS OSÉ FAIRE.
+                    <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl text-white font-bold tracking-wider leading-[1.05] mb-4">
+                        CONSTRUISONS ENSEMBLE.<br />
+                        <span className="text-[#E6DCC8] italic font-light tracking-normal">La marque que l'industrie n'a jamais osé faire.</span>
                     </h2>
+                    <p className="font-mono text-sm text-white/50 leading-relaxed tracking-wide mt-4">
+                        Vous n'êtes pas un consommateur. Vous êtes co-fondateur. Votez, testez, décidez.
+                    </p>
                 </motion.div>
 
                 {/* ─── COMMUNITY COUNTER ─── */}
@@ -272,7 +276,7 @@ export function Alliance() {
                         className="space-y-8"
                     >
                         {/* 3D Card */}
-                        <div className="h-[60vh] md:h-[65vh] w-full relative">
+                        <div className="h-[75vh] md:h-[80vh] w-full relative">
                             <FounderCard3D />
                         </div>
 
@@ -282,7 +286,7 @@ export function Alliance() {
                                 <div className="mt-[7px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
                                     <h4 className="font-mono text-xs text-white tracking-widest">VOUS VALIDEZ</h4>
-                                    <p className="font-mono text-[11px] text-gray-500 mt-1">
+                                    <p className="font-mono text-[11px] text-white/40 mt-1">
                                         Prototypes des futures saveurs (Samples gratuits).
                                     </p>
                                 </div>
@@ -292,7 +296,7 @@ export function Alliance() {
                                 <div className="mt-[7px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
                                     <h4 className="font-mono text-xs text-white tracking-widest">VOUS DÉCIDEZ</h4>
-                                    <p className="font-mono text-[11px] text-gray-500 mt-1">
+                                    <p className="font-mono text-[11px] text-white/40 mt-1">
                                         Priorités R&D (cf. Vote ci-contre).
                                     </p>
                                 </div>
@@ -302,16 +306,18 @@ export function Alliance() {
                                 <div className="mt-[7px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
                                     <h4 className="font-mono text-xs text-white tracking-widest">VOUS SAVEZ</h4>
-                                    <p className="font-mono text-[11px] text-gray-500 mt-1">
+                                    <p className="font-mono text-[11px] text-white/40 mt-1">
                                         Feuilles de route 6 mois avant le public.
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <p className="font-mono text-[11px] text-gray-600 italic border-l border-void-600 pl-4 py-1">
-                            "Construisons la marque que l'industrie n'a jamais osé faire."
-                        </p>
+                        <div className="pt-4 border-t border-white/[0.06]">
+                            <p className="font-mono text-[10px] text-white/20 tracking-wider">
+                                [ACCÈS] BATCH 001 — PLACES LIMITÉES À {COMMUNITY_TARGET.toLocaleString('fr-FR')} FONDATEURS
+                            </p>
+                        </div>
                     </motion.div>
                 </div>
             </div>

@@ -22,8 +22,8 @@ export default function Home() {
             {/* Block 1: Architecture Hero */}
             <HeroVoid />
 
-            {/* Visual Spacer for Aeration */}
-            <div className="h-32 bg-void" />
+
+
 
             {/* Block 2: System Failure (Glitch) */}
             <SystemFailure />

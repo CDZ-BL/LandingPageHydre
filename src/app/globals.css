@@ -12,15 +12,13 @@
   --obsidian: #050505;
   --bone: #E6DCC8;
 
-  /* === OPACITY TEXT SYSTEM === */
-  --text-primary: rgba(255, 255, 255, 1);
-  /* 100% - Headlines */
-  --text-secondary: rgba(255, 255, 255, 0.85);
-  /* 85% - Body (Platine) */
-  --text-tertiary: rgba(255, 255, 255, 0.60);
-  /* 60% - Labels (Métal) */
-  --text-muted: rgba(255, 255, 255, 0.40);
-  /* 40% - Structure (Carbone) */
+  /* === SOLID-STATE TEXT HIERARCHY ===
+     Pre-calculated against #050505 to bypass GPU alpha-blending.
+     Eliminates per-frame compositing tax over live WebGL canvas. */
+  --text-primary: #FFFFFF;     /* 100% — Headlines */
+  --text-secondary: #D9D9D9;   /* 85% optical equivalent — Body (Platine) */
+  --text-tertiary: #9E9E9E;    /* 60% optical equivalent — Labels (Métal) */
+  --text-muted: #6B6B6B;       /* 40% optical equivalent — Structure (Carbone) */
 
   /* === STROKES & BORDERS === */
   --stroke: rgba(255, 255, 255, 0.10);
@@ -162,8 +160,9 @@ body::before {
 
   /* === FONT FAMILIES === */
   .font-headline {
-    font-family: var(--font-clash), system-ui, sans-serif;
+    font-family: var(--font-headline), system-ui, sans-serif;
     text-transform: uppercase;
+    letter-spacing: -0.03em;
   }
 
   .font-body {
@@ -177,11 +176,10 @@ body::before {
     text-transform: uppercase;
   }
 
-  /* Legacy compat */
   .font-display {
-    font-family: var(--font-clash), serif;
+    font-family: var(--font-headline), system-ui, sans-serif;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
+    letter-spacing: -0.02em;
   }
 
   /* === OPACITY TEXT SYSTEM === */
@@ -219,11 +217,13 @@ body::before {
     border-color: var(--stroke-hover);
   }
 
-  /* === GLASS EFFECT === */
+  /* === GLASS EFFECT — GPU-Accelerated Compositing === */
   .glass {
     background: rgba(10, 10, 10, 0.8);
     backdrop-filter: blur(20px);
     border: 1px solid var(--stroke);
+    transform: translateZ(0);
+    will-change: backdrop-filter;
   }
 
   /* === GLITCH === */

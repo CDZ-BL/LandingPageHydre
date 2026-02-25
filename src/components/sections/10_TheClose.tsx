@@ -60,7 +60,7 @@ export function TheClose() {
                                     </span>
                                 </div>
 
-                                <h2 className="font-headline text-4xl md:text-6xl text-white font-bold leading-[0.9] tracking-widest mb-12">
+                                <h2 className="font-headline text-h1 text-white font-bold leading-[0.9] tracking-widest mb-12">
                                     REJOIGNEZ LE<br />
                                     PROTOCOLE.
                                 </h2>
@@ -103,7 +103,7 @@ export function TheClose() {
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                             </svg>
                                         </div>
-                                        <h3 className="font-headline text-2xl text-white font-bold mb-2">ACCÈS AUTORISÉ</h3>
+                                        <h3 className="font-headline text-h3 text-white font-bold mb-2">ACCÈS AUTORISÉ</h3>
                                         <p className="font-mono text-xs text-void-500">VÉRIFIEZ VOS MESSAGES.</p>
                                     </motion.div>
                                 ) : (

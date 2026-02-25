@@ -1,11 +1,21 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useLenis } from 'lenis/react';
 
 // --- HERO ---
 export function HeroVoid() {
     const { scrollY } = useScroll();
     const textY = useTransform(scrollY, [0, 500], [0, -100]);
+    const lenis = useLenis();
+
+    const handleCTAClick = () => {
+        if (lenis) {
+            lenis.scrollTo('#close', { duration: 2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        } else {
+            document.querySelector('#close')?.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
     return (
         <section
@@ -29,23 +39,16 @@ export function HeroVoid() {
                 {/* ━━━ LEFT TEXT OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
                 <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-full lg:w-1/2">
 
-                    {/* Status bar */}
-                    <div className="absolute top-8 left-0 right-0 flex justify-between items-start mix-blend-difference">
-                        <div className="font-mono text-white text-xs tracking-wider opacity-80">
-                            <span className="block">AETHER [LABS]</span>
-                            <span className="block mt-1">BATCH 001</span>
-                        </div>
-                    </div>
 
                     <motion.h1
                         initial={{ opacity: 0, x: -40, filter: 'blur(10px)' }}
                         animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="font-display text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter text-white leading-[0.95] mb-8"
+                        className="font-display text-display font-bold tracking-tighter text-white leading-[0.95] mb-8"
                     >
                         L'HYDRATATION <br />
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">ÉPURÉE.</span>
-                        <span className="text-[#E6DCC8] italic font-light tracking-normal block text-xl md:text-3xl mt-4 opacity-80">CONÇUE AVEC VOUS.</span>
+                        <span className="text-[#E6DCC8] italic font-light tracking-normal block text-h3 mt-4 opacity-80">CONÇUE AVEC VOUS.</span>
                     </motion.h1>
 
                     <motion.p
@@ -62,9 +65,27 @@ export function HeroVoid() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
-                        className="bg-white text-black font-bold px-8 py-4 rounded-sm hover:bg-[#E6DCC8] transition-colors duration-300 tracking-widest text-xs md:text-sm uppercase"
+                        onClick={handleCTAClick}
+                        className="group relative cursor-pointer overflow-hidden"
                     >
-                        REJOINDRE L'ALLIANCE
+                        {/* Outer border — thin, clinical */}
+                        <div className="relative border border-white/30 group-hover:border-white/60 transition-all duration-700">
+                            {/* Fill sweep */}
+                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+
+                            <div className="relative z-10 flex items-center gap-4 px-8 md:px-10 py-4 md:py-5">
+                                <span className="font-mono text-[10px] md:text-xs text-white group-hover:text-black tracking-[0.3em] uppercase transition-colors duration-500">
+                                    Rejoindre l'Alliance
+                                </span>
+                                {/* Arrow */}
+                                <svg
+                                    className="w-4 h-4 text-white/50 group-hover:text-black group-hover:translate-x-1 transition-all duration-500"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
+                                </svg>
+                            </div>
+                        </div>
                     </motion.button>
 
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }} className="mt-16 flex gap-8 text-[10px] uppercase tracking-[0.2em] text-white/30 font-mono">
@@ -74,11 +95,9 @@ export function HeroVoid() {
                 </motion.div>
 
                 {/* RIGHT: Status indicator */}
-                <div className="absolute inset-0 lg:relative lg:w-1/2 h-full pointer-events-none">
-                    <div className="absolute top-8 right-8 font-mono text-right text-xs tracking-wider opacity-80 z-30 mix-blend-difference">
-                        <span className="block">STATUS</span>
-                        <span className="block text-neon-orange font-semibold mt-1 animate-pulse">AVAILABLE</span>
-                    </div>
+                <div className="absolute top-8 right-8 font-mono text-right text-xs tracking-wider opacity-80 z-30 mix-blend-difference pointer-events-none">
+                    <span className="block">STATUS</span>
+                    <span className="block text-neon-orange font-semibold mt-1 animate-pulse">AVAILABLE</span>
                 </div>
 
                 {/* Bottom gradient */}

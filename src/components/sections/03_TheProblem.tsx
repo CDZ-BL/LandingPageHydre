@@ -41,7 +41,7 @@ export function TheProblem() {
                     <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
                         [ SECTION 1 : TRANSPARENCE ]
                     </span>
-                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-widest">
+                    <h2 className="font-headline text-h1 text-white font-bold tracking-widest">
                         AUDIT DE FORMULATION.
                     </h2>
                     <p className="font-mono text-lg md:text-xl text-white/60 mt-4 tracking-wide">

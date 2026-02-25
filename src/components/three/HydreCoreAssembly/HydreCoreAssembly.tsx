@@ -25,12 +25,10 @@
 import * as THREE from 'three';
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { useGLTF, useTexture, Decal } from '@react-three/drei';
+import { useGLTF, useTexture } from '@react-three/drei';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import CustomShaderMaterial from 'three-custom-shader-material';
-import { dissolveVertex, dissolveFragment } from '@/shaders/ApexDissolve';
 import type { HydreCoreAssemblyProps } from './HydreCoreAssembly.types';
 
 // ─────────────────────────────────────────────────────────────
@@ -41,7 +39,7 @@ gsap.registerPlugin(ScrollTrigger);
 // ─────────────────────────────────────────────────────────────
 // ASSET PATH — Single source of truth
 // ─────────────────────────────────────────────────────────────
-const MODEL_PATH = '/models/Tube+Lid+Tabs.glb' as const;
+const MODEL_PATH = '/models/Tube+Lid+Tabs2.glb' as const;
 
 // ─────────────────────────────────────────────────────────────
 // SCROLL KINEMATICS CONSTANTS
@@ -55,8 +53,8 @@ const LID_ROTATION_RADIANS = Math.PI * 3;
 const SCROLL_DEPTH_PX = 800;
 /** GSAP scrub lag in seconds — simulates physical friction */
 const SCRUB_LAG_SECONDS = 1;
-/** Scroll-driven Y-rotation — spins the tube to showcase the label */
-const TUBE_SHOWCASE_ROTATION = Math.PI * 0.6;
+/** Perpetual Y-rotation speed in rad/s — 14s per full revolution */
+const TUBE_SPIN_SPEED = -(Math.PI * 2) / 14;
 
 // ─────────────────────────────────────────────────────────────
 // PRELOAD DIRECTIVE
@@ -87,6 +85,7 @@ const ORBIT_RADIUS = 0.06;
 const ORBIT_SPEED = 0.4;
 const ORBIT_Y_SPREAD = 0.04;
 
+
 /**
  * HydreCoreAssembly — Premium 3D product assembly
  *
@@ -99,57 +98,33 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
     // ── 1. DESTRUCTURE THE PARSED SCENE GRAPH ──────────────
     // R3F's useGLTF returns the full glTF result. We extract
     // only `nodes` — the flattened map of named meshes.
-    const { nodes } = useGLTF(MODEL_PATH) as any;
+    const { nodes, materials } = useGLTF(MODEL_PATH) as any;
     const etiquetteTexture = useTexture(ETIQUETTE_PATH);
 
-    // ── 1.5. COMPUTE EXACT PHYSICAL DIMENSIONS ─────────────
-    // The user requested a 1:1 map with the physical 146mm tube limit.
-    // Instead of guessing the scale, we mathematically extract the 
-    // exact bounding box height and radius from the glTF geometry.
-    const { smoothedTubeGeometry, tubeDimensions } = useMemo(() => {
-        if (!nodes.Mesh_Tube?.geometry) return { smoothedTubeGeometry: null, tubeDimensions: null };
-
-        const geom = nodes.Mesh_Tube.geometry.clone();
-        geom.computeVertexNormals();
-
-        // Calculate exact bounding box
-        geom.computeBoundingBox();
-        const bbox = geom.boundingBox as THREE.Box3;
-
-        // Physical dimensions in world space
-        const height = bbox.max.y - bbox.min.y;
-        // Radius is half the width on the X or Z axis
-        const radius = (bbox.max.x - bbox.min.x) / 2;
-        // Y-Center of the tube
-        const centerY = bbox.min.y + (height / 2);
-
-        return {
-            smoothedTubeGeometry: geom,
-            tubeDimensions: { height, radius, centerY }
-        };
-    }, [nodes.Mesh_Tube]);
+    // ── 1.5. CONFIGURE ETIQUETTE TEXTURE FOR UV MAPPING ────
+    // The new GLB (Tube+Lid+Tabs2) has a dedicated "Label" material
+    // slot with cylindrical UVs pre-configured in Blender to match
+    // the exact proportions of etiquette.png.
+    useMemo(() => {
+        etiquetteTexture.colorSpace = THREE.SRGBColorSpace;
+        etiquetteTexture.flipY = false; // glTF convention
+        etiquetteTexture.needsUpdate = true;
+    }, [etiquetteTexture]);
 
     // ── 2. KINEMATIC POINTERS FOR GSAP ─────────────────────
     // Exclusive refs per mesh for surgical animation control.
     const lidRef = useRef<THREE.Mesh>(null);
-    const tabletRef = useRef<THREE.Mesh>(null);
     const assemblyGroupRef = useRef<THREE.Group>(null);
     const floatingRef = useRef<THREE.Group>(null);
     const orbitingTabletsRef = useRef<THREE.Group>(null);
 
     // ── 4. SCROLL-DRIVEN UNSCREWING + DISSOLVE MATRIX ──────
-    // Binds lid kinematics and tablet dissolve to the DOM
-    // scroll position. Timeline phases:
-    //   A (0.0) — Lift lid
-    //   B (0.0) — Unscrew lid
-    //   C (0.5) — Dissolve tablet (starts when lid is off)
-    // ── 4. APEX EXTRACTION TIMELINE ────────────────────────
-    // 1. Lid unscrews and moves aside
-    // 2. Tablet levitates out (Extraction)
-    // 3. Tablet rotates to face camera
-    // 4. Tablet dissolves (Atomization)
     useGSAP(() => {
-        if (!lidRef.current || !tabletRef.current || !assemblyGroupRef.current) return;
+        if (!lidRef.current || !assemblyGroupRef.current || !orbitingTabletsRef.current) return;
+
+        // Set initial state for orbiting tablets (visible immediately, not hidden)
+        gsap.set(orbitingTabletsRef.current.scale, { x: 1, y: 1, z: 1 });
+        gsap.set(orbitingTabletsRef.current.position, { y: 0.05 });
 
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -160,12 +135,6 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
             },
         });
 
-        // Phase 0: Showcase rotation — spins the tube to reveal the label
-        tl.to(assemblyGroupRef.current.rotation, {
-            y: TUBE_SHOWCASE_ROTATION,
-            ease: 'power1.inOut',
-        }, 0);
-
         // Phase A & B: Lift and Spin the Lid (Starts at timeline 0)
         tl.to(lidRef.current.position, { y: `+=${LID_LIFT_DISTANCE}`, ease: 'power2.out' }, 0);
         tl.to(lidRef.current.rotation, { y: `+=${LID_ROTATION_RADIANS}`, ease: 'power1.inOut' }, 0);
@@ -173,28 +142,19 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
         // Move the lid out of the way to the side
         tl.to(lidRef.current.position, { x: '+=0.04', z: '-=0.02', ease: 'power1.inOut' }, 0.2);
 
-        // Phase C: Extract the Tablet (Levitation)
-        // Starts at 0.3, as the lid is clearing the tube
-        tl.to(tabletRef.current.position, {
-            y: '+=0.08', // Pull up out of the tube
-            z: '+=0.04', // Pull forward toward the camera
-            ease: 'power3.inOut'
-        }, 0.3);
-
-        // Rotate the tablet to show off its geometry
-        tl.to(tabletRef.current.rotation, {
-            x: Math.PI * 0.5,
-            y: Math.PI * 2,
-            ease: 'power1.inOut'
-        }, 0.3);
-
-        // Phase D reserved for future dissolve effect
+        // Phase C: Tablets burst out of the tube as the lid moves away
+        // Removed scroll-triggered scale/position since they are visible from the start
 
     }, { dependencies: [] });
 
     // ── 5. AMBIENT BREATHING + ORBITING TABLETS LOOP ───────
-    useFrame((state) => {
+    useFrame((state, delta) => {
         const t = state.clock.elapsedTime;
+
+        // Perpetual 360° rotation — smooth cinematic spin
+        if (assemblyGroupRef.current) {
+            assemblyGroupRef.current.rotation.y += delta * TUBE_SPIN_SPEED;
+        }
 
         // Breathing on the inner group
         if (floatingRef.current) {
@@ -205,15 +165,23 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
 
         // Orbiting tablets — each child orbits at a unique phase
         if (orbitingTabletsRef.current) {
+            const dynamicRadius = ORBIT_RADIUS + Math.sin(t * 0.5) * 0.02; // Breath-like expansion
+
             orbitingTabletsRef.current.children.forEach((child, i) => {
                 const phase = (i / ORBITING_TABLET_COUNT) * Math.PI * 2;
                 const angle = t * ORBIT_SPEED + phase;
-                child.position.x = Math.cos(angle) * ORBIT_RADIUS;
-                child.position.z = Math.sin(angle) * ORBIT_RADIUS;
+                
+                child.position.x = Math.cos(angle) * dynamicRadius;
+                child.position.z = Math.sin(angle) * dynamicRadius;
                 child.position.y = Math.sin(angle * 0.7 + phase) * ORBIT_Y_SPREAD;
+                
                 // Self-rotation for visual interest
                 child.rotation.x = t * 0.5 + phase;
                 child.rotation.z = t * 0.3 + phase;
+
+                // Subtle pulsing scale
+                const scalePulse = 0.6 + Math.sin(t * 2 + phase) * 0.05;
+                child.scale.set(scalePulse, scalePulse, scalePulse);
             });
         }
     });
@@ -222,50 +190,66 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
         <group ref={assemblyGroupRef} {...props} dispose={null}>
             <group ref={floatingRef}>
 
-                {/* ━━━ TUBE: Statically anchored at origin ━━━━━━━━━━━━━
-                 *  No position prop — geometry origin is 0,0,0 in Blender.
-                 *  Receives the luxury deep chrome material.
+                {/* ━━━ TUBE: Multi-primitive mesh (Body + Label) ━━━━━━
+                 *  The glTF contains two primitives on the tube:
+                 *  - Primitive 0 → "Material" (dark chrome body)
+                 *  - Primitive 1 → "Label" (cylindrical UV zone)
+                 *  R3F destructures multi-primitive meshes as a Group
+                 *  with child meshes. We render them with distinct
+                 *  materials: body gets luxe chrome, label gets the
+                 *  etiquette texture mapped to its Blender UVs.
                  */}
-                <mesh
-                    geometry={smoothedTubeGeometry || nodes.Mesh_Tube.geometry}
-                >
-                    <meshPhysicalMaterial
-                        color="#030303"
-                        metalness={0.8}
-                        roughness={0.4}
-                        clearcoat={1.0}
-                        clearcoatRoughness={0.05}
-                        envMapIntensity={2.5}
-                    />
-                    {/* The Decal projects the etiquette exactly 1:1 onto the tube surface. */}
-                    {tubeDimensions && (
-                        <Decal
-                            position={[
-                                Math.sin(-TUBE_SHOWCASE_ROTATION) * tubeDimensions.radius,
-                                tubeDimensions.centerY, // Exactly vertically centered
-                                Math.cos(-TUBE_SHOWCASE_ROTATION) * tubeDimensions.radius
-                            ]}
-                            rotation={[0, -TUBE_SHOWCASE_ROTATION, 0]}
-                            // X: Wraps half the circumference (PI * r)
-                            // Y: Matches the exact physical height of the tube bounding box
-                            // Z: Projection depth
-                            scale={[
-                                Math.PI * tubeDimensions.radius * 1.5, // 1.5x arc to allow slight wrapping overflow
-                                tubeDimensions.height, // 100% exact height mapping
-                                tubeDimensions.radius * 2 // Deep enough to hit the surface
-                            ]}
-                        >
-                            <meshPhysicalMaterial
-                                map={etiquetteTexture}
-                                transparent={true}
-                                polygonOffset={true}
-                                polygonOffsetFactor={-1}
-                                roughness={0.6} // Matte finish for the label
-                                metalness={0.1}
-                            />
-                        </Decal>
-                    )}
-                </mesh>
+                {nodes.Mesh_Tube.type === 'Group' ? (
+                    <group>
+                        {(nodes.Mesh_Tube.children as THREE.Mesh[]).map((child: THREE.Mesh, i: number) => {
+                            const isLabel = child.material === materials.Label ||
+                                (child.material as THREE.Material)?.name === 'Label';
+                            return (
+                                <mesh
+                                    key={i}
+                                    geometry={child.geometry}
+                                    position={child.position}
+                                    rotation={child.rotation}
+                                    scale={child.scale}
+                                >
+                                    {isLabel ? (
+                                        <meshPhysicalMaterial
+                                            map={etiquetteTexture}
+                                            color="#ffffff"
+                                            metalness={0.05}
+                                            roughness={0.55}
+                                            clearcoat={0.6}
+                                            clearcoatRoughness={0.15}
+                                            envMapIntensity={1.0}
+                                        />
+                                    ) : (
+                                        <meshPhysicalMaterial
+                                            color="#030303"
+                                            metalness={0.8}
+                                            roughness={0.4}
+                                            clearcoat={1.0}
+                                            clearcoatRoughness={0.05}
+                                            envMapIntensity={2.5}
+                                        />
+                                    )}
+                                </mesh>
+                            );
+                        })}
+                    </group>
+                ) : (
+                    /* Fallback: single-primitive mesh (shouldn't happen with Tube+Lid+Tabs2) */
+                    <mesh geometry={nodes.Mesh_Tube.geometry}>
+                        <meshPhysicalMaterial
+                            map={etiquetteTexture}
+                            color="#ffffff"
+                            metalness={0.05}
+                            roughness={0.55}
+                            clearcoat={0.6}
+                            clearcoatRoughness={0.15}
+                            envMapIntensity={1.0}
+                        />
+                    </mesh>
+                )}
 
                 {/* ━━━ LID: Unscrewing scroll timeline target ━━━━━━━━━━
                  *  Position/rotation read from the parsed glTF node.
@@ -280,24 +264,6 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                     rotation={nodes.Mesh_Lid.rotation}
                 />
 
-                {/* ━━━ TABLET HERO: Compressed Powder ━━━━━━━━━━━━━━━━━
-                 *  Non-metallic, matte — compressed powder aesthetic.
-                 */}
-                <mesh
-                    ref={tabletRef}
-                    geometry={nodes.Mesh_Tablet_Hero.geometry}
-                    position={nodes.Mesh_Tablet_Hero.position}
-                    rotation={nodes.Mesh_Tablet_Hero.rotation}
-                >
-                    <meshStandardMaterial
-                        color="#e8e8e8"
-                        roughness={0.7}
-                        metalness={0.0}
-                        envMapIntensity={0.5}
-                        side={THREE.DoubleSide}
-                    />
-                </mesh>
-
                 {/* ━━━ ORBITING TABLETS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                  *  Cloned tablet geometry orbiting perpetually.
                  *  useFrame drives their positions each tick.
@@ -309,12 +275,12 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                             geometry={nodes.Mesh_Tablet_Hero.geometry}
                             scale={0.6}
                         >
+                            {/* Realistic White Tablet Material */}
                             <meshStandardMaterial
-                                color="#e8e8e8"
-                                roughness={0.7}
+                                color="#fdfdfd"
+                                roughness={0.5}
                                 metalness={0.0}
-                                envMapIntensity={0.5}
-                                side={THREE.DoubleSide}
+                                envMapIntensity={1.0}
                             />
                         </mesh>
                     ))}

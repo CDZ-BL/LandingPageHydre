@@ -1,170 +1,307 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import NumberTicker from '@/components/ui/NumberTicker';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DATA — Cost structure comparison
+// ═══════════════════════════════════════════════════════════════════════════
+
+interface CostSegment {
+    label: string;
+    percent: number;
+    color: string;
+    glow?: string;
+}
+
+const COMPETITOR_COST: CostSegment[] = [
+    { label: 'Marketing & Pub', percent: 40, color: '#dc2626' },
+    { label: 'Marge distributeur', percent: 25, color: '#991b1b' },
+    { label: 'Packaging premium', percent: 12, color: '#7f1d1d' },
+    { label: 'Marge marque', percent: 8, color: '#450a0a' },
+    { label: 'Ingrédients actifs', percent: 15, color: 'rgba(255,255,255,0.15)' },
+];
+
+const CLEAR_COST: CostSegment[] = [
+    { label: 'Ingrédients actifs', percent: 55, color: '#ffffff', glow: '0 0 20px rgba(255,255,255,0.4)' },
+    { label: 'Production', percent: 20, color: 'rgba(255,255,255,0.6)' },
+    { label: 'R&D + Labo', percent: 15, color: 'rgba(255,255,255,0.35)' },
+    { label: 'Opérations', percent: 10, color: 'rgba(255,255,255,0.15)' },
+];
+
+const COMPETITOR_PRICE = 9.99;
+const CLEAR_PRICE = 5.90;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STACKED BAR — Horizontal cost breakdown
+// ═══════════════════════════════════════════════════════════════════════════
+
+function CostBar({ segments, delay }: { segments: CostSegment[]; delay: number }) {
+    return (
+        <div className="flex w-full h-3 overflow-hidden rounded-sm gap-px">
+            {segments.map((seg, i) => (
+                <motion.div
+                    key={seg.label}
+                    initial={{ width: 0 }}
+                    whileInView={{ width: `${seg.percent}%` }}
+                    viewport={{ once: true, margin: '-50px' }}
+                    transition={{
+                        duration: 1.2,
+                        delay: delay + i * 0.08,
+                        ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="h-full relative"
+                    style={{
+                        backgroundColor: seg.color,
+                        boxShadow: seg.glow || 'none',
+                    }}
+                />
+            ))}
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LEGEND — Dots + labels under bar
+// ═══════════════════════════════════════════════════════════════════════════
+
+function CostLegend({ segments }: { segments: CostSegment[] }) {
+    return (
+        <div className="flex flex-wrap gap-x-5 gap-y-1.5 mt-3">
+            {segments.map((seg) => (
+                <div key={seg.label} className="flex items-center gap-2">
+                    <div
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{ backgroundColor: seg.color, boxShadow: seg.glow || 'none' }}
+                    />
+                    <span className="font-mono text-[10px] text-white/40 tracking-wider">
+                        {seg.label} ({seg.percent}%)
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PRINCIPLE CARD — Minimal value prop card
+// ═══════════════════════════════════════════════════════════════════════════
+
+function PrincipleCard({
+    number,
+    title,
+    description,
+    delay,
+}: {
+    number: string;
+    title: string;
+    description: string;
+    delay: number;
+}) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.7, delay }}
+            className="group relative"
+        >
+            <div className="relative border border-white/[0.06] bg-white/[0.01] p-6 md:p-8 hover:border-white/[0.12] transition-colors duration-500">
+                {/* Number */}
+                <span className="font-mono text-[10px] text-white/15 tracking-[0.3em] block mb-4">
+                    {number}
+                </span>
+                {/* Title */}
+                <h4 className="font-headline text-lg md:text-xl text-white tracking-wider mb-3">
+                    {title}
+                </h4>
+                {/* Body */}
+                <p className="font-mono text-xs md:text-sm text-white/50 leading-relaxed tracking-wide">
+                    {description}
+                </p>
+                {/* Bottom accent line */}
+                <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full bg-gradient-to-r from-white/30 to-transparent transition-all duration-700" />
+            </div>
+        </motion.div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MAIN COMPONENT
+// ═══════════════════════════════════════════════════════════════════════════
 
 export function ThePact() {
+    const savings = Math.round(((COMPETITOR_PRICE - CLEAR_PRICE) / COMPETITOR_PRICE) * 100);
+
     return (
-        <section className="relative py-32 bg-void overflow-hidden">
-            {/* Blueprint Grid Background */}
+        <section className="relative py-32 md:py-40 bg-void overflow-hidden">
+            {/* Subtle grid */}
             <div
-                className="absolute inset-0 opacity-10 pointer-events-none"
+                className="absolute inset-0 opacity-[0.03] pointer-events-none"
                 style={{
                     backgroundImage: `
-                        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
+                        linear-gradient(rgba(255,255,255,1) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)
                     `,
-                    backgroundSize: '100px 100px',
+                    backgroundSize: '80px 80px',
                 }}
             />
-            {/* Blueprint Measurements */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-5">
-                <div className="absolute top-32 left-10 border-l border-t border-white w-16 h-16"></div>
-                <div className="absolute bottom-32 right-10 border-r border-b border-white w-16 h-16"></div>
-            </div>
 
             <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
+
+                {/* ━━━ SECTION HEADER ━━━ */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: "-100px" }}
+                    viewport={{ once: true, margin: '-100px' }}
                     transition={{ duration: 0.8 }}
-                    className="mb-20"
+                    className="mb-20 max-w-3xl"
                 >
-                    <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
-                        [ SECTION 2 : LE PACTE DE VALEUR ]
+                    <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
+                        [ 02 — LE PACTE ]
                     </span>
-                    <h3 className="font-sans text-3xl md:text-5xl lg:text-6xl text-white font-bold tracking-widest mb-8">
-                        LE RETOUR DU POUVOIR D'ACHAT.
-                    </h3>
-                    <p className="font-sans text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                        Le modèle standard est cassé : vous payez pour le bruit, pas pour le produit.
-                        <br />
-                        AETHER propose un <span className="text-white font-semibold">Nouveau Pacte Industriel</span>.
+                    <h2 className="font-headline text-4xl md:text-5xl lg:text-6xl text-white font-bold tracking-wider leading-[1.05] mb-6">
+                        VOUS PAYEZ LE PRODUIT.<br />
+                        <span className="text-[#E6DCC8] italic font-light tracking-normal">Pas le bruit.</span>
+                    </h2>
+                    <p className="font-mono text-sm md:text-base text-white/60 leading-relaxed tracking-wide">
+                        Le modèle standard est cassé — 85% du prix finance le marketing, pas vos performances.
+                        CLEAR supprime l'inutile et investit tout dans la formule.
                     </p>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 items-center">
-                    {/* Left Column: The Philosophy */}
+                {/* ━━━ COST COMPARISON — Side by side ━━━ */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-24">
+
+                    {/* COMPETITOR */}
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, margin: "-100px" }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="space-y-12"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ duration: 0.7 }}
+                        className="border border-white/[0.06] bg-white/[0.01] p-6 md:p-8 relative"
                     >
-                        <div className="relative pl-8 border-l border-void-600">
-                            <h4 className="font-sans text-xl text-white font-bold mb-4">
-                                MATIÈRE PREMIÈRE &gt; MARKETING
-                            </h4>
-                            <p className="font-mono text-sm md:text-base text-gray-400 leading-relaxed">
-                                Suppression des intermédiaires et de la publicité. Chaque euro finance la qualité.
-                            </p>
+                        {/* HUD corners */}
+                        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/10" />
+                        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/10" />
+                        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/10" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/10" />
+
+                        <div className="flex items-baseline justify-between mb-6">
+                            <div>
+                                <span className="font-mono text-[10px] text-white/20 tracking-[0.2em] block mb-1">CONCURRENT PREMIUM</span>
+                                <span className="font-mono text-2xl md:text-3xl text-white/40 tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
+                            </div>
+                            <span className="font-mono text-[10px] text-red-500/60 tracking-wider">
+                                INEFFICIENT
+                            </span>
                         </div>
 
-                        <div className="relative pl-8 border-l border-void-600">
-                            <h4 className="font-sans text-xl text-white font-bold mb-4">
-                                TRANSPARENCE RADICALE
-                            </h4>
-                            <p className="font-mono text-sm md:text-base text-gray-400 leading-relaxed text-justify">
-                                Analyse labo et production avec les membres.
-                            </p>
+                        <CostBar segments={COMPETITOR_COST} delay={0.2} />
+                        <CostLegend segments={COMPETITOR_COST} />
+
+                        {/* Callout */}
+                        <div className="mt-6 pt-4 border-t border-white/[0.04]">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1 h-1 rounded-full bg-red-500/60" />
+                                <span className="font-mono text-[10px] text-red-400/40 tracking-wider">
+                                    SEULEMENT 15% DU PRIX ATTEINT LE PRODUIT
+                                </span>
+                            </div>
                         </div>
                     </motion.div>
 
-                    {/* Right Column: Visual Breakdown (Blueprint Style) */}
+                    {/* CLEAR */}
                     <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, margin: "-100px" }}
-                        transition={{ duration: 0.8, delay: 0.4 }}
-                        className="relative p-6 border border-void-700 bg-void-200/50"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ duration: 0.7, delay: 0.15 }}
+                        className="border border-white/[0.1] bg-white/[0.02] p-6 md:p-8 relative"
                     >
-                        {/* Technical Corners */}
-                        <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/50"></div>
-                        <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/50"></div>
-                        <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/50"></div>
-                        <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/50"></div>
+                        {/* HUD corners */}
+                        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20" />
+                        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20" />
+                        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20" />
 
-                        <h4 className="font-mono text-xs text-void-500 tracking-widest mb-8 text-center uppercase">
-                            // ANALYSE COMPARATIVE DES COÛTS
-                        </h4>
-
-                        <div className="space-y-10">
-                            {/* Standard Brand */}
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: false, margin: "-50px" }}
-                                transition={{ duration: 0.6 }}
-                            >
-                                <div className="flex justify-between items-center text-xs font-mono text-gray-500 mb-3">
-                                    <span>CONCURRENT PREMIUM</span>
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-gray-600">PRIX TOTAL : 9.99€</span>
-                                    </div>
-                                </div>
-                                {/* Ultra-thin bar container */}
-                                <div className="h-2 bg-void-900 w-full relative overflow-hidden border border-void-700">
-                                    {/* Marketing portion - dark gray with hatching effect + SHAKE */}
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        whileInView={{ width: '85%' }}
-                                        viewport={{ once: false, margin: "-50px" }}
-                                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                                        className="h-full bg-red-900/40 absolute left-0 animate-bar-shake"
-                                        style={{
-                                            backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px)'
-                                        }}
-                                    />
-                                </div>
-                                <div className="mt-2 flex justify-between text-[10px] font-mono text-gray-600">
-                                    <span>PRODUIT (15%)</span>
-                                    <span className="text-gray-500">MARKETING + MARGE (85%)</span>
-                                </div>
-                            </motion.div>
-
-                            {/* AETHER */}
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: false, margin: "-50px" }}
-                                transition={{ duration: 0.6, delay: 0.3 }}
-                            >
-                                <div className="flex justify-between items-center text-xs font-mono text-white mb-3">
-                                    <span>AETHER PROTOCOLE</span>
-                                    <div className="flex items-center gap-3">
-                                        <span>PRIX TOTAL : 5.90€</span>
-                                    </div>
-                                </div>
-                                {/* Ultra-thin bar container */}
-                                <div className="h-2 bg-void-900 w-full relative overflow-hidden border border-void-700">
-                                    {/* Ingredients portion - solid white with glow */}
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        whileInView={{ width: '100%' }}
-                                        viewport={{ once: false, margin: "-50px" }}
-                                        transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
-                                        className="h-full bg-white absolute left-0"
-                                        style={{
-                                            boxShadow: '0 0 15px rgba(255,255,255,0.6), inset 0 0 5px rgba(255,255,255,0.3)'
-                                        }}
-                                    />
-                                </div>
-                                <div className="mt-2 flex justify-between text-[10px] font-mono">
-                                    <span className="text-white">INGRÉDIENTS ACTIFS (100%)</span>
-                                    <span className="text-gray-500">BRUIT (0%)</span>
-                                </div>
-                            </motion.div>
+                        <div className="flex items-baseline justify-between mb-6">
+                            <div>
+                                <span className="font-mono text-[10px] text-white/40 tracking-[0.2em] block mb-1">CLEAR PROTOCOLE</span>
+                                <span className="font-mono text-2xl md:text-3xl text-white tabular-nums">{CLEAR_PRICE.toFixed(2)}€</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                                <span className="font-mono text-[10px] text-emerald-400/70 tracking-wider">
+                                    −{savings}% VS MARCHÉ
+                                </span>
+                            </div>
                         </div>
 
-                        <div className="mt-8 pt-6 border-t border-void-800 text-center">
-                            <p className="font-mono text-xs text-void-500">
-                                [DATA] : VOTRE INVESTISSEMENT EST BIOLOGIQUE, PAS MÉDIATIQUE.
-                            </p>
+                        <CostBar segments={CLEAR_COST} delay={0.4} />
+                        <CostLegend segments={CLEAR_COST} />
+
+                        {/* Callout */}
+                        <div className="mt-6 pt-4 border-t border-white/[0.06]">
+                            <div className="flex items-center gap-2">
+                                <div className="w-1 h-1 rounded-full bg-white/60" />
+                                <span className="font-mono text-[10px] text-white/40 tracking-wider">
+                                    100% DU BUDGET AU SERVICE DE LA FORMULE
+                                </span>
+                            </div>
                         </div>
                     </motion.div>
                 </div>
+
+                {/* ━━━ THREE PRINCIPLES ━━━ */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true, margin: '-80px' }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-10"
+                >
+                    <div className="flex items-center gap-4 mb-10">
+                        <div className="h-px flex-1 bg-white/[0.06]" />
+                        <span className="font-mono text-[10px] text-white/20 tracking-[0.25em]">
+                            NOUVEAU PACTE INDUSTRIEL
+                        </span>
+                        <div className="h-px flex-1 bg-white/[0.06]" />
+                    </div>
+                </motion.div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                    <PrincipleCard
+                        number="001"
+                        title="DIRECT-TO-CONSUMER"
+                        description="Zéro intermédiaire, zéro distributeur. Du labo à votre porte. Chaque euro finance la qualité, pas la logistique."
+                        delay={0.1}
+                    />
+                    <PrincipleCard
+                        number="002"
+                        title="TRANSPARENCE RADICALE"
+                        description="Formule ouverte, analyses labo publiées, coûts de production partagés avec les membres. Aucun proprietary blend."
+                        delay={0.2}
+                    />
+                    <PrincipleCard
+                        number="003"
+                        title="CO-DÉVELOPPEMENT"
+                        description="Les fondateurs votent sur les prochaines formules, testent les prototypes, et influencent la roadmap produit."
+                        delay={0.3}
+                    />
+                </div>
+
+                {/* ━━━ BOTTOM LINE ━━━ */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.8, delay: 0.5 }}
+                    className="mt-16 text-center"
+                >
+                    <p className="font-mono text-[10px] text-white/10 tracking-[0.2em]">
+                        [DATA] VOTRE INVESTISSEMENT EST BIOLOGIQUE, PAS MÉDIATIQUE.
+                    </p>
+                </motion.div>
             </div>
         </section>
     );

@@ -1,30 +1,15 @@
 import type { Metadata, Viewport } from 'next';
-import localFont from 'next/font/local';
+import { Instrument_Sans } from 'next/font/google';
 import { JetBrains_Mono } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import './globals.css';
 
-// CLASH DISPLAY - Headlines (Local from Fontshare)
-const clashDisplay = localFont({
-    src: [
-        {
-            path: '../../public/fonts/ClashDisplay-Regular.woff2',
-            weight: '400',
-            style: 'normal',
-        },
-        {
-            path: '../../public/fonts/ClashDisplay-Semibold.woff2',
-            weight: '600',
-            style: 'normal',
-        },
-        {
-            path: '../../public/fonts/ClashDisplay-Bold.woff2',
-            weight: '700',
-            style: 'normal',
-        },
-    ],
-    variable: '--font-clash',
+// INSTRUMENT SANS — Neo-Grotesque Headlines (Clinical Swiss Authority)
+const instrumentSans = Instrument_Sans({
+    subsets: ['latin'],
+    weight: ['400', '600', '700'],
+    variable: '--font-headline',
     display: 'swap',
 });
 
@@ -36,15 +21,15 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'AETHER | Pre-Launch Experience',
-    description: 'High-performance electrolytes. Ionic precision for elite athletes. Join the Founders Circle.',
-    keywords: ['electrolytes', 'sports nutrition', 'Hyrox', 'CrossFit', 'hydration', 'performance'],
+    title: 'AETHER | Expérience Pré-Lancement',
+    description: 'Électrolytes haute performance. Précision ionique pour athlètes exigeants. Rejoignez le Cercle des Fondateurs.',
+    keywords: ['électrolytes', 'nutrition sportive', 'Hyrox', 'CrossFit', 'hydratation', 'performance', 'AETHER'],
     authors: [{ name: 'AETHER' }],
     openGraph: {
-        title: 'AETHER | Ionic Precision',
-        description: 'The anti-bullshit electrolyte. Full-dose, fully transparent.',
+        title: 'AETHER | Précision Ionique',
+        description: 'L\'anti-bullshit des électrolytes. Dosage complet, transparence totale.',
         type: 'website',
-        locale: 'en_US',
+        locale: 'fr_FR',
     },
     robots: {
         index: true,
@@ -64,8 +49,8 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="fr" className={`${clashDisplay.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
-            <body className="antialiased bg-obsidian text-white/85">
+        <html lang="fr" className={`${instrumentSans.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
+            <body className="antialiased bg-obsidian text-[#D9D9D9]">
                 <LenisProvider>
                     {children}
                 </LenisProvider>
