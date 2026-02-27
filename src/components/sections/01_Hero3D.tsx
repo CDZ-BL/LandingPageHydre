@@ -20,11 +20,9 @@ export function HeroVoid() {
     return (
         <section
             id="hydre-product-section"
-            className="relative bg-void text-white overflow-hidden"
-            style={{ height: '200vh' }}
+            className="relative bg-void text-white overflow-hidden h-screen"
         >
-            {/* Sticky viewport — pins text while scroll drives the product */}
-            <div className="sticky top-0 h-screen flex">
+            <div className="relative h-full flex">
 
                 {/* ━━━ FULLSCREEN VIDEO BACKGROUND ━━━━━━━━━━━━━━━━━━ */}
                 <video
@@ -58,7 +56,6 @@ export function HeroVoid() {
                         className="text-base md:text-lg text-white/60 font-light tracking-wide mb-10 max-w-md"
                     >
                         Pour vous. Pas pour le marketing.<br />
-                        <span className="text-xs font-mono text-white/30 mt-2 block">// INITIATING NEURAL SYNC...</span>
                     </motion.p>
 
                     <motion.button
@@ -88,17 +85,7 @@ export function HeroVoid() {
                         </div>
                     </motion.button>
 
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 1 }} className="mt-16 flex gap-8 text-[10px] uppercase tracking-[0.2em] text-white/30 font-mono">
-                        <span>System: Normal</span>
-                        <span>Bio-Link: Active</span>
-                    </motion.div>
                 </motion.div>
-
-                {/* RIGHT: Status indicator */}
-                <div className="absolute top-8 right-8 font-mono text-right text-xs tracking-wider opacity-80 z-30 mix-blend-difference pointer-events-none">
-                    <span className="block">STATUS</span>
-                    <span className="block text-neon-orange font-semibold mt-1 animate-pulse">AVAILABLE</span>
-                </div>
 
                 {/* Bottom gradient */}
                 <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-void via-void/80 to-transparent z-[2] pointer-events-none" />

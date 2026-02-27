@@ -156,7 +156,7 @@ export function TheSpecs() {
                     transition={{ duration: 0.8 }}
                     className="mb-16"
                 >
-                    <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
+                    <span className="font-mono text-xs text-neon-orange tracking-widest mb-4 block">
                         [ SECTION 3 : LA FORMULE ]
                     </span>
                     <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-widest">

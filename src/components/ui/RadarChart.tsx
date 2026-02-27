@@ -397,12 +397,6 @@ export function RadarChart({ competitor }: RadarChartProps) {
                 }
             `}</style>
 
-            {/* Legend / Status */}
-            <div className="flex justify-between items-center max-w-[300px] mx-auto mt-2 font-mono text-[9px] text-white/30 uppercase tracking-widest">
-                <span>Ref: HYDRE_V1.0</span>
-                <span>STATUS: SCANNING...</span>
-                <span>Target: {competitor.codeName}</span>
-            </div>
         </div>
     );
 }

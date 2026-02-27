@@ -38,7 +38,7 @@ export function TheProblem() {
                     transition={{ duration: 0.8 }}
                     className="mb-8"
                 >
-                    <span className="font-mono text-xs text-amber-500 tracking-widest mb-4 block">
+                    <span className="font-mono text-xs text-neon-orange tracking-widest mb-4 block">
                         [ SECTION 1 : TRANSPARENCE ]
                     </span>
                     <h2 className="font-headline text-h1 text-white font-bold tracking-widest">
@@ -73,7 +73,7 @@ export function TheProblem() {
                     {/* Section Divider */}
                     <div className="flex items-center gap-4 mb-12 pt-12 border-t border-white/10">
                         <div className="flex-1 h-[1px] bg-white/10" />
-                        <h3 className="font-data text-xs text-amber-500 tracking-widest">
+                        <h3 className="font-data text-xs text-neon-orange tracking-widest">
                             [ ANALYSE COMPARATIVE ]
                         </h3>
                         <div className="flex-1 h-[1px] bg-white/10" />

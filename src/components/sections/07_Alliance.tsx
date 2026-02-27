@@ -237,7 +237,7 @@ export function Alliance() {
                         viewport={{ once: false, margin: '-100px' }}
                         transition={{ duration: 0.8 }}
                     >
-                        <h3 className="font-mono text-[10px] text-amber-500/70 tracking-widest mb-4">
+                        <h3 className="font-mono text-[10px] text-neon-orange/70 tracking-widest mb-4">
                             [ VOTE EN COURS : DEVELOPPEMENT GAMME ]
                         </h3>
 
@@ -259,7 +259,7 @@ export function Alliance() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0 }}
-                                    className="font-mono text-xs text-cyan-400/60 mt-4 tracking-wider"
+                                    className="font-mono text-xs text-[#E6DCC8]/70 mt-4 tracking-wider"
                                 >
                                     ✓ VOTE ENREGISTRÉ — {RD_OPTIONS.find((o) => o.id === userVote)?.label}
                                 </motion.p>

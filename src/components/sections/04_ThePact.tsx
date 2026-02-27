@@ -14,10 +14,10 @@ interface CostSegment {
 }
 
 const COMPETITOR_COST: CostSegment[] = [
-    { label: 'Marketing & Pub', percent: 40, color: '#dc2626' },
-    { label: 'Marge distributeur', percent: 25, color: '#991b1b' },
-    { label: 'Packaging premium', percent: 12, color: '#7f1d1d' },
-    { label: 'Marge marque', percent: 8, color: '#450a0a' },
+    { label: 'Marketing & Pub', percent: 40, color: '#FF6B00' },
+    { label: 'Marge distributeur', percent: 25, color: 'rgba(255,107,0,0.65)' },
+    { label: 'Packaging premium', percent: 12, color: 'rgba(255,107,0,0.4)' },
+    { label: 'Marge marque', percent: 8, color: 'rgba(255,107,0,0.2)' },
     { label: 'Ingrédients actifs', percent: 15, color: 'rgba(255,255,255,0.15)' },
 ];
 
@@ -191,7 +191,7 @@ export function ThePact() {
                                 <span className="font-mono text-[10px] text-white/20 tracking-[0.2em] block mb-1">CONCURRENT PREMIUM</span>
                                 <span className="font-mono text-2xl md:text-3xl text-white/40 tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
                             </div>
-                            <span className="font-mono text-[10px] text-red-500/60 tracking-wider">
+                            <span className="font-mono text-[10px] text-neon-orange/60 tracking-wider">
                                 INEFFICIENT
                             </span>
                         </div>
@@ -202,8 +202,8 @@ export function ThePact() {
                         {/* Callout */}
                         <div className="mt-6 pt-4 border-t border-white/[0.04]">
                             <div className="flex items-center gap-2">
-                                <div className="w-1 h-1 rounded-full bg-red-500/60" />
-                                <span className="font-mono text-[10px] text-red-400/40 tracking-wider">
+                                <div className="w-1 h-1 rounded-full bg-neon-orange/60" />
+                                <span className="font-mono text-[10px] text-neon-orange/40 tracking-wider">
                                     SEULEMENT 15% DU PRIX ATTEINT LE PRODUIT
                                 </span>
                             </div>
@@ -230,8 +230,8 @@ export function ThePact() {
                                 <span className="font-mono text-2xl md:text-3xl text-white tabular-nums">{CLEAR_PRICE.toFixed(2)}€</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                                <span className="font-mono text-[10px] text-emerald-400/70 tracking-wider">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#E6DCC8] animate-pulse" />
+                                <span className="font-mono text-[10px] text-[#E6DCC8]/70 tracking-wider">
                                     −{savings}% VS MARCHÉ
                                 </span>
                             </div>
