@@ -249,10 +249,10 @@ export function SystemFailure() {
                             <h2 className="font-headline text-2xl sm:text-3xl md:text-5xl text-white font-black uppercase tracking-widest animate-text-distort will-change-transform">
                                 /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                             </h2>
-                            <h2 className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-neon-orange font-black uppercase tracking-widest mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform" aria-hidden="true">
+                            <h2 className="absolute top-0 left-0 right-0 font-headline text-2xl sm:text-3xl md:text-5xl text-neon-orange font-black uppercase tracking-widest mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform pointer-events-none" aria-hidden="true">
                                 /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                             </h2>
-                            <h2 className="absolute top-0 left-0 right-0 font-sans text-2xl sm:text-3xl md:text-5xl text-bone font-black uppercase tracking-tight mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform" aria-hidden="true">
+                            <h2 className="absolute top-0 left-0 right-0 font-headline text-2xl sm:text-3xl md:text-5xl text-bone font-black uppercase tracking-widest mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform pointer-events-none" aria-hidden="true">
                                 /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
                             </h2>
                         </div>
