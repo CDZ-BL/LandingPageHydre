@@ -1,0 +1,200 @@
+import { create } from 'zustand';
+
+// ── TYPES ────────────────────────────────────────────────────
+
+export interface HydreUser {
+  id: string;
+  email: string;
+  displayName: string | null;
+  emailVerified: boolean;
+  referralCode: string;
+  founderPointsTotal: number;
+}
+
+export type AuthModal = 'closed' | 'login' | 'signup' | 'verify';
+export type GamePhase = 'intro' | 'playing' | 'voted' | 'converting';
+export type FlavorId = 'yuzu-ginger' | 'berry-mint' | 'electric-lime';
+
+interface HydreState {
+  // ── Auth ─────────────────────────────────────
+  user: HydreUser | null;
+  isAuthenticated: boolean;
+  isAuthLoading: boolean;
+  authModal: AuthModal;
+  pendingVerificationEmail: string | null;
+
+  // ── UI ───────────────────────────────────────
+  isModalOpen: boolean;
+  isConversionModalOpen: boolean;
+  activeSection: number;
+  isLowPowerMode: boolean;
+
+  // ── Waitlist ─────────────────────────────────
+  waitlistCount: number;
+  userEmail: string;
+  userSport: string;
+  isSubmitted: boolean;
+
+  // ── Flavor Battle ────────────────────────────
+  flavorVotes: Record<FlavorId, number>;
+  selectedFlavor: FlavorId | null;
+  isVoteComplete: boolean;
+  gamePhase: GamePhase;
+
+  // ── Auth Actions ─────────────────────────────
+  setUser: (user: HydreUser | null) => void;
+  setAuthLoading: (loading: boolean) => void;
+  openAuthModal: (mode: AuthModal) => void;
+  closeAuthModal: () => void;
+  setPendingVerificationEmail: (email: string | null) => void;
+  logout: () => void;
+
+  // ── UI Actions ───────────────────────────────
+  setModalOpen: (open: boolean) => void;
+  setConversionModalOpen: (open: boolean) => void;
+  setActiveSection: (section: number) => void;
+  setLowPowerMode: (low: boolean) => void;
+
+  // ── Waitlist Actions ─────────────────────────
+  setWaitlistCount: (count: number) => void;
+  setUserEmail: (email: string) => void;
+  setUserSport: (sport: string) => void;
+  setSubmitted: (submitted: boolean) => void;
+
+  // ── Flavor Battle Actions ────────────────────
+  setFlavorVotes: (votes: Record<FlavorId, number>) => void;
+  setSelectedFlavor: (flavor: FlavorId) => void;
+  setVoteComplete: (complete: boolean) => void;
+  setGamePhase: (phase: GamePhase) => void;
+}
+
+// ── STORE ────────────────────────────────────────────────────
+
+export const useHydreStore = create<HydreState>((set) => ({
+  // ── Auth State ───────────────────────────────
+  user: null,
+  isAuthenticated: false,
+  isAuthLoading: false,
+  authModal: 'closed',
+  pendingVerificationEmail: null,
+
+  // ── UI State ─────────────────────────────────
+  isModalOpen: false,
+  isConversionModalOpen: false,
+  activeSection: 0,
+  isLowPowerMode: false,
+
+  // ── Waitlist State ───────────────────────────
+  waitlistCount: 0,
+  userEmail: '',
+  userSport: '',
+  isSubmitted: false,
+
+  // ── Flavor Battle State ──────────────────────
+  flavorVotes: {
+    'yuzu-ginger': 0,
+    'berry-mint': 0,
+    'electric-lime': 0,
+  },
+  selectedFlavor: null,
+  isVoteComplete: false,
+  gamePhase: 'intro',
+
+  // ── Auth Actions ─────────────────────────────
+  setUser: (user) =>
+    set({
+      user,
+      isAuthenticated: user !== null,
+    }),
+
+  setAuthLoading: (loading) =>
+    set({
+      isAuthLoading: loading,
+    }),
+
+  openAuthModal: (mode) =>
+    set({
+      authModal: mode,
+    }),
+
+  closeAuthModal: () =>
+    set({
+      authModal: 'closed',
+    }),
+
+  setPendingVerificationEmail: (email) =>
+    set({
+      pendingVerificationEmail: email,
+    }),
+
+  logout: () =>
+    set({
+      user: null,
+      isAuthenticated: false,
+      authModal: 'closed',
+      pendingVerificationEmail: null,
+    }),
+
+  // ── UI Actions ───────────────────────────────
+  setModalOpen: (open) =>
+    set({
+      isModalOpen: open,
+    }),
+
+  setConversionModalOpen: (open) =>
+    set({
+      isConversionModalOpen: open,
+    }),
+
+  setActiveSection: (section) =>
+    set({
+      activeSection: section,
+    }),
+
+  setLowPowerMode: (low) =>
+    set({
+      isLowPowerMode: low,
+    }),
+
+  // ── Waitlist Actions ─────────────────────────
+  setWaitlistCount: (count) =>
+    set({
+      waitlistCount: count,
+    }),
+
+  setUserEmail: (email) =>
+    set({
+      userEmail: email,
+    }),
+
+  setUserSport: (sport) =>
+    set({
+      userSport: sport,
+    }),
+
+  setSubmitted: (submitted) =>
+    set({
+      isSubmitted: submitted,
+    }),
+
+  // ── Flavor Battle Actions ────────────────────
+  setFlavorVotes: (votes) =>
+    set({
+      flavorVotes: votes,
+    }),
+
+  setSelectedFlavor: (flavor) =>
+    set({
+      selectedFlavor: flavor,
+    }),
+
+  setVoteComplete: (complete) =>
+    set({
+      isVoteComplete: complete,
+    }),
+
+  setGamePhase: (phase) =>
+    set({
+      gamePhase: phase,
+    }),
+}));

@@ -83,8 +83,8 @@ export function TheClose() {
                             </div>
 
                             <div className="mt-12 lg:mt-0 pt-8 border-t border-white/5 font-mono text-[10px] text-void-600 flex justify-between">
-                                <span>NIVEAU_ACCREDITATION_ALFA</span>
-                                <span>NOEUD : 884-299-X</span>
+                                <span></span>
+                                <span></span>
                             </div>
                         </div>
 
@@ -149,8 +149,8 @@ export function TheClose() {
                                                         </span>
                                                     ) : (
                                                         <>
-                                                            <span className="font-mono text-xs font-bold tracking-[0.2em] transition-colors duration-300 text-black group-hover:text-white">
-                                                                INITIER_SEQUENCE
+                                                            <span className="font-mono text-xs font-bold tracking-[0.2em] transition-colors duration-300 text-black group-hover:text-white uppercase">
+                                                                REJOINDRE LA FONDATION
                                                             </span>
                                                             <svg className="w-4 h-4 transition-colors duration-300 text-black group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />

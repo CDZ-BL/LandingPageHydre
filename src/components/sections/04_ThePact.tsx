@@ -157,7 +157,7 @@ export function ThePact() {
                     className="mb-20 max-w-3xl"
                 >
                     <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
-                        [ 02 — LE PACTE ]
+
                     </span>
                     <h2 className="font-headline text-4xl md:text-5xl lg:text-6xl text-white font-bold tracking-wider leading-[1.05] mb-6">
                         VOUS PAYEZ LE PRODUIT.<br />
@@ -263,7 +263,7 @@ export function ThePact() {
                     <div className="flex items-center gap-4 mb-10">
                         <div className="h-px flex-1 bg-white/[0.06]" />
                         <span className="font-mono text-[10px] text-white/20 tracking-[0.25em]">
-                            NOUVEAU PACTE INDUSTRIEL
+
                         </span>
                         <div className="h-px flex-1 bg-white/[0.06]" />
                     </div>

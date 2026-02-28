@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 // ═══════════════════════════════════════════════════════════════════════════
 //  CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
-const RING_RADIUS   = 45;
+const RING_RADIUS = 45;
 const CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 
 // Acceleration-based fill: speed = BASE + ACCEL × seconds_held
@@ -19,8 +19,8 @@ const CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
 // At t=1s: 0.40 prog/s — perceptible ramp, rewards commitment.
 // At t=2s: 0.70 prog/s — near full speed, feel of inevitability.
 // Total fill time (0→100%) ≈ 2.2s (vs 3s flat).
-const HOLD_BASE_SPEED    = 0.10;   // progress/sec at first frame of hold
-const HOLD_ACCELERATION  = 0.30;   // extra progress/sec per second held
+const HOLD_BASE_SPEED = 0.10;   // progress/sec at first frame of hold
+const HOLD_ACCELERATION = 0.30;   // extra progress/sec per second held
 
 // How long the ring takes to drain back to 0 after an early release.
 // Creates healthy tension: you must commit.
@@ -42,27 +42,27 @@ const NAV_GUARD_MS = 2000;
 
 export function SystemFailure() {
     // ─── REFS ─────────────────────────────────────────────────────────────
-    const containerRef   = useRef<HTMLDivElement>(null);
-    const glitchRef      = useRef<HTMLDivElement>(null);
-    const stableRef      = useRef<HTMLDivElement>(null);
-    const ringRef        = useRef<SVGCircleElement>(null);
-    const percentRef     = useRef<HTMLSpanElement>(null);
-    const shieldRef      = useRef<HTMLDivElement>(null);
-    const holdZoneRef    = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const glitchRef = useRef<HTMLDivElement>(null);
+    const stableRef = useRef<HTMLDivElement>(null);
+    const ringRef = useRef<SVGCircleElement>(null);
+    const percentRef = useRef<HTMLSpanElement>(null);
+    const shieldRef = useRef<HTMLDivElement>(null);
+    const holdZoneRef = useRef<HTMLDivElement>(null);
 
-    const revealedRef      = useRef(false);
-    const isHoldingRef     = useRef(false);
-    const navScrollActive  = useRef(false);
-    const progressRef      = useRef({ value: 0 });
-    const drainTweenRef    = useRef<gsap.core.Tween | null>(null);
-    const rafIdRef         = useRef<number | null>(null);
+    const revealedRef = useRef(false);
+    const isHoldingRef = useRef(false);
+    const navScrollActive = useRef(false);
+    const progressRef = useRef({ value: 0 });
+    const drainTweenRef = useRef<gsap.core.Tween | null>(null);
+    const rafIdRef = useRef<number | null>(null);
     const holdStartTimeRef = useRef<number>(0);
     const lastFrameTimeRef = useRef<number>(0);
 
     // ─── STATE (visual only) ──────────────────────────────────────────────
-    const [isHolding,   setIsHolding]   = useState(false);
+    const [isHolding, setIsHolding] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
-    const [isComplete,  setIsComplete]  = useState(false);
+    const [isComplete, setIsComplete] = useState(false);
 
     const lenis = useLenis();
 
@@ -71,7 +71,7 @@ export function SystemFailure() {
     // ─────────────────────────────────────────────────────────────────────
     const syncRing = useCallback(() => {
         const v = progressRef.current.value;
-        if (ringRef.current)    ringRef.current.style.strokeDashoffset = String(CIRCUMFERENCE - CIRCUMFERENCE * v);
+        if (ringRef.current) ringRef.current.style.strokeDashoffset = String(CIRCUMFERENCE - CIRCUMFERENCE * v);
         if (percentRef.current) percentRef.current.textContent = `${Math.floor(v * 100)}%`;
     }, []);
 
@@ -84,16 +84,16 @@ export function SystemFailure() {
 
         const block = (e: Event) => { e.preventDefault(); e.stopPropagation(); };
         const blockKey = (e: KeyboardEvent) => {
-            if (['ArrowDown','ArrowUp','Space','PageDown','PageUp','Home','End'].includes(e.code))
+            if (['ArrowDown', 'ArrowUp', 'Space', 'PageDown', 'PageUp', 'Home', 'End'].includes(e.code))
                 e.preventDefault();
         };
 
-        shield.addEventListener('wheel',     block,    { passive: false });
-        shield.addEventListener('touchmove', block,    { passive: false });
+        shield.addEventListener('wheel', block, { passive: false });
+        shield.addEventListener('touchmove', block, { passive: false });
         document.addEventListener('keydown', blockKey, { passive: false });
 
         return () => {
-            shield.removeEventListener('wheel',     block);
+            shield.removeEventListener('wheel', block);
             shield.removeEventListener('touchmove', block);
             document.removeEventListener('keydown', blockKey);
         };
@@ -206,10 +206,10 @@ export function SystemFailure() {
             },
         });
 
-        departure.to('.sf-glitch',            { scale: 5,  opacity: 0, duration: 1.0, ease: 'expo.in' }, 0);
-        departure.to('.animate-text-distort',  { scale: 25, z: 2000, rotationZ: 12,   opacity: 0, duration: 1.0, ease: 'expo.in' }, 0);
+        departure.to('.sf-glitch', { scale: 5, opacity: 0, duration: 1.0, ease: 'expo.in' }, 0);
+        departure.to('.animate-text-distort', { scale: 25, z: 2000, rotationZ: 12, opacity: 0, duration: 1.0, ease: 'expo.in' }, 0);
         departure.to('.animate-glitch-hard-1', { scale: 50, z: 2500, x: -window.innerWidth * 0.7, rotationZ: -30, opacity: 0, duration: 0.9, ease: 'expo.in' }, 0);
-        departure.to('.animate-glitch-hard-2', { scale: 40, z: 3000, x:  window.innerWidth * 0.7, rotationZ:  40, opacity: 0, duration: 0.8, ease: 'expo.in' }, 0);
+        departure.to('.animate-glitch-hard-2', { scale: 40, z: 3000, x: window.innerWidth * 0.7, rotationZ: 40, opacity: 0, duration: 0.8, ease: 'expo.in' }, 0);
     }, [lenis]);
 
     // ─────────────────────────────────────────────────────────────────────
@@ -218,7 +218,7 @@ export function SystemFailure() {
     useGSAP(() => {
         if (!ringRef.current) return;
         gsap.set(ringRef.current, {
-            strokeDasharray:  CIRCUMFERENCE,
+            strokeDasharray: CIRCUMFERENCE,
             strokeDashoffset: CIRCUMFERENCE,
         });
     }, { scope: containerRef });
@@ -241,11 +241,11 @@ export function SystemFailure() {
         lastFrameTimeRef.current = performance.now();
 
         const tick = (now: number) => {
-            const delta       = Math.min((now - lastFrameTimeRef.current) / 1000, 0.1); // cap at 100ms
+            const delta = Math.min((now - lastFrameTimeRef.current) / 1000, 0.1); // cap at 100ms
             lastFrameTimeRef.current = now;
 
             const holdElapsed = (now - holdStartTimeRef.current) / 1000;
-            const speed       = HOLD_BASE_SPEED + HOLD_ACCELERATION * holdElapsed;
+            const speed = HOLD_BASE_SPEED + HOLD_ACCELERATION * holdElapsed;
 
             progressRef.current.value = Math.min(1, progressRef.current.value + speed * delta);
             syncRing();
@@ -277,9 +277,9 @@ export function SystemFailure() {
         if (drainTime < 0.02) return; // already near 0
 
         drainTweenRef.current = gsap.to(progressRef.current, {
-            value:    0,
+            value: 0,
             duration: drainTime,
-            ease:     'power2.in',
+            ease: 'power2.in',
             onUpdate: syncRing,
             onComplete() { drainTweenRef.current = null; },
         });
@@ -296,20 +296,20 @@ export function SystemFailure() {
             el.setPointerCapture(e.pointerId);
             startHold();
         };
-        const onUp   = () => stopHold();
+        const onUp = () => stopHold();
         const onLeave = (e: PointerEvent) => {
             // Only release if pointer is no longer captured
             if (!el.hasPointerCapture(e.pointerId)) stopHold();
         };
 
-        el.addEventListener('pointerdown',   onDown,  { passive: false });
-        el.addEventListener('pointerup',     onUp,    { passive: false });
-        el.addEventListener('pointercancel', onUp,    { passive: false });
+        el.addEventListener('pointerdown', onDown, { passive: false });
+        el.addEventListener('pointerup', onUp, { passive: false });
+        el.addEventListener('pointercancel', onUp, { passive: false });
         el.addEventListener('lostpointercapture', onLeave, { passive: false });
 
         return () => {
-            el.removeEventListener('pointerdown',   onDown);
-            el.removeEventListener('pointerup',     onUp);
+            el.removeEventListener('pointerdown', onDown);
+            el.removeEventListener('pointerup', onUp);
             el.removeEventListener('pointercancel', onUp);
             el.removeEventListener('lostpointercapture', onLeave);
         };
@@ -355,52 +355,52 @@ export function SystemFailure() {
 
                         {/* Status badge */}
                         <div className="inline-block font-mono text-neon-orange text-[10px] tracking-widest mb-4 animate-hard-blink">
-                            [ SYSTEM_UPDATE // STANDARD CALIBRATION ]
+                            [ ANALYSE_MARCHÉ // ANOMALIE DÉTECTÉE ]
                         </div>
 
                         {/* Main headline — triple layer glitch */}
-                        <div className="relative mb-12">
+                        <div className="relative mb-16">
                             <h2
-                                className="font-headline text-white font-black uppercase tracking-widest animate-text-distort will-change-transform"
-                                style={{ fontSize: 'clamp(1.4rem, 2.8vw + 0.5rem, 3rem)' }}
+                                className="font-headline text-white font-black uppercase tracking-wider leading-[1.3] animate-text-distort will-change-transform"
+                                style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
                             >
-                                /// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///
+                                /// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///
                             </h2>
                             <h2
-                                className="absolute top-0 left-0 right-0 font-sans text-neon-orange font-black uppercase tracking-widest mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform"
-                                style={{ fontSize: 'clamp(1.4rem, 2.8vw + 0.5rem, 3rem)' }}
+                                className="absolute top-0 left-0 right-0 font-headline text-neon-orange font-black uppercase tracking-wider leading-[1.3] mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform"
+                                style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
                                 aria-hidden="true"
-                            >/// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///</h2>
+                            >/// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///</h2>
                             <h2
-                                className="absolute top-0 left-0 right-0 font-sans text-bone font-black uppercase tracking-tight mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform"
-                                style={{ fontSize: 'clamp(1.4rem, 2.8vw + 0.5rem, 3rem)' }}
+                                className="absolute top-0 left-0 right-0 font-headline text-bone font-black uppercase tracking-wider leading-[1.3] mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform"
+                                style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
                                 aria-hidden="true"
-                            >/// SYSTEME CORROMPU : MISE À JOUR FORCÉE ///</h2>
+                            >/// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///</h2>
                         </div>
 
                         {/* Info block */}
                         <div className="space-y-4 font-mono border-l-4 border-white/10 pl-6 my-5 text-left max-w-2xl mx-auto bg-black/40 backdrop-blur-sm p-5 rounded-r-lg">
                             <div className="text-[#E6DCC8] text-[10px] tracking-widest uppercase mb-3 font-bold">
-                                [ M.A.J SYSTEME // EFFACEMENT DES TAXES // DIMINUTION DU PRIX ]
+                                [ PROTOCOLE_CLEAR // SUPPRESSION_MARGE // OPTIMISATION_COÛT ]
                             </div>
                             <h3
                                 className="font-headline text-white mb-4 tracking-widest leading-tight"
                                 style={{ fontSize: 'clamp(1rem, 2vw + 0.25rem, 1.75rem)' }}
                             >
-                                /// DANGER TAXE MARKETING ///
+                                /// DIAGNOSTIC : SURCOÛT SYSTÉMIQUE ///
                             </h3>
                             <div className="space-y-3 text-sm md:text-base">
                                 <div className="text-white/90 leading-relaxed animate-line-teleport">
                                     <span className="text-[#E6DCC8] font-black mr-2 text-base md:text-lg">{'>'} ANALYSE :</span>
-                                    70% DU PRIX = MARKETING. (Standard Industrie)
+                                    70% DE VOTRE ARGENT NE TOUCHE JAMAIS LE PRODUIT.
                                 </div>
                                 <div className="text-white/70 leading-relaxed animate-line-teleport">
                                     <span className="text-neon-orange font-black mr-2 text-base md:text-lg">{'>'} CONSÉQUENCES :</span>
-                                    PRIX ÉLEVÉ. QUALITÉ MÉDIOCRE.
+                                    VOUS SURPAYEZ. LE PRODUIT SOUS-PERFORME.
                                 </div>
                                 <div className="text-white/90 leading-relaxed animate-emergency-flash">
                                     <span className="text-[#E6DCC8] font-black mr-2 text-base md:text-lg">{'>'} CORRECTIF :</span>
-                                    SUPPRESSION TAXE MARKETING.
+                                    RÉÉCRITURE DU MODÈLE. DE ZÉRO.
                                 </div>
                             </div>
                         </div>
@@ -467,9 +467,9 @@ export function SystemFailure() {
                             <div
                                 className="font-mono text-[9px] tracking-[0.3em] uppercase transition-all duration-300"
                                 style={{
-                                    color:  isHolding ? '#FF6B00'          : 'rgba(255,255,255,0.25)',
-                                    opacity: isHolding ? 1                  : 0.8,
-                                    letterSpacing: isHolding ? '0.35em'    : '0.3em',
+                                    color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.25)',
+                                    opacity: isHolding ? 1 : 0.8,
+                                    letterSpacing: isHolding ? '0.35em' : '0.3em',
                                 }}
                             >
                                 {isHolding
@@ -498,12 +498,19 @@ export function SystemFailure() {
                         </div>
 
                         <h3 className="font-headline text-h2 text-white font-bold mb-6">
-                            <span className="text-[#E6DCC8]">MISE À JOUR EFFECTUÉE :</span>
+                            <span className="text-[#E6DCC8]">
+                                MISE À JOUR EFFECTUÉE
+                                <span className="inline-flex w-[1.5ch] justify-start">
+                                    <span>.</span>
+                                    <span>.</span>
+                                    <span className="animate-pulse" style={{ animationDuration: '1.4s' }}>.</span>
+                                </span>
+                            </span>
                         </h3>
 
                         <p className="font-sans text-h3 text-[#D9D9D9] max-w-2xl mx-auto leading-relaxed">
-                            Le prix est maintenant <span className="text-[#E6DCC8] font-semibold">diminué</span>.<br />
-                            La qualité est <span className="text-[#E6DCC8] font-semibold">augmentée</span>.
+                            <span className="text-emerald-400 font-semibold">Moins cher. Plus concentré.</span><br />
+                            <span className="text-[#E6DCC8] font-semibold">Sans intermédiaire.</span>
                         </p>
 
                     </div>

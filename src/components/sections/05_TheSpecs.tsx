@@ -1,9 +1,8 @@
 'use client';
 
+import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
-import { getAssetPath } from '@/lib/utils';
+import { XRayTubeCanvas } from '@/components/three/XRayTubeCanvas';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INGREDIENT DATA — Real formulation per tablet
@@ -15,30 +14,27 @@ interface Ingredient {
     source: string;
     amount: number;
     unit: string;
+    ajr: number; // EU AJR (Reg. 1169/2011)
     category: 'electrolyte' | 'vitamin';
 }
 
 const INGREDIENTS: Ingredient[] = [
-    // ── ELECTROLYTES ──
-    { id: 'sodium',    name: 'SODIUM',    source: 'Sodium Bicarbonate',               amount: 280, unit: 'mg', category: 'electrolyte' },
-    { id: 'potassium', name: 'POTASSIUM', source: 'Potassium Chloride, Citrate',      amount: 150, unit: 'mg', category: 'electrolyte' },
-    { id: 'chlore',    name: 'CHLORE',    source: 'Potassium Chloride',               amount: 70,  unit: 'mg', category: 'electrolyte' },
-    { id: 'magnesium', name: 'MAGNÉSIUM', source: 'Magnesium Citrate',                amount: 60,  unit: 'mg', category: 'electrolyte' },
-    { id: 'zinc',      name: 'ZINC',      source: 'Zinc Citrate',                     amount: 3,   unit: 'mg', category: 'electrolyte' },
+    // ── ELECTROLYTES ── (AJR: EU Regulation 1169/2011)
+    { id: 'sodium', name: 'SODIUM', source: 'Sodium Bicarbonate', amount: 280, unit: 'mg', ajr: 2000, category: 'electrolyte' },
+    { id: 'potassium', name: 'POTASSIUM', source: 'Potassium Chloride, Citrate', amount: 150, unit: 'mg', ajr: 2000, category: 'electrolyte' },
+    { id: 'chlore', name: 'CHLORE', source: 'Potassium Chloride', amount: 70, unit: 'mg', ajr: 800, category: 'electrolyte' },
+    { id: 'magnesium', name: 'MAGNÉSIUM', source: 'Magnesium Citrate', amount: 60, unit: 'mg', ajr: 375, category: 'electrolyte' },
+    { id: 'zinc', name: 'ZINC', source: 'Zinc Citrate', amount: 3, unit: 'mg', ajr: 10, category: 'vitamin' },
     // ── VITAMINS ──
-    { id: 'vitc',      name: 'VITAMINE C',   source: 'Acide L-Ascorbique',            amount: 60,  unit: 'mg', category: 'vitamin' },
-    { id: 'vitb3',     name: 'VITAMINE B3',  source: 'Niacine',                       amount: 8,   unit: 'mg', category: 'vitamin' },
-    { id: 'vitb5',     name: 'VITAMINE B5',  source: 'Acide Pantothénique',           amount: 2,   unit: 'mg', category: 'vitamin' },
-    { id: 'vitb6',     name: 'VITAMINE B6',  source: 'Pyridoxine',                    amount: 2,   unit: 'mg', category: 'vitamin' },
-    { id: 'vitb12',    name: 'VITAMINE B12', source: 'Cyanocobalamine',               amount: 2,   unit: 'mcg', category: 'vitamin' },
+    { id: 'vitc', name: 'VITAMINE C', source: 'Acide L-Ascorbique', amount: 60, unit: 'mg', ajr: 80, category: 'vitamin' },
+    { id: 'vitb3', name: 'VITAMINE B3', source: 'Niacine', amount: 8, unit: 'mg', ajr: 16, category: 'vitamin' },
+    { id: 'vitb5', name: 'VITAMINE B5', source: 'Acide Pantothénique', amount: 2, unit: 'mg', ajr: 6, category: 'vitamin' },
+    { id: 'vitb6', name: 'VITAMINE B6', source: 'Pyridoxine', amount: 2, unit: 'mg', ajr: 1.4, category: 'vitamin' },
+    { id: 'vitb12', name: 'VITAMINE B12', source: 'Cyanocobalamine', amount: 2, unit: 'mcg', ajr: 2.5, category: 'vitamin' },
 ];
 
 const ELECTROLYTES = INGREDIENTS.filter(i => i.category === 'electrolyte');
 const VITAMINS = INGREDIENTS.filter(i => i.category === 'vitamin');
-
-// Max dosage for bar scaling (within each category)
-const MAX_ELECTROLYTE = Math.max(...ELECTROLYTES.map(i => i.amount));
-const MAX_VITAMIN = Math.max(...VITAMINS.map(i => i.amount));
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INGREDIENT ROW — Single row in the datasheet
@@ -47,15 +43,21 @@ const MAX_VITAMIN = Math.max(...VITAMINS.map(i => i.amount));
 function IngredientRow({
     ingredient,
     index,
-    maxAmount,
     accentColor,
+    barMode = 'ajr',
+    maxAmount = 1,
 }: {
     ingredient: Ingredient;
     index: number;
-    maxAmount: number;
     accentColor: string;
+    barMode?: 'ajr' | 'amount';
+    maxAmount?: number;
 }) {
-    const barWidth = Math.max((ingredient.amount / maxAmount) * 100, 4); // min 4% for visibility
+    const ajrPercent = Math.round((ingredient.amount / ingredient.ajr) * 100);
+    // For 'amount' mode: normalize bar to the highest amount in the group
+    const barWidth = barMode === 'amount'
+        ? Math.min(Math.max((ingredient.amount / maxAmount) * 100, 4), 100)
+        : Math.min(Math.max(ajrPercent, 4), 100);
 
     return (
         <motion.div
@@ -93,13 +95,16 @@ function IngredientRow({
                     />
                 </div>
 
-                {/* Dosage */}
-                <div className="w-[70px] md:w-[80px] shrink-0 text-right">
+                {/* Dosage + % AJR */}
+                <div className="w-[100px] md:w-[120px] shrink-0 text-right">
                     <span className="font-mono text-sm md:text-base font-bold tabular-nums" style={{ color: accentColor }}>
                         {ingredient.amount}
                     </span>
                     <span className="font-mono text-[10px] text-white/30 ml-0.5">
                         {ingredient.unit}
+                    </span>
+                    <span className="font-mono text-[10px] text-white/40 ml-1.5 tabular-nums">
+                        {ajrPercent}%
                     </span>
                 </div>
             </div>
@@ -120,7 +125,7 @@ function CategoryHeader({ label, count, color }: { label: string; count: number;
             </span>
             <div className="flex-1 h-px bg-white/[0.06]" />
             <span className="font-mono text-[10px] text-white/20 tabular-nums">
-                {count.toString().padStart(2, '0')} COMPOSANTS
+
             </span>
         </div>
     );
@@ -131,8 +136,7 @@ function CategoryHeader({ label, count, color }: { label: string; count: number;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function TheSpecs() {
-    const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null);
-
+    const [activeTab, setActiveTab] = useState<'ingredients' | 'nutrition'>('nutrition');
     return (
         <section className="relative py-32 bg-void overflow-hidden">
             {/* Grid background */}
@@ -156,9 +160,6 @@ export function TheSpecs() {
                     transition={{ duration: 0.8 }}
                     className="mb-16"
                 >
-                    <span className="font-mono text-xs text-neon-orange tracking-widest mb-4 block">
-                        [ SECTION 3 : LA FORMULE ]
-                    </span>
                     <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-widest">
                         ARCHITECTURE MOLÉCULAIRE.
                     </h2>
@@ -167,7 +168,7 @@ export function TheSpecs() {
                     </p>
                 </motion.div>
 
-                <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-start">
+                <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-stretch">
 
                     {/* ━━━ LEFT: X-Ray Image ━━━ */}
                     <motion.div
@@ -175,28 +176,16 @@ export function TheSpecs() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true, margin: "-100px" }}
                         transition={{ duration: 0.8 }}
-                        className="relative"
+                        className="relative h-full min-h-[50vh] lg:min-h-0 flex flex-col"
                     >
-                        <div className="border border-white/[0.06] p-8 bg-white/[0.01] relative">
-                            {/* HUD Corners */}
-                            <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-white/20" />
-                            <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-white/20" />
-                            <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/20" />
-                            <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white/20" />
+                        <div className="relative w-[120%] -ml-[10%] lg:w-full lg:ml-0 flex-1 h-full flex items-center justify-center -mt-10 lg:mt-0">
+                            <XRayTubeCanvas />
 
-                            <div className="relative w-full aspect-square">
-                                <Image
-                                    src={getAssetPath('/images/Xraytube.png')}
-                                    alt="Radiographie de la formule HYDRE — composition par pastille"
-                                    fill
-                                    className="object-contain"
-                                    sizes="(max-width: 1024px) 85vw, 42vw"
-                                />
-                            </div>
-                            <div className="mt-6 flex items-center justify-center gap-3">
+                            {/* Floating Label */}
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-xs flex items-center justify-center gap-3 opacity-50 pointer-events-none">
                                 <div className="h-px flex-1 bg-white/[0.06]" />
-                                <span className="font-mono text-[10px] text-white/30 tracking-[0.15em]">
-                                    [X-RAY MODE] — FORMULE V1.0
+                                <span className="font-mono text-[10px] text-white/50 tracking-[0.15em] whitespace-nowrap">
+                                    RADIOGRAPHIE 3D — TEMPS RÉEL
                                 </span>
                                 <div className="h-px flex-1 bg-white/[0.06]" />
                             </div>
@@ -218,65 +207,116 @@ export function TheSpecs() {
                             <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/20" />
                             <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white/20" />
 
-                            {/* Header Bar */}
-                            <div className="px-6 py-4 border-b border-white/[0.06] flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                                    <span className="font-mono text-[10px] text-white/50 tracking-[0.2em] uppercase">
-                                        Fiche Technique — 1 Pastille
-                                    </span>
-                                </div>
-                                <span className="font-mono text-[10px] text-white/20 tracking-wider">
-                                    {INGREDIENTS.length} ACTIFS
-                                </span>
+                            {/* Header Bar — Tab Buttons */}
+                            <div className="px-6 py-3 border-b border-white/[0.06] flex items-center gap-2">
+                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                                <button
+                                    onClick={() => setActiveTab('ingredients')}
+                                    className={`font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm transition-all duration-300 ${activeTab === 'ingredients'
+                                        ? 'bg-white/10 text-white border border-white/20'
+                                        : 'text-white/40 hover:text-white/60 border border-transparent'
+                                        }`}
+                                >
+                                    Ingrédients
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('nutrition')}
+                                    className={`font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm transition-all duration-300 ${activeTab === 'nutrition'
+                                        ? 'bg-white/10 text-white border border-white/20'
+                                        : 'text-white/40 hover:text-white/60 border border-transparent'
+                                        }`}
+                                >
+                                    Apport Nutritionnel
+                                </button>
                             </div>
 
                             {/* Content */}
                             <div className="px-6 py-5">
 
-                                {/* ── ELECTROLYTES ── */}
-                                <CategoryHeader
-                                    label="Électrolytes"
-                                    count={ELECTROLYTES.length}
-                                    color="#FF6B00"
-                                />
-                                {ELECTROLYTES.map((ingredient, i) => (
-                                    <IngredientRow
-                                        key={ingredient.id}
-                                        ingredient={ingredient}
-                                        index={i}
-                                        maxAmount={MAX_ELECTROLYTE}
-                                        accentColor="#FF6B00"
-                                    />
-                                ))}
+                                {activeTab === 'nutrition' ? (
+                                    <>
+                                        {/* ── ELECTROLYTES ── */}
+                                        <CategoryHeader
+                                            label="Électrolytes"
+                                            count={ELECTROLYTES.length}
+                                            color="#FF6B00"
+                                        />
+                                        {ELECTROLYTES.map((ingredient, i) => (
+                                            <IngredientRow
+                                                key={ingredient.id}
+                                                ingredient={ingredient}
+                                                index={i}
+                                                accentColor="#FF6B00"
+                                                barMode="amount"
+                                                maxAmount={Math.max(...ELECTROLYTES.map(e => e.amount))}
+                                            />
+                                        ))}
 
-                                {/* Spacer */}
-                                <div className="h-6" />
+                                        {/* Spacer */}
+                                        <div className="h-6" />
 
-                                {/* ── VITAMINS ── */}
-                                <CategoryHeader
-                                    label="Vitamines"
-                                    count={VITAMINS.length}
-                                    color="#CCFF00"
-                                />
-                                {VITAMINS.map((ingredient, i) => (
-                                    <IngredientRow
-                                        key={ingredient.id}
-                                        ingredient={ingredient}
-                                        index={i + ELECTROLYTES.length}
-                                        maxAmount={MAX_VITAMIN}
-                                        accentColor="#CCFF00"
-                                    />
-                                ))}
+                                        {/* ── VITAMINS ── */}
+                                        <CategoryHeader
+                                            label="Vitamines et minéraux"
+                                            count={VITAMINS.length}
+                                            color="#CCFF00"
+                                        />
+                                        {VITAMINS.map((ingredient, i) => (
+                                            <IngredientRow
+                                                key={ingredient.id}
+                                                ingredient={ingredient}
+                                                index={i + ELECTROLYTES.length}
+                                                accentColor="#CCFF00"
+                                            />
+                                        ))}
+                                    </>
+                                ) : (
+                                    /* ── INGREDIENTS LIST ── */
+                                    <div className="space-y-3">
+                                        <div className="font-mono text-[10px] text-white/30 tracking-[0.15em] uppercase mb-4">
+                                            Liste des ingrédients — 1 pastille effervescente
+                                        </div>
+                                        <p className="font-mono text-xs text-white/60 leading-relaxed">
+                                            Acide citrique, bicarbonate de sodium, carbonate de sodium, sorbitol, chlorure de potassium,
+                                            citrate de potassium, acide L-ascorbique (vitamine C), citrate de magnésium, arôme naturel Yuzu & Pêche,
+                                            citrate de zinc, niacine (vitamine B3), D-pantothénate de calcium (vitamine B5),
+                                            chlorhydrate de pyridoxine (vitamine B6), cyanocobalamine (vitamine B12),
+                                            édulcorant : sucralose.
+                                        </p>
+                                        <div className="h-4" />
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                                            <span className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">
+                                                Allergènes
+                                            </span>
+                                            <div className="flex-1 h-px bg-white/[0.06]" />
+                                        </div>
+                                        <p className="font-mono text-xs text-white/50 leading-relaxed">
+                                            Aucun allergène majeur. Sans gluten, sans lactose, sans OGM.
+                                        </p>
+                                        <div className="h-4" />
+                                        <div className="flex items-center gap-3 mb-2">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                                            <span className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">
+                                                Conseils d&apos;utilisation
+                                            </span>
+                                            <div className="flex-1 h-px bg-white/[0.06]" />
+                                        </div>
+                                        <p className="font-mono text-xs text-white/50 leading-relaxed">
+                                            Dissoudre 1 pastille dans un verre d&apos;eau froide (200 ml).
+                                            Ne pas dépasser la dose journalière recommandée.
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Footer */}
                             <div className="px-6 py-4 border-t border-white/[0.06] flex items-center justify-between">
                                 <span className="font-mono text-[10px] text-white/20 tracking-wider">
-                                    0 SUCRE // 0 COLORANT // 0 ÉDULCORANT
+                                    *% AJR — Apports Journaliers Recommandés
                                 </span>
-                                <span className="font-mono text-[10px] text-white/20 tracking-wider">
-                                    100% ACTIFS
+                                <span className="font-mono text-[10px] text-white/15 tracking-wider">
+                                    UE Reg. 1169/2011
                                 </span>
                             </div>
                         </div>
@@ -289,7 +329,7 @@ export function TheSpecs() {
                             transition={{ duration: 0.6, delay: 0.8 }}
                             className="mt-4 font-mono text-[10px] text-white/15 tracking-wider text-right"
                         >
-                            [DATA] FORMULATION OUVERTE — AUCUN PROPRIETARY BLEND
+
                         </motion.div>
                     </motion.div>
                 </div>

@@ -3,6 +3,7 @@ import { Instrument_Sans } from 'next/font/google';
 import { JetBrains_Mono } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { LenisProvider } from '@/components/providers/LenisProvider';
+import { AuthModal } from '@/components/ui/AuthModal';
 import './globals.css';
 
 // INSTRUMENT SANS — Neo-Grotesque Headlines (Clinical Swiss Authority)
@@ -53,6 +54,7 @@ export default function RootLayout({
             <body className="antialiased bg-obsidian text-[#D9D9D9]">
                 <LenisProvider>
                     {children}
+                    <AuthModal />
                 </LenisProvider>
             </body>
         </html>

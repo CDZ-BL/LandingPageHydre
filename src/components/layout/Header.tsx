@@ -1,25 +1,31 @@
 'use client';
 
 import { useLenis } from 'lenis/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useHydreStore } from '@/lib/store';
+import { useRouter, usePathname } from 'next/navigation';
 
 // ─── EASING ───────────────────────────────────────────────────────────────────
 const SILK_EASE = (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 
 export function Header() {
     const lenis = useLenis();
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const { isAuthenticated, user, openAuthModal, logout } = useHydreStore();
 
     // ─────────────────────────────────────────────────────────────────────────
     //  SMART NAV SCROLL
-    //
-    //  SystemFailure is now min-h-screen (no 1180dvh pin zone), so Lenis
-    //  scrolls through it without stalling. Two events are dispatched:
-    //  - `clearNavStart`              → blocks the ring's reveal guard
-    //  - `forceCompleteSystemFailure` → silently completes the section so
-    //    scroll-back never shows a half-loaded black void.
     // ─────────────────────────────────────────────────────────────────────────
     const handleNavScroll = (selector: string) => {
         if (!selector || !lenis) return;
+
+        // If on account page, navigate home first
+        if (pathname !== '/') {
+            router.push('/');
+            return;
+        }
 
         window.dispatchEvent(new CustomEvent('clearNavStart'));
         window.dispatchEvent(new CustomEvent('forceCompleteSystemFailure'));
@@ -27,7 +33,22 @@ export function Header() {
         lenis.scrollTo(selector, { duration: 0.8, easing: SILK_EASE });
     };
 
-    const handleCTA = () => handleNavScroll('#close');
+    const handleCTA = () => {
+        if (isAuthenticated) {
+            router.push('/account');
+        } else {
+            openAuthModal('signup');
+        }
+    };
+
+    const handleLogout = () => {
+        logout();
+        localStorage.removeItem('hydre_access_token');
+        localStorage.removeItem('hydre_refresh_token');
+        if (pathname === '/account') {
+            router.push('/');
+        }
+    };
 
     return (
         <nav className="absolute top-0 left-0 w-full z-[99999] pointer-events-none">
@@ -44,7 +65,11 @@ export function Header() {
                     "CLEAR" in heavy bone at full width.
                     "Nutrition" below with wider tracking → golden ratio width
                     relationship: W_NUTRITION ≈ W_CLEAR / φ (1.618).           */}
-                <div className="pointer-events-auto flex flex-col items-center select-none" style={{ gap: '0.18em' }}>
+                <button
+                    onClick={() => router.push('/')}
+                    className="pointer-events-auto flex flex-col items-center select-none"
+                    style={{ gap: '0.18em' }}
+                >
                     <h1
                         className="font-headline font-black text-[#E6DCC8] uppercase leading-none"
                         style={{
@@ -61,7 +86,7 @@ export function Header() {
                     >
                         Nutrition
                     </span>
-                </div>
+                </button>
 
                 {/* ━━━ CENTER: Discreet navigation ━━━ */}
                 <div className="hidden lg:flex items-center gap-10 pointer-events-auto">
@@ -90,31 +115,79 @@ export function Header() {
                     })}
                 </div>
 
-                {/* ━━━ RIGHT: CTA ━━━ */}
-                <motion.button
-                    initial={{ opacity: 0, x: 12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.8, delay: 0.8 }}
-                    onClick={handleCTA}
-                    className="pointer-events-auto group relative overflow-hidden mix-blend-difference"
-                >
-                    <div className="relative border border-white/20 group-hover:border-white/50 transition-all duration-700">
-                        {/* Fill sweep */}
-                        <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
-                        <div className="relative z-10 flex items-center gap-3 px-5 md:px-7 py-2.5 md:py-3">
-                            <span className="font-mono text-[9px] md:text-[10px] text-white group-hover:text-black tracking-[0.3em] uppercase transition-colors duration-500">
-                                Rejoindre
-                            </span>
-                            <svg
-                                className="w-3 h-3 text-white/40 group-hover:text-black group-hover:translate-x-0.5 transition-all duration-500"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                {/* ━━━ RIGHT: Auth-aware CTA ━━━ */}
+                <div className="pointer-events-auto flex items-center gap-4">
+                    <AnimatePresence mode="wait">
+                        {isAuthenticated ? (
+                            <motion.div
+                                key="auth-actions"
+                                initial={{ opacity: 0, x: 12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 12 }}
+                                transition={{ duration: 0.4 }}
+                                className="flex items-center gap-4"
                             >
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10 group-hover:bg-white/40 transition-colors duration-500" />
-                </motion.button>
+                                {/* Points badge */}
+                                <span className="hidden md:flex items-center gap-1.5 font-mono text-[10px] text-[#E6DCC8]/60 tracking-[0.15em]">
+                                    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
+                                    </svg>
+                                    {user?.founderPointsTotal ?? 0}
+                                </span>
+
+                                {/* Account button */}
+                                <button
+                                    onClick={() => router.push('/account')}
+                                    className="group relative overflow-hidden mix-blend-difference"
+                                >
+                                    <div className="relative border border-white/20 group-hover:border-white/50 transition-all duration-700">
+                                        <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+                                        <div className="relative z-10 flex items-center gap-2 px-4 md:px-5 py-2 md:py-2.5">
+                                            <svg className="w-3.5 h-3.5 text-white/60 group-hover:text-black transition-colors duration-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                                            </svg>
+                                            <span className="font-mono text-[9px] md:text-[10px] text-white group-hover:text-black tracking-[0.2em] uppercase transition-colors duration-500">
+                                                Compte
+                                            </span>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                {/* Logout */}
+                                <button
+                                    onClick={handleLogout}
+                                    className="font-mono text-[9px] text-white/25 tracking-[0.15em] uppercase hover:text-white/60 transition-colors duration-500"
+                                >
+                                    Sortir
+                                </button>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="guest-actions"
+                                initial={{ opacity: 0, x: 12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 12 }}
+                                transition={{ duration: 0.4 }}
+                            >
+                                {/* Se connecter — solid white, permanent, no theatre */}
+                                <button
+                                    onClick={() => openAuthModal('login')}
+                                    className="group flex items-center gap-2.5 bg-white hover:bg-white/90 active:bg-white/80 px-5 md:px-6 py-2.5 md:py-3 transition-all duration-300"
+                                >
+                                    <svg
+                                        className="w-3 h-3 text-black/50 group-hover:text-black transition-colors duration-300"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                                    </svg>
+                                    <span className="font-mono text-[10px] md:text-[11px] text-black tracking-[0.25em] uppercase">
+                                        Se connecter
+                                    </span>
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
 
             </motion.div>
 

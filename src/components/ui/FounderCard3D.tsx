@@ -25,7 +25,7 @@ function CardModel() {
     });
 
     return (
-        <group ref={groupRef} rotation={[0, Math.PI / 2, 0]}>
+        <group ref={groupRef} rotation={[Math.PI / 2, 0, 0]}>
             <primitive object={scene} scale={62.5} />
         </group>
     );
@@ -83,19 +83,7 @@ export function FounderCard3D() {
                 />
             </div>
 
-            {/* Corner classification labels */}
-            <div className="absolute top-3 left-3 z-20 pointer-events-none">
-                <span className="font-mono text-[9px] text-cyan-400/50 tracking-widest">BATCH 001</span>
-            </div>
-            <div className="absolute top-3 right-3 z-20 pointer-events-none">
-                <span className="font-mono text-[9px] text-cyan-400/50 tracking-widest">FOUNDER ACCESS</span>
-            </div>
-            <div className="absolute bottom-3 left-3 z-20 pointer-events-none">
-                <span className="font-mono text-[9px] text-gray-600 tracking-widest">HYDRE × AETHER</span>
-            </div>
-            <div className="absolute bottom-3 right-3 z-20 pointer-events-none">
-                <span className="font-mono text-[9px] text-gray-600 tracking-widest">// PIONEER</span>
-            </div>
+
 
             {/* Camera at z=11 + fov 38 — no clipping at any rotation angle */}
             <Canvas
@@ -106,11 +94,14 @@ export function FounderCard3D() {
                 <ambientLight intensity={0.6} />
                 <directionalLight position={[4, 6, 5]} intensity={4} color="#fff5e6" />
                 <directionalLight position={[-5, 2, 4]} intensity={2} color="#a0c4ff" />
+                {/* Strong frontal fill — lights the card face from camera direction */}
+                <directionalLight position={[0, 0, 8]} intensity={3} color="#e8f0ff" />
+                <directionalLight position={[0, -6, 5]} intensity={2.5} color="#ffffff" />
                 <spotLight position={[4, 0, -5]} intensity={8} color="#00ccff" angle={0.5} penumbra={0.8} />
                 <spotLight position={[-4, 0, -5]} intensity={8} color="#00ccff" angle={0.5} penumbra={0.8} />
                 <spotLight position={[0, 8, 2]} intensity={5} color="#ffffff" angle={0.4} penumbra={1} castShadow />
                 <pointLight position={[0, -4, 2]} intensity={3} color="#00aaff" />
-                <pointLight position={[0, 0, 5]} intensity={1.5} color="#e0f0ff" />
+                <pointLight position={[0, 0, 5]} intensity={3} color="#e0f0ff" />
 
                 <Suspense fallback={null}>
                     <CardModel />

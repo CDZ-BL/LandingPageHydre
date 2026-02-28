@@ -70,40 +70,62 @@ function VoteBar({
     return (
         <motion.button
             onClick={() => onVote(option.id)}
-            className={`w-full text-left px-4 py-3 border transition-all duration-300 group ${isSelected
-                ? 'border-white/20 bg-white/[0.04]'
-                : 'border-void-700/50 hover:border-void-500 hover:bg-white/[0.02]'
-                }`}
+            className="w-full text-left relative group"
             whileHover={{ scale: 1.005 }}
             whileTap={{ scale: 0.995 }}
         >
-            <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                    <div
-                        className={`w-2.5 h-2.5 border-[1.5px] rounded-full transition-all duration-300 ${isSelected ? 'scale-110' : 'border-void-500'
-                            }`}
-                        style={isSelected ? { backgroundColor: option.color, borderColor: option.color } : {}}
-                    />
-                    <span className="font-mono text-xs text-white tracking-widest">{option.label}</span>
-                    <span className="font-mono text-[10px] text-white/30">— {option.subtitle}</span>
-                </div>
-                <span
-                    className={`font-mono text-xs tabular-nums transition-opacity duration-300 ${hasVoted ? 'opacity-100' : 'opacity-0'}`}
-                    style={{ color: option.color }}
-                >
-                    {percentage}%
-                </span>
-            </div>
+            {/* ── External diffuse glow BEHIND the button (like Hero3D) ── */}
+            <div
+                className="absolute -inset-3 rounded-lg pointer-events-none transition-all duration-700"
+                style={{
+                    background: isSelected ? option.color : 'transparent',
+                    opacity: isSelected ? 0.3 : 0,
+                    filter: 'blur(40px)',
+                }}
+            />
 
-            {/* Vote bar */}
-            <div className="h-[3px] bg-void-800/60 w-full overflow-hidden rounded-full ml-[22px]" style={{ width: 'calc(100% - 22px)' }}>
-                <motion.div
-                    className="h-full rounded-full"
-                    style={{ backgroundColor: option.color }}
-                    initial={{ width: 0 }}
-                    animate={{ width: hasVoted ? `${percentage}%` : '0%' }}
-                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-                />
+            {/* ── Button container with external box-shadow glow ── */}
+            <div
+                className="relative border px-4 py-3 transition-all duration-500 bg-black/90"
+                style={{
+                    borderColor: isSelected ? `${option.color}50` : 'rgba(255,255,255,0.06)',
+                    boxShadow: isSelected
+                        ? `0 0 40px ${option.color}40, 0 0 80px ${option.color}20`
+                        : 'none',
+                }}
+            >
+                <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-3">
+                        <div
+                            className={`w-2.5 h-2.5 border-[1.5px] rounded-full transition-all duration-500 ${isSelected ? 'scale-110' : 'border-void-500'
+                                }`}
+                            style={isSelected ? {
+                                backgroundColor: option.color,
+                                borderColor: option.color,
+                                boxShadow: `0 0 8px ${option.color}80`,
+                            } : {}}
+                        />
+                        <span className="font-mono text-xs text-white tracking-widest">{option.label}</span>
+                        <span className="font-mono text-[10px] text-white/30">— {option.subtitle}</span>
+                    </div>
+                    <span
+                        className={`font-mono text-xs tabular-nums transition-opacity duration-300 ${hasVoted ? 'opacity-100' : 'opacity-0'}`}
+                        style={{ color: option.color }}
+                    >
+                        {percentage}%
+                    </span>
+                </div>
+
+                {/* Vote bar */}
+                <div className="h-[3px] bg-void-800/60 w-full overflow-hidden rounded-full ml-[22px]" style={{ width: 'calc(100% - 22px)' }}>
+                    <motion.div
+                        className="h-full rounded-full"
+                        style={{ backgroundColor: option.color }}
+                        initial={{ width: 0 }}
+                        animate={{ width: hasVoted ? `${percentage}%` : '0%' }}
+                        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+                    />
+                </div>
             </div>
         </motion.button>
     );
@@ -205,7 +227,7 @@ export function Alliance() {
                     className="mb-12 max-w-3xl"
                 >
                     <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
-                        [ 04 — L'ALLIANCE ]
+
                     </span>
                     <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl text-white font-bold tracking-wider leading-[1.05] mb-4">
                         CONSTRUISONS ENSEMBLE.<br />
@@ -216,31 +238,26 @@ export function Alliance() {
                     </p>
                 </motion.div>
 
-                {/* ─── COMMUNITY COUNTER ─── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: false, margin: '-80px' }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="mb-16"
-                >
-                    <CommunityCounter />
-                </motion.div>
+                {/* ─── UNIFIED BLOCK: STATS + VOTE (Left) | CARD (Right) ─── */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-8 xl:gap-12 items-center">
 
-                {/* ─── TWO-COLUMN: VOTE + FOUNDER CARD ─── */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-
-                    {/* LEFT: R&D Vote System */}
+                    {/* LEFT: Community Counter + Vote System + Features */}
                     <motion.div
                         initial={{ opacity: 0, x: -30 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: false, margin: '-100px' }}
                         transition={{ duration: 0.8 }}
+                        className="space-y-6"
                     >
-                        <h3 className="font-mono text-[10px] text-neon-orange/70 tracking-widest mb-4">
+                        {/* Community Counter */}
+                        <CommunityCounter />
+
+                        {/* Vote Header */}
+                        <h3 className="font-mono text-[10px] text-neon-orange/70 tracking-widest">
                             [ VOTE EN COURS : DEVELOPPEMENT GAMME ]
                         </h3>
 
+                        {/* Vote Bars */}
                         <div className="space-y-2">
                             {RD_OPTIONS.map((option) => (
                                 <VoteBar
@@ -259,64 +276,56 @@ export function Alliance() {
                                     initial={{ opacity: 0, y: 10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0 }}
-                                    className="font-mono text-xs text-[#E6DCC8]/70 mt-4 tracking-wider"
+                                    className="font-mono text-xs text-[#E6DCC8]/70 tracking-wider"
                                 >
                                     ✓ VOTE ENREGISTRÉ — {RD_OPTIONS.find((o) => o.id === userVote)?.label}
                                 </motion.p>
                             )}
                         </AnimatePresence>
-                    </motion.div>
-
-                    {/* RIGHT: Founder Card + Features */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: false, margin: '-100px' }}
-                        transition={{ duration: 0.8, delay: 0.2 }}
-                        className="space-y-8"
-                    >
-                        {/* 3D Card */}
-                        <div className="h-[75vh] md:h-[80vh] w-full relative">
-                            <FounderCard3D />
-                        </div>
 
                         {/* Features */}
-                        <div className="space-y-4">
-                            <div className="flex items-start gap-3">
-                                <div className="mt-[7px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.06]">
+                            <div className="flex items-start gap-2">
+                                <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
-                                    <h4 className="font-mono text-xs text-white tracking-widest">VOUS VALIDEZ</h4>
-                                    <p className="font-mono text-[11px] text-white/40 mt-1">
+                                    <h4 className="font-mono text-[10px] text-white tracking-widest">VOUS VALIDEZ</h4>
+                                    <p className="font-mono text-[10px] text-white/40 mt-1">
                                         Prototypes des futures saveurs (Samples gratuits).
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="flex items-start gap-3">
-                                <div className="mt-[7px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                            <div className="flex items-start gap-2">
+                                <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
-                                    <h4 className="font-mono text-xs text-white tracking-widest">VOUS DÉCIDEZ</h4>
-                                    <p className="font-mono text-[11px] text-white/40 mt-1">
+                                    <h4 className="font-mono text-[10px] text-white tracking-widest">VOUS DÉCIDEZ</h4>
+                                    <p className="font-mono text-[10px] text-white/40 mt-1">
                                         Priorités R&D (cf. Vote ci-contre).
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="flex items-start gap-3">
-                                <div className="mt-[7px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
+                            <div className="flex items-start gap-2">
+                                <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
-                                    <h4 className="font-mono text-xs text-white tracking-widest">VOUS SAVEZ</h4>
-                                    <p className="font-mono text-[11px] text-white/40 mt-1">
+                                    <h4 className="font-mono text-[10px] text-white tracking-widest">VOUS SAVEZ</h4>
+                                    <p className="font-mono text-[10px] text-white/40 mt-1">
                                         Feuilles de route 6 mois avant le public.
                                     </p>
                                 </div>
                             </div>
                         </div>
+                    </motion.div>
 
-                        <div className="pt-4 border-t border-white/[0.06]">
-                            <p className="font-mono text-[10px] text-white/20 tracking-wider">
-                                [ACCÈS] BATCH 001 — PLACES LIMITÉES À {COMMUNITY_TARGET.toLocaleString('fr-FR')} FONDATEURS
-                            </p>
+                    {/* RIGHT: Founder Card */}
+                    <motion.div
+                        initial={{ opacity: 0, x: 30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: false, margin: '-100px' }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                    >
+                        <div className="h-[65vh] md:h-[75vh] w-full relative">
+                            <FounderCard3D />
                         </div>
                     </motion.div>
                 </div>

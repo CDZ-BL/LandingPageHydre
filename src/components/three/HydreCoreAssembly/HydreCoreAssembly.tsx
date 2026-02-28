@@ -28,10 +28,21 @@ import { useGLTF, useTexture } from '@react-three/drei';
 import type { HydreCoreAssemblyProps } from './HydreCoreAssembly.types';
 
 // ─────────────────────────────────────────────────────────
+// TAB-VISIBILITY GUARD
+// When the browser throttles rAF on a hidden tab and the user
+// returns, R3F delivers one frame whose delta equals all the
+// elapsed real time (potentially many seconds). Without a cap
+// the lid state machine races through several phases at once.
+// 50 ms = one frame at 20 fps — tight enough that the animation
+// never looks jumpy even on a slow device.
+// ─────────────────────────────────────────────────────────
+const MAX_DELTA = 0.05; // seconds
+
+// ─────────────────────────────────────────────────────────
 // ASSETS
 // ─────────────────────────────────────────────────────────
-const MODEL_PATH     = '/models/Tube+Lid+Tabs2.glb' as const;
-const ETIQUETTE_PATH = '/images/etiquette.png';
+const MODEL_PATH = '/models/Tube+Lid+Tabs2.glb' as const;
+const ETIQUETTE_PATH = '/images/etiquettegradiant.png';
 useGLTF.preload(MODEL_PATH);
 useTexture.preload(ETIQUETTE_PATH);
 
@@ -43,25 +54,25 @@ const ASSEMBLY_SPIN_SPEED = (Math.PI * 2) / 22;   // 22 s / revolution — majes
 // ─────────────────────────────────────────────────────────
 // LID STATE MACHINE
 // ─────────────────────────────────────────────────────────
-const LID_HOVER_AMOUNT    = 0.018;                        // Three.js units of lift
-const LID_LIFT_DURATION   = 1.8;                          // seconds to reach hover height
-const LID_HOVER_DURATION  = 5.0;                          // seconds held aloft
-const LID_LOWER_DURATION  = 1.8;                          // seconds to descend
-const LID_REST_DURATION   = 2.0;                          // seconds at rest
-const LID_ACTIVE_SPIN     = (Math.PI * 2) * 0.8;         // rad/s — fast satisfying spin
-const LID_REST_SPIN       = (Math.PI * 2) * 0.09;        // rad/s — slow idle
+const LID_HOVER_AMOUNT = 0.018;                        // Three.js units of lift
+const LID_LIFT_DURATION = 1.8;                          // seconds to reach hover height
+const LID_HOVER_DURATION = 5.0;                          // seconds held aloft
+const LID_LOWER_DURATION = 1.8;                          // seconds to descend
+const LID_REST_DURATION = 2.0;                          // seconds at rest
+const LID_ACTIVE_SPIN = (Math.PI * 2) * 0.8;         // rad/s — fast satisfying spin
+const LID_REST_SPIN = (Math.PI * 2) * 0.09;        // rad/s — slow idle
 const LID_HOVER_FLOAT_AMP = 0.004;                        // subtle bob while hovering
 
 type LidPhase = 'rest' | 'lifting' | 'hovering' | 'lowering';
 const LID_PHASE_DURATION: Record<LidPhase, number> = {
-    rest:     LID_REST_DURATION,
-    lifting:  LID_LIFT_DURATION,
+    rest: LID_REST_DURATION,
+    lifting: LID_LIFT_DURATION,
     hovering: LID_HOVER_DURATION,
     lowering: LID_LOWER_DURATION,
 };
 const LID_PHASE_NEXT: Record<LidPhase, LidPhase> = {
-    rest:     'lifting',
-    lifting:  'hovering',
+    rest: 'lifting',
+    lifting: 'hovering',
     hovering: 'lowering',
     lowering: 'rest',
 };
@@ -69,9 +80,9 @@ const LID_PHASE_NEXT: Record<LidPhase, LidPhase> = {
 // ─────────────────────────────────────────────────────────
 // TABLET ORBIT
 // ─────────────────────────────────────────────────────────
-const TABLET_COUNT   = 6;
-const ORBIT_RADIUS   = 0.085;
-const ORBIT_SPEED    = 0.38;    // rad/s  — gentle perpetual orbit
+const TABLET_COUNT = 6;
+const ORBIT_RADIUS = 0.085;
+const ORBIT_SPEED = 0.38;    // rad/s  — gentle perpetual orbit
 const ORBIT_Y_SPREAD = 0.042;
 const TABLET_SELF_SPIN_X = 0.55;
 const TABLET_SELF_SPIN_Z = 0.28;
@@ -80,46 +91,55 @@ const TABLET_SELF_SPIN_Z = 0.28;
 // EASING
 // ─────────────────────────────────────────────────────────
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-const easeInCubic  = (t: number) => Math.pow(t, 3);
+const easeInCubic = (t: number) => Math.pow(t, 3);
 
 // ─────────────────────────────────────────────────────────
 // MATERIALS
 // ─────────────────────────────────────────────────────────
 const LID_MATERIAL = new THREE.MeshStandardMaterial({
-    color:           new THREE.Color('#f2f2f2'),
-    metalness:       0.0,
-    roughness:       0.55,
+    color: new THREE.Color('#f2f2f2'),
+    metalness: 0.0,
+    roughness: 0.55,
     envMapIntensity: 0.8,
 });
 
 export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
     const { nodes, materials } = useGLTF(MODEL_PATH) as any;
-    const etiquetteTexture     = useTexture(ETIQUETTE_PATH);
+    const etiquetteTexture = useTexture(ETIQUETTE_PATH);
 
     useMemo(() => {
-        etiquetteTexture.colorSpace  = THREE.SRGBColorSpace;
-        etiquetteTexture.flipY       = false;
+        etiquetteTexture.colorSpace = THREE.SRGBColorSpace;
+        etiquetteTexture.flipY = false;
         etiquetteTexture.needsUpdate = true;
     }, [etiquetteTexture]);
 
     // ── REFS ──────────────────────────────────────────────
     const assemblyRef = useRef<THREE.Group>(null);
-    const floatRef    = useRef<THREE.Group>(null);
-    const lidRef      = useRef<THREE.Mesh>(null);
-    const tabletsRef  = useRef<THREE.Group>(null);
+    const floatRef = useRef<THREE.Group>(null);
+    const lidRef = useRef<THREE.Mesh>(null);
+    const tabletsRef = useRef<THREE.Group>(null);
+
+    // Internal time tracked with clamped delta — immune to tab-hide catch-up
+    const internalTime = useRef(0);
 
     // Lid state machine
-    const lidPhase    = useRef<LidPhase>('rest');
-    const lidPhaseT   = useRef(0);          // elapsed seconds within current phase
-    const lidBaseY    = useRef<number | null>(null);
+    const lidPhase = useRef<LidPhase>('rest');
+    const lidPhaseT = useRef(0);          // elapsed seconds within current phase
+    const lidBaseY = useRef<number | null>(null);
 
     // ── FRAME LOOP ────────────────────────────────────────
-    useFrame((state, delta) => {
-        const t = state.clock.elapsedTime;
+    useFrame((_state, delta) => {
+        // ── TAB-VISIBILITY GUARD ─────────────────────────
+        // Clamp delta so a returning hidden-tab never delivers
+        // a burst of seconds in one frame. Uses internal time
+        // instead of state.clock.elapsedTime for the same reason.
+        const d = Math.min(delta, MAX_DELTA);
+        internalTime.current += d;
+        const t = internalTime.current;
 
         // 1. SLOW ASSEMBLY SPIN ──────────────────────────
         if (assemblyRef.current) {
-            assemblyRef.current.rotation.y -= delta * ASSEMBLY_SPIN_SPEED;
+            assemblyRef.current.rotation.y -= d * ASSEMBLY_SPIN_SPEED;
         }
 
         // 2. AMBIENT BREATHING ───────────────────────────
@@ -137,12 +157,12 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
             }
             const base = lidBaseY.current;
 
-            // Advance phase timer
-            lidPhaseT.current += delta;
+            // Advance phase timer with clamped delta
+            lidPhaseT.current += d;
             const phaseDuration = LID_PHASE_DURATION[lidPhase.current];
             if (lidPhaseT.current >= phaseDuration) {
-                lidPhaseT.current = lidPhaseT.current - phaseDuration; // carry over
-                lidPhase.current  = LID_PHASE_NEXT[lidPhase.current];
+                lidPhaseT.current = lidPhaseT.current - phaseDuration; // carry over remainder
+                lidPhase.current = LID_PHASE_NEXT[lidPhase.current];
             }
 
             const p = Math.min(lidPhaseT.current / phaseDuration, 1); // 0→1 within phase
@@ -151,7 +171,7 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
             const spinSpeed = (lidPhase.current === 'rest')
                 ? LID_REST_SPIN
                 : LID_ACTIVE_SPIN;
-            lidRef.current.rotation.y += delta * spinSpeed;
+            lidRef.current.rotation.y += d * spinSpeed;
 
             // Vertical position per phase
             switch (lidPhase.current) {
@@ -182,8 +202,8 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
                 child.position.x = Math.cos(angle) * breathRadius;
                 child.position.z = Math.sin(angle) * breathRadius;
                 child.position.y = Math.sin(angle * 0.65 + phase) * ORBIT_Y_SPREAD;
-                child.rotation.x += delta * TABLET_SELF_SPIN_X;
-                child.rotation.z += delta * (TABLET_SELF_SPIN_Z + Math.sin(phase) * 0.1);
+                child.rotation.x += d * TABLET_SELF_SPIN_X;
+                child.rotation.z += d * (TABLET_SELF_SPIN_Z + Math.sin(phase) * 0.1);
                 const s = 0.6 + Math.sin(t * 1.8 + phase) * 0.04;
                 child.scale.set(s, s, s);
             });

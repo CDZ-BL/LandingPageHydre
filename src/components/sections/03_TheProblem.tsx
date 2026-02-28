@@ -38,9 +38,6 @@ export function TheProblem() {
                     transition={{ duration: 0.8 }}
                     className="mb-8"
                 >
-                    <span className="font-mono text-xs text-neon-orange tracking-widest mb-4 block">
-                        [ SECTION 1 : TRANSPARENCE ]
-                    </span>
                     <h2 className="font-headline text-h1 text-white font-bold tracking-widest">
                         AUDIT DE FORMULATION.
                     </h2>

@@ -63,25 +63,29 @@ export function HeroVoid() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.6 }}
                         onClick={handleCTAClick}
-                        className="group relative cursor-pointer overflow-hidden"
+                        className="group relative cursor-pointer"
                     >
-                        {/* Outer border — thin, clinical */}
-                        <div className="relative border border-white/30 group-hover:border-white/60 transition-all duration-700">
+                        {/* Persistent diffuse orange glow behind button */}
+                        <div className="absolute -inset-4 bg-neon-orange/15 blur-[40px] rounded-full pointer-events-none group-hover:bg-neon-orange/25 transition-all duration-700" />
+
+                        {/* Outer border — TheClose-style diffuse orange glow */}
+                        <div className="relative border border-neon-orange/30 bg-white/[0.02] overflow-hidden shadow-[0_0_40px_rgba(255,107,0,0.3),0_0_80px_rgba(255,107,0,0.15)] group-hover:shadow-[0_0_50px_rgba(255,107,0,0.5),0_0_100px_rgba(255,107,0,0.25)] group-hover:border-neon-orange/60 ring-1 ring-neon-orange/10 transition-all duration-700">
                             {/* Fill sweep */}
-                            <div className="absolute inset-0 bg-white transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
+                            <div className="absolute inset-0 bg-neon-orange/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
 
                             <div className="relative z-10 flex items-center gap-4 px-8 md:px-10 py-4 md:py-5">
-                                <span className="font-mono text-[10px] md:text-xs text-white group-hover:text-black tracking-[0.3em] uppercase transition-colors duration-500">
-                                    Rejoindre l'Alliance
+                                <span className="font-mono text-[10px] md:text-xs text-white group-hover:text-neon-orange tracking-[0.3em] uppercase transition-colors duration-500 font-bold">
+                                    DEVENIR TESTEUR
                                 </span>
                                 {/* Arrow */}
                                 <svg
-                                    className="w-4 h-4 text-white/50 group-hover:text-black group-hover:translate-x-1 transition-all duration-500"
-                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}
+                                    className="w-4 h-4 text-white/50 group-hover:text-neon-orange group-hover:translate-x-1 transition-all duration-500"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                                 >
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
                                 </svg>
                             </div>
+
                         </div>
                     </motion.button>
 

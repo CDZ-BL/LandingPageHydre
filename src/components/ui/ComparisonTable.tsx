@@ -237,8 +237,7 @@ export function ComparisonTable({ competitor }: ComparisonTableProps) {
 
                 {/* Footer / Summary */}
                 <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[9px] font-mono text-white/30">
-                    <span>[ AUTO-GENERATED REPORT ]</span>
-                    <span>CONFIDENCE: 99.9%</span>
+
                 </div>
             </div>
         </div>

@@ -2,10 +2,43 @@
 
 import { Suspense, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { useThree } from '@react-three/fiber';
 import { Environment, Lightformer } from '@react-three/drei';
 import { HydreCoreAssembly } from '@/components/three/HydreCoreAssembly';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// ─────────────────────────────────────────────────────────
+// FRAME GUARD — pause the THREE.Clock on tab hide
+// Placed inside the Canvas so it has access to useThree().
+//
+// R3F computes delta via clock.getDelta() each frame.
+// When the tab is hidden the browser throttles rAF; on return
+// the accumulated real-time causes a huge delta spike.
+// Stopping the clock on hide means clock.getDelta() returns
+// ~0 on the first visible frame, eliminating the spike.
+// The MAX_DELTA clamp in HydreCoreAssembly acts as a second
+// line of defence in case this listener fires late.
+// ─────────────────────────────────────────────────────────
+function FrameGuard() {
+    const { clock } = useThree();
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                clock.stop();
+            } else {
+                // start() resets oldTime → delta on next frame ≈ 0
+                clock.start();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+    }, [clock]);
+
+    return null;
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,6 +140,7 @@ export function FixedProductCanvas() {
                 <directionalLight position={[5, 10, 5]} intensity={2}    color="#ffffff" />
                 <ambientLight                            intensity={0.15}              />
 
+                <FrameGuard />
                 <Suspense fallback={null}>
                     {/* scale=4.5 fills the right half generously.
                         Y=-0.30: origin is at tube bottom, -0.30 centers the
