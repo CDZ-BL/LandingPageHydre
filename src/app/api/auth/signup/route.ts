@@ -16,6 +16,7 @@ import { getServerSupabase } from '@/lib/supabase';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { SignupSchema } from '@/lib/validations/auth';
 import { VerificationEmail } from '@/emails/VerificationEmail';
+import { randomInt } from 'crypto';
 
 /** Supabase auth error for user already registered */
 const AUTH_USER_ALREADY_EXISTS = 'user_already_exists';
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     const parsed = SignupSchema.safeParse(body);
     if (!parsed.success) {
         return NextResponse.json(
-            { error: 'Validation error', details: parsed.error.issues },
+            { error: 'Invalid request' },
             { status: 400 }
         );
     }
@@ -94,9 +95,8 @@ export async function POST(request: NextRequest) {
     }
 
     // ── 5. GENERATE 6-DIGIT VERIFICATION CODE ────────────────
-    const verificationCode = String(
-        Math.floor(100000 + Math.random() * 900000)
-    );
+    // crypto.randomInt is cryptographically secure — never use Math.random() for secrets
+    const verificationCode = String(randomInt(100000, 1000000));
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
     // ── 6. INSERT VERIFICATION CODE ──────────────────────────

@@ -20,7 +20,7 @@ export function TheClose() {
     };
 
     return (
-        <section className="relative py-24 md:py-48 bg-black overflow-hidden group">
+        <section className="relative py-14 md:py-24 lg:py-48 bg-black overflow-hidden group">
             {/* Ambient Background Glow - High Luminosity */}
             <div className="absolute inset-0 opacity-40 pointer-events-none transition-opacity duration-1000 group-hover:opacity-60">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-neon-orange/30 blur-[150px] rounded-full mix-blend-screen animate-pulse-slow" />
@@ -60,9 +60,9 @@ export function TheClose() {
                                     </span>
                                 </div>
 
-                                <h2 className="font-headline text-h1 text-white font-bold leading-[0.9] tracking-widest mb-12">
-                                    REJOIGNEZ LE<br />
-                                    PROTOCOLE.
+                                <h2 className="font-headline text-h1 text-white font-bold leading-[0.9] tracking-wide mb-12">
+                                    Rejoignez le<br />
+                                    protocole.
                                 </h2>
 
                                 {/* Benefits Matrix - Minimalist & Large */}

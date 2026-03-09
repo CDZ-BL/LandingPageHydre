@@ -9,17 +9,20 @@
 
 import * as THREE from 'three';
 import { Suspense, useMemo, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer, PresentationControls } from '@react-three/drei';
 
 // ─────────────────────────────────────────────────────────
 // ASSETS
 // ─────────────────────────────────────────────────────────
 const MODEL_PATH = '/models/Tube+Lid+Tabs2.glb' as const;
-const ETIQUETTE_PATH = '/images/etiquettegradiant.png';
+const ETIQUETTE_PATH = '/images/tubelabelgoutte.webp';
 
-useGLTF.preload(MODEL_PATH);
-useTexture.preload(ETIQUETTE_PATH);
+// Skip preloads on mobile — avoids downloading ~2MB of assets on small screens
+if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+    useGLTF.preload(MODEL_PATH);
+    useTexture.preload(ETIQUETTE_PATH);
+}
 
 const TABLET_MATERIAL = new THREE.MeshStandardMaterial({
     color: new THREE.Color('#fdfdfd'),
@@ -32,45 +35,50 @@ const TABLET_MATERIAL = new THREE.MeshStandardMaterial({
 // ─────────────────────────────────────────────────────────
 // SCENE
 // ─────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────
+// ORBIT CONSTANTS
+// radius = 0.055 → world-space orbit = 0.055 × scale(5.9) ≈ 0.32 units
+// Camera fov=22 at z=2.8 gives half-width ≈ 0.54 units — tablets stay
+// fully inside the frustum at all times.
+// ─────────────────────────────────────────────────────────
+const ORBIT_RADIUS = 0.055;
+const ORBIT_SPEED = 0.45;   // rad/s — gentle clockwise revolution
+const ORBIT_Y_FLOAT = 0.008;  // amplitude of vertical breathing (world ≈ 0.047)
+const TABLET_COUNT = 5;
+
 function OrbitingTablets({ geometry, baseScale }: { geometry: THREE.BufferGeometry; baseScale: THREE.Vector3 }) {
     const groupRef = useRef<THREE.Group>(null);
-    const t1 = useRef<THREE.Mesh>(null);
-    const t2 = useRef<THREE.Mesh>(null);
-    const t3 = useRef<THREE.Mesh>(null);
+    const meshRefs = useRef<(THREE.Mesh | null)[]>([]);
 
     useFrame((state, delta) => {
-        // Orbit the group around the shared center (tube + stack)
         if (groupRef.current) {
-            groupRef.current.rotation.y -= delta * 0.5; // revolve clockwise
-            groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 1.5) * 0.05; // slight float up/down
+            groupRef.current.rotation.y -= delta * ORBIT_SPEED;
+            // subtle breathing float — stays very close to origin
+            groupRef.current.position.y = Math.sin(state.clock.elapsedTime * 1.2) * ORBIT_Y_FLOAT;
         }
-
-        // Spin each tablet exactly on its own axes
-        const tRefs = [t1, t2, t3];
-        tRefs.forEach((ref, i) => {
-            if (ref.current) {
-                ref.current.rotation.x += delta * (1.2 + i * 0.3);
-                ref.current.rotation.z += delta * (0.8 + i * 0.2);
-            }
+        meshRefs.current.forEach((mesh, i) => {
+            if (!mesh) return;
+            mesh.rotation.x += delta * (1.0 + i * 0.25);
+            mesh.rotation.z += delta * (0.65 + i * 0.15);
         });
     });
 
-    const radius = 0.22; // wide enough to orbit around both the tube (left) and the stack (right)
-
     return (
         <group ref={groupRef}>
-            {[t1, t2, t3].map((ref, i) => {
-                const angle = (i / 3) * Math.PI * 2;
+            {Array.from({ length: TABLET_COUNT }).map((_, i) => {
+                const angle = (i / TABLET_COUNT) * Math.PI * 2;
+                // Y stagger: spread tablets slightly across height — 0.022 × 5.9 ≈ 0.13 world units
+                const yOffset = (i - (TABLET_COUNT - 1) / 2) * 0.022;
                 return (
                     <mesh
                         key={i}
-                        ref={ref as any}
+                        ref={(el) => { meshRefs.current[i] = el; }}
                         geometry={geometry}
                         material={TABLET_MATERIAL}
                         position={[
-                            Math.cos(angle) * radius,
-                            (i - 1) * 0.12, // stagger Y heights
-                            Math.sin(angle) * radius
+                            Math.cos(angle) * ORBIT_RADIUS,
+                            yOffset,
+                            Math.sin(angle) * ORBIT_RADIUS,
                         ]}
                         scale={baseScale}
                     />
@@ -84,16 +92,22 @@ function XRayScene() {
     const { nodes, materials } = useGLTF(MODEL_PATH) as any;
     const etiquetteTexture = useTexture(ETIQUETTE_PATH);
 
+    const { gl } = useThree();
+
     useMemo(() => {
         etiquetteTexture.colorSpace = THREE.SRGBColorSpace;
         etiquetteTexture.flipY = false;
+        etiquetteTexture.minFilter = THREE.LinearFilter;
+        etiquetteTexture.magFilter = THREE.LinearFilter;
+        etiquetteTexture.generateMipmaps = false;
+        etiquetteTexture.anisotropy = gl.capabilities.getMaxAnisotropy();
         etiquetteTexture.needsUpdate = true;
-    }, [etiquetteTexture]);
+    }, [etiquetteTexture, gl]);
 
     return (
         <group>
             {/* TUBE POSITION */}
-            <group position={[-0.1, -0.40, 0]}>
+            <group position={[0, -0.28, 0]}>
                 <PresentationControls
                     global={false}
                     cursor={true}
@@ -124,8 +138,8 @@ function XRayScene() {
                                                     map={etiquetteTexture}
                                                     color="#ffffff"
                                                     metalness={0.05}
-                                                    roughness={1}
-                                                    clearcoat={0.05}
+                                                    roughness={0.55}
+                                                    clearcoat={0.6}
                                                     clearcoatRoughness={0.15}
                                                     envMapIntensity={1.0}
                                                 />
@@ -179,22 +193,13 @@ function XRayScene() {
                 </PresentationControls>
             </group>
 
-            {/* TABLET STACK */}
-            {/* Added a slight Y rotation so the score lines face more towards the camera */}
-            <group scale={5.9} position={[0.2, -0.37, 0]} rotation={[0, -0.07, 0]}>
+            {/* TABLET STACK — temporarily hidden */}
+            {/* <group scale={5.9} position={[0.2, -0.37, 0]} rotation={[0, -0.07, 0]}>
                 {(() => {
-                    // 1. Calculate the true height of one tablet
                     nodes.Mesh_Tablet_Hero.geometry.computeBoundingBox();
                     const bbox = nodes.Mesh_Tablet_Hero.geometry.boundingBox;
-                    // Full height in local space
                     const localHeight = bbox ? bbox.max.y - bbox.min.y : 0.01;
-
-                    // The tablets are scaled uniformly by 5.9 in the parent group.
-                    // The mesh itself has nodes.Mesh_Tablet_Hero.scale which we apply.
-                    // Let's assume uniform scaling for simplicity.
                     const tabletScale = nodes.Mesh_Tablet_Hero.scale.y;
-
-                    // We slightly overlap them so it looks like a tight stack
                     const stepY = localHeight * tabletScale * 0.95;
 
                     return Array.from({ length: 20 }).map((_, i) => (
@@ -203,17 +208,16 @@ function XRayScene() {
                             geometry={nodes.Mesh_Tablet_Hero.geometry}
                             material={TABLET_MATERIAL}
                             position={[0, i * stepY, 0]}
-                            // All rotations completely identical for perfectly aligned middle lines
                             rotation={nodes.Mesh_Tablet_Hero.rotation}
                             scale={nodes.Mesh_Tablet_Hero.scale}
                         />
                     ));
                 })()}
-            </group>
+            </group> */}
 
             {/* ORBITING TABLETS */}
-            {/* Center of orbit positioned between the tube (-0.1) and stack (0.2) */}
-            <group scale={5.9} position={[0.05, -0.32, 0]}>
+            {/* Center of orbit aligned with the tube position */}
+            <group scale={5.9} position={[-0.1, -0.40, 0]}>
                 <OrbitingTablets
                     geometry={nodes.Mesh_Tablet_Hero.geometry}
                     baseScale={nodes.Mesh_Tablet_Hero.scale}
@@ -231,8 +235,8 @@ export function XRayTubeCanvas() {
         // The container wrapper is 100% width and height.
         <div className="relative w-full h-full">
             <Canvas
-                dpr={[1, 1.5]}
-                camera={{ position: [0, 0, 2.8], fov: 22 }}
+                dpr={2}
+                camera={{ position: [0, 0, 1.8], fov: 18 }}
                 gl={{
                     antialias: true,
                     alpha: true,

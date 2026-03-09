@@ -332,11 +332,20 @@ export function SystemFailure() {
                 />
             )}
 
+            {/* ── TOP GRADIENT VEIL — sits above the section, fades hero into black ── */}
+            <div
+                className="relative z-[59] w-full h-24 -mb-24 pointer-events-none"
+                style={{
+                    background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 50%, black 100%)',
+                }}
+            />
+
             <section
                 id="system-failure-section"
                 ref={containerRef}
                 className="relative z-[60] w-full bg-black min-h-screen flex items-center justify-center overflow-hidden"
             >
+
 
                 {/* ── GLITCH CONTENT ───────────────────────────────────────────
                     Visible until the reveal fires.                            */}
@@ -379,9 +388,9 @@ export function SystemFailure() {
                         </div>
 
                         {/* Info block */}
-                        <div className="space-y-4 font-mono border-l-4 border-white/10 pl-6 my-5 text-left max-w-2xl mx-auto bg-black/40 backdrop-blur-sm p-5 rounded-r-lg">
-                            <div className="text-[#E6DCC8] text-[10px] tracking-widest uppercase mb-3 font-bold">
-                                [ PROTOCOLE_CLEAR // SUPPRESSION_MARGE // OPTIMISATION_COÛT ]
+                        <div className="space-y-4 font-mono border-l-4 border-white/10 pl-4 md:pl-6 my-5 text-left max-w-2xl mx-auto bg-black/40 backdrop-blur-sm p-4 md:p-5 rounded-r-lg">
+                            <div className="text-emerald-400 text-[10px] tracking-widest uppercase mb-3 font-bold">
+                                [ PROTOCOLE_SMART // SUPPRESSION_MARGE // OPTIMISATION_COÛT ]
                             </div>
                             <h3
                                 className="font-headline text-white mb-4 tracking-widest leading-tight"
@@ -389,17 +398,17 @@ export function SystemFailure() {
                             >
                                 /// DIAGNOSTIC : SURCOÛT SYSTÉMIQUE ///
                             </h3>
-                            <div className="space-y-3 text-sm md:text-base">
+                            <div className="space-y-3 text-xs md:text-sm lg:text-base">
                                 <div className="text-white/90 leading-relaxed animate-line-teleport">
-                                    <span className="text-[#E6DCC8] font-black mr-2 text-base md:text-lg">{'>'} ANALYSE :</span>
+                                    <span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} ANALYSE :</span>
                                     70% DE VOTRE ARGENT NE TOUCHE JAMAIS LE PRODUIT.
                                 </div>
                                 <div className="text-white/70 leading-relaxed animate-line-teleport">
-                                    <span className="text-neon-orange font-black mr-2 text-base md:text-lg">{'>'} CONSÉQUENCES :</span>
+                                    <span className="text-neon-orange font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CONSÉQUENCES :</span>
                                     VOUS SURPAYEZ. LE PRODUIT SOUS-PERFORME.
                                 </div>
                                 <div className="text-white/90 leading-relaxed animate-emergency-flash">
-                                    <span className="text-[#E6DCC8] font-black mr-2 text-base md:text-lg">{'>'} CORRECTIF :</span>
+                                    <span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CORRECTIF :</span>
                                     RÉÉCRITURE DU MODÈLE. DE ZÉRO.
                                 </div>
                             </div>
@@ -467,7 +476,7 @@ export function SystemFailure() {
                             <div
                                 className="font-mono text-[9px] tracking-[0.3em] uppercase transition-all duration-300"
                                 style={{
-                                    color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.25)',
+                                    color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.85)',
                                     opacity: isHolding ? 1 : 0.8,
                                     letterSpacing: isHolding ? '0.35em' : '0.3em',
                                 }}
@@ -492,9 +501,9 @@ export function SystemFailure() {
                 >
                     <div className="relative inline-block">
 
-                        <div className="sf-stable-badge inline-flex items-center gap-3 mb-8 px-6 py-3 border border-neon-orange/30 bg-neon-orange/5 rounded-sm">
-                            <span className="w-3 h-3 bg-neon-orange rounded-full animate-pulse" />
-                            <span className="font-mono text-neon-orange text-sm tracking-widest">SYSTÈME STABILISÉ</span>
+                        <div className="sf-stable-badge inline-flex items-center gap-3 mb-8 px-6 py-3 border border-emerald-400/40 bg-emerald-400/5 rounded-sm">
+                            <span className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
+                            <span className="font-mono text-emerald-400 text-sm tracking-widest">SYSTÈME STABILISÉ</span>
                         </div>
 
                         <h3 className="font-headline text-h2 text-white font-bold mb-6">

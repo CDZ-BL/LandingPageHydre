@@ -17,6 +17,7 @@ import { getServerSupabase } from '@/lib/supabase';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { ResendCodeSchema } from '@/lib/validations/auth';
 import { VerificationEmail } from '@/emails/VerificationEmail';
+import { randomInt } from 'crypto';
 
 export async function POST(request: NextRequest) {
     // ── 1. RATE LIMIT (STRICT - AUTH-SENSITIVE) ──────────────
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
     const parsed = ResendCodeSchema.safeParse(body);
     if (!parsed.success) {
         return NextResponse.json(
-            { error: 'Validation error', details: parsed.error.issues },
+            { error: 'Invalid request' },
             { status: 400 }
         );
     }
@@ -98,9 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ── 5. GENERATE NEW 6-DIGIT VERIFICATION CODE ───────────
-    const verificationCode = String(
-        Math.floor(100000 + Math.random() * 900000)
-    );
+    const verificationCode = String(randomInt(100000, 1000000));
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
 
     // ── 6. INSERT NEW VERIFICATION CODE ─────────────────────

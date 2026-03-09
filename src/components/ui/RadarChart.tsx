@@ -16,8 +16,8 @@ const SONAR_DURATION_MS = 1500; // Time for wave to travel center → edge
 const DOT_FLASH_DURATION_MS = 600;
 
 export function RadarChart({ competitor }: RadarChartProps) {
-    const size = 320;
-    const padding = 60; // Extra space for labels
+    const size = 220;
+    const padding = 50; // Extra space for labels
     const viewBoxSize = size + padding * 2;
     const center = viewBoxSize / 2;
     const radius = size * 0.45;
@@ -120,7 +120,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
     // Axis label positions
     const axisLabels = RADAR_AXES.map((axis, i) => {
         const angle = i * angleStep - Math.PI / 2;
-        const labelRadius = radius + 45;
+        const labelRadius = radius + 35;
         return {
             x: center + labelRadius * Math.cos(angle),
             y: center + labelRadius * Math.sin(angle),
@@ -324,7 +324,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
                             dominantBaseline="middle"
                             className={`
                                 font-mono text-[10px] tracking-widest transition-colors duration-300
-                                ${hoveredAxis === i ? 'fill-white font-bold' : 'fill-white/30'}
+                                ${hoveredAxis === i ? 'fill-neon-orange font-bold drop-shadow-[0_0_8px_rgba(255,107,0,0.8)]' : 'fill-white drop-shadow-[0_0_4px_rgba(0,0,0,0.8)]'}
                             `}
                         >
                             {axis.label}

@@ -9,6 +9,7 @@ export interface HydreUser {
   emailVerified: boolean;
   referralCode: string;
   founderPointsTotal: number;
+  walletBalanceCents: number;
 }
 
 export type AuthModal = 'closed' | 'login' | 'signup' | 'verify';

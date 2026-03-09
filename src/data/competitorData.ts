@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// AETHER — Competitive Analysis Data (Real Data)
+// Smart Nutrition — Competitive Analysis Data (Real Data)
 // ═══════════════════════════════════════════════════════════════════════════
 
 export interface CompetitorMetrics {
@@ -22,10 +22,10 @@ export interface Competitor {
     metrics: CompetitorMetrics;
 }
 
-// AETHER HYDRE V1.0 — Reference baseline (optimal values)
+// Smart Nutrition HYDRE V1.0 — Reference baseline (optimal values)
 export const AETHER_DATA: Competitor = {
     id: 'aether',
-    codeName: 'AETHER HYDRE',
+    codeName: 'SMART HYDRE',
     category: 'Référence',
     description: 'Système d\'hydratation cellulaire optimisé — Formule complète sans sucre',
     metrics: {

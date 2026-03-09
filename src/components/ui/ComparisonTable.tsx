@@ -54,7 +54,7 @@ function DeltaPill({ aether, competitor, inverted = false }: { aether: number, c
         label = `${percent > 0 ? '+' : ''}${percent.toFixed(0)}%`;
     }
 
-    if (aether === competitor) return <span className="text-white/20 text-[10px]">=</span>;
+    if (aether === competitor) return <span className="text-white text-[10px] uppercase font-bold tracking-widest">Idem</span>;
 
     return (
         <div className={`
@@ -63,7 +63,7 @@ function DeltaPill({ aether, competitor, inverted = false }: { aether: number, c
                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                 : 'bg-red-500/10 text-red-500 border border-red-500/20'}
         `}>
-            {better ? 'WIN' : 'LOSS'}
+            {better ? 'MEILLEUR' : 'INFÉRIEUR'}
             <span className="ml-1 opacity-70 font-mono scale-90">{label}</span>
         </div>
     );
@@ -78,7 +78,7 @@ function TextComparison({ aether, competitor }: { aether: string, competitor: st
 
     const isWin = aetherGood && competitorBad;
 
-    if (aether === competitor) return <span className="text-white/20 text-[10px]">=</span>;
+    if (aether === competitor) return <span className="text-white text-[10px] uppercase font-bold tracking-widest">Idem</span>;
 
     return (
         <div className={`
@@ -87,7 +87,7 @@ function TextComparison({ aether, competitor }: { aether: string, competitor: st
                 ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                 : 'bg-white/5 text-white/40 border border-white/10'}
         `}>
-            {isWin ? 'SUPERIOR' : 'DIFF'}
+            {isWin ? 'MEILLEUR' : 'DIFFÉRENT'}
         </div>
     );
 }
@@ -151,13 +151,13 @@ export function ComparisonTable({ competitor }: ComparisonTableProps) {
     ];
 
     return (
-        <div className="relative overflow-x-auto rounded-machined border border-white/10 bg-black/40 backdrop-blur-sm custom-scrollbar">
-            <div className="min-w-[550px]">
+        <div className="relative overflow-x-auto rounded-machined border border-white/10 bg-black/40 backdrop-blur-sm custom-scrollbar max-w-lg">
+            <div className="min-w-[420px]">
                 {/* Header */}
-                <div className="grid grid-cols-4 gap-4 px-4 py-4 bg-white/[0.03] border-b border-white/10 items-center">
+                <div className="grid grid-cols-4 gap-2 px-3 py-2 bg-white/[0.03] border-b border-white/10 items-center">
                     <div className="font-data text-[10px] text-tertiary tracking-widest uppercase">MÉTRIQUE</div>
                     <div className="font-data text-[10px] text-white font-bold tracking-widest text-center flex flex-col items-center gap-1">
-                        <span>AETHER</span>
+                        <span>SMART</span>
                         <div className="w-12 h-[1px] bg-white/50" />
                     </div>
                     <div className="font-data text-[10px] text-orange-500/80 tracking-widest text-center truncate flex flex-col items-center gap-1">
@@ -179,7 +179,7 @@ export function ComparisonTable({ competitor }: ComparisonTableProps) {
                             <div
                                 key={row.label}
                                 className={`
-                                grid grid-cols-4 gap-4 px-4 py-3 items-center border-b border-white/[0.02]
+                                grid grid-cols-4 gap-2 px-3 py-1.5 items-center border-b border-white/[0.02]
                                 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.01] hover:bg-white/[0.02]'}
                                 transition-colors duration-200 group
                             `}
@@ -236,7 +236,7 @@ export function ComparisonTable({ competitor }: ComparisonTableProps) {
                 </AnimatePresence>
 
                 {/* Footer / Summary */}
-                <div className="px-4 py-3 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[9px] font-mono text-white/30">
+                <div className="px-4 py-1.5 bg-white/[0.02] border-t border-white/5 flex justify-between items-center text-[9px] font-mono text-white/30">
 
                 </div>
             </div>

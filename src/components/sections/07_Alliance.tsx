@@ -106,7 +106,7 @@ function VoteBar({
                             } : {}}
                         />
                         <span className="font-mono text-xs text-white tracking-widest">{option.label}</span>
-                        <span className="font-mono text-[10px] text-white/30">— {option.subtitle}</span>
+                        <span className="hidden sm:inline font-mono text-[10px] text-white/30">— {option.subtitle}</span>
                     </div>
                     <span
                         className={`font-mono text-xs tabular-nums transition-opacity duration-300 ${hasVoted ? 'opacity-100' : 'opacity-0'}`}
@@ -207,7 +207,7 @@ export function Alliance() {
     const totalVotes = RD_OPTIONS.reduce((sum, opt) => sum + opt.baseVotes, 0);
 
     return (
-        <section className="relative py-32 md:py-40 bg-black text-white">
+        <section className="relative py-16 md:py-32 lg:py-40 bg-black text-white">
             {/* Background */}
             <div
                 className="absolute inset-0 opacity-100 pointer-events-none"
@@ -229,8 +229,8 @@ export function Alliance() {
                     <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
 
                     </span>
-                    <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl text-white font-bold tracking-wider leading-[1.05] mb-4">
-                        CONSTRUISONS ENSEMBLE.<br />
+                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide leading-[1.05] mb-4">
+                        Construisons ensemble.<br />
                         <span className="text-[#E6DCC8] italic font-light tracking-normal">La marque que l'industrie n'a jamais osé faire.</span>
                     </h2>
                     <p className="font-mono text-sm text-white/50 leading-relaxed tracking-wide mt-4">
@@ -284,7 +284,7 @@ export function Alliance() {
                         </AnimatePresence>
 
                         {/* Features */}
-                        <div className="grid grid-cols-3 gap-4 pt-4 border-t border-white/[0.06]">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/[0.06]">
                             <div className="flex items-start gap-2">
                                 <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
@@ -324,7 +324,7 @@ export function Alliance() {
                         viewport={{ once: false, margin: '-100px' }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        <div className="h-[65vh] md:h-[75vh] w-full relative">
+                        <div className="h-[50vh] sm:h-[60vh] md:h-[75vh] w-full relative">
                             <FounderCard3D />
                         </div>
                     </motion.div>

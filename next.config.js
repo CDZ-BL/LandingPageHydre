@@ -45,6 +45,16 @@ const nextConfig = {
                         key: 'Referrer-Policy',
                         value: 'strict-origin-when-cross-origin',
                     },
+                    {
+                        // Enforce HTTPS for 1 year, include subdomains, allow preload
+                        key: 'Strict-Transport-Security',
+                        value: 'max-age=31536000; includeSubDomains; preload',
+                    },
+                    {
+                        // Restrict access to sensitive browser features
+                        key: 'Permissions-Policy',
+                        value: 'camera=(), microphone=(), geolocation=(), payment=()',
+                    },
                 ],
             },
             // ── IMMUTABLE ASSET CACHING ──────────────────────────

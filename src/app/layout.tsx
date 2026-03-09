@@ -1,15 +1,15 @@
 import type { Metadata, Viewport } from 'next';
-import { Instrument_Sans } from 'next/font/google';
-import { JetBrains_Mono } from 'next/font/google';
+import { Raleway, JetBrains_Mono } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import { AuthModal } from '@/components/ui/AuthModal';
 import './globals.css';
 
-// INSTRUMENT SANS — Neo-Grotesque Headlines (Clinical Swiss Authority)
-const instrumentSans = Instrument_Sans({
+// RALEWAY — Premium geometric sans-serif for headlines
+const instrumentSans = Raleway({
     subsets: ['latin'],
-    weight: ['400', '600', '700'],
+    weight: ['400', '600', '700', '800', '900'],
+    style: ['normal', 'italic'],
     variable: '--font-headline',
     display: 'swap',
 });
@@ -22,12 +22,12 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: 'AETHER | Expérience Pré-Lancement',
+    title: 'Smart Nutrition | Expérience Pré-Lancement',
     description: 'Électrolytes haute performance. Précision ionique pour athlètes exigeants. Rejoignez le Cercle des Fondateurs.',
-    keywords: ['électrolytes', 'nutrition sportive', 'Hyrox', 'CrossFit', 'hydratation', 'performance', 'AETHER'],
-    authors: [{ name: 'AETHER' }],
+    keywords: ['électrolytes', 'nutrition sportive', 'Hyrox', 'CrossFit', 'hydratation', 'performance', 'Smart Nutrition'],
+    authors: [{ name: 'Smart Nutrition' }],
     openGraph: {
-        title: 'AETHER | Précision Ionique',
+        title: 'Smart Nutrition | Précision Ionique',
         description: 'L\'anti-bullshit des électrolytes. Dosage complet, transparence totale.',
         type: 'website',
         locale: 'fr_FR',

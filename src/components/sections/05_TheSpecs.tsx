@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { XRayTubeCanvas } from '@/components/three/XRayTubeCanvas';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -37,73 +36,107 @@ const ELECTROLYTES = INGREDIENTS.filter(i => i.category === 'electrolyte');
 const VITAMINS = INGREDIENTS.filter(i => i.category === 'vitamin');
 
 // ═══════════════════════════════════════════════════════════════════════════
-// INGREDIENT ROW — Single row in the datasheet
+// FROSTED GLASS PANEL — Shared wrapper with backdrop blur
+// ═══════════════════════════════════════════════════════════════════════════
+
+function GlassPanel({
+    children,
+    className = '',
+    delay = 0,
+}: {
+    children: React.ReactNode;
+    className?: string;
+    delay?: number;
+}) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-80px' }}
+            transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+            className={`
+                relative
+                border border-white/[0.08]
+                bg-white/[0.02]
+                backdrop-blur-xl
+                ${className}
+            `}
+            style={{
+                backdropFilter: 'blur(16px) saturate(1.2)',
+                WebkitBackdropFilter: 'blur(16px) saturate(1.2)',
+            }}
+        >
+            {/* HUD Corners */}
+            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20" />
+            {children}
+        </motion.div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INGREDIENT ROW — Ultra-sharp mono datasheet row
 // ═══════════════════════════════════════════════════════════════════════════
 
 function IngredientRow({
     ingredient,
     index,
     accentColor,
-    barMode = 'ajr',
     maxAmount = 1,
 }: {
     ingredient: Ingredient;
     index: number;
     accentColor: string;
-    barMode?: 'ajr' | 'amount';
     maxAmount?: number;
 }) {
     const ajrPercent = Math.round((ingredient.amount / ingredient.ajr) * 100);
-    // For 'amount' mode: normalize bar to the highest amount in the group
-    const barWidth = barMode === 'amount'
-        ? Math.min(Math.max((ingredient.amount / maxAmount) * 100, 4), 100)
-        : Math.min(Math.max(ajrPercent, 4), 100);
+    const barWidth = Math.min(Math.max((ingredient.amount / maxAmount) * 100, 4), 100);
 
     return (
         <motion.div
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 16 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
+            viewport={{ once: true, margin: '-30px' }}
             transition={{ duration: 0.5, delay: index * 0.06 }}
             className="group"
         >
-            {/* Row */}
-            <div className="flex items-center gap-4 py-3 border-b border-white/[0.04] group-hover:border-white/10 transition-colors duration-300">
-
-                {/* Name + Source */}
-                <div className="w-[140px] md:w-[180px] shrink-0">
-                    <div className="font-mono text-xs md:text-sm text-white font-bold tracking-wider group-hover:text-white transition-colors">
+            <div className="flex items-center gap-3 py-2.5 border-b border-white/[0.04] group-hover:border-white/10 transition-colors duration-300">
+                {/* Name */}
+                <div className="w-[100px] md:w-[130px] shrink-0">
+                    <div className="font-mono text-[11px] md:text-xs text-white font-bold tracking-wider group-hover:text-white transition-colors">
                         {ingredient.name}
                     </div>
-                    <div className="font-mono text-[10px] text-white/25 tracking-wide mt-0.5 truncate">
+                    <div className="font-mono text-[9px] text-white/20 tracking-wide mt-0.5 truncate">
                         {ingredient.source}
                     </div>
                 </div>
 
                 {/* Bar */}
-                <div className="flex-1 h-[6px] bg-white/[0.04] rounded-full overflow-hidden relative">
+                <div className="flex-1 h-[4px] bg-white/[0.04] rounded-full overflow-hidden relative">
                     <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${barWidth}%` }}
-                        viewport={{ once: true, margin: '-30px' }}
-                        transition={{ duration: 1, delay: 0.2 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                        className="h-full rounded-full relative"
+                        viewport={{ once: true, margin: '-20px' }}
+                        transition={{ duration: 1, delay: 0.15 + index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                        className="h-full rounded-full"
                         style={{
                             background: `linear-gradient(90deg, ${accentColor}40, ${accentColor})`,
-                            boxShadow: `0 0 12px ${accentColor}30`,
+                            boxShadow: `0 0 10px ${accentColor}25`,
                         }}
                     />
                 </div>
 
-                {/* Dosage + % AJR */}
-                <div className="w-[100px] md:w-[120px] shrink-0 text-right">
-                    <span className="font-mono text-sm md:text-base font-bold tabular-nums" style={{ color: accentColor }}>
+                {/* Value + AJR */}
+                <div className="w-[65px] md:w-[80px] shrink-0 text-right">
+                    <span className="font-mono text-xs md:text-sm font-bold tabular-nums" style={{ color: accentColor }}>
                         {ingredient.amount}
                     </span>
-                    <span className="font-mono text-[10px] text-white/30 ml-0.5">
+                    <span className="font-mono text-[9px] text-white/25 ml-0.5">
                         {ingredient.unit}
                     </span>
-                    <span className="font-mono text-[10px] text-white/40 ml-1.5 tabular-nums">
+                    <span className="font-mono text-[9px] text-white/35 ml-1 tabular-nums">
                         {ajrPercent}%
                     </span>
                 </div>
@@ -113,225 +146,203 @@ function IngredientRow({
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// CATEGORY HEADER — Divider between electrolytes and vitamins
+// CATEGORY HEADER
 // ═══════════════════════════════════════════════════════════════════════════
 
-function CategoryHeader({ label, count, color }: { label: string; count: number; color: string }) {
+function CategoryHeader({ label, color }: { label: string; color: string }) {
     return (
-        <div className="flex items-center gap-3 mb-2 mt-2">
-            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}60` }} />
-            <span className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">
+        <div className="flex items-center gap-2.5 mb-2 mt-1">
+            <div
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}60` }}
+            />
+            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
                 {label}
             </span>
             <div className="flex-1 h-px bg-white/[0.06]" />
-            <span className="font-mono text-[10px] text-white/20 tabular-nums">
-
-            </span>
         </div>
     );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// MAIN COMPONENT
+// MAIN COMPONENT — Centered Tube + Flanking Glass Panels
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function TheSpecs() {
-    const [activeTab, setActiveTab] = useState<'ingredients' | 'nutrition'>('nutrition');
+    const maxElectrolyteAmount = Math.max(...ELECTROLYTES.map(e => e.amount));
+
     return (
-        <section className="relative py-32 bg-void overflow-hidden">
-            {/* Grid background */}
+        <section className="relative py-20 md:py-32 bg-void overflow-hidden">
+            {/* Subtle grid background */}
             <div
-                className="absolute inset-0 opacity-5"
+                className="absolute inset-0 opacity-[0.03]"
                 style={{
                     backgroundImage: `
-                        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)
+                        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
                     `,
-                    backgroundSize: '50px 50px',
+                    backgroundSize: '60px 60px',
                 }}
             />
 
-            <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
-                {/* Section Header */}
+            {/* Radial glow behind tube */}
+            <div
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
+                style={{
+                    background: 'radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%)',
+                }}
+            />
+
+            <div className="relative z-10 w-[90%] max-w-[1500px] mx-auto">
+
+                {/* ━━━ SECTION HEADER ━━━ */}
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-100px" }}
+                    viewport={{ once: true, margin: '-100px' }}
                     transition={{ duration: 0.8 }}
-                    className="mb-16"
+                    className="text-center mb-16 md:mb-20"
                 >
-                    <h2 className="font-headline text-4xl md:text-6xl text-white font-bold tracking-widest">
-                        ARCHITECTURE MOLÉCULAIRE.
+                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide">
+                        Composition de votre produit
                     </h2>
-                    <p className="font-mono text-sm text-white/40 mt-4 tracking-wide max-w-2xl">
-                        Composition complète par pastille effervescente. Chaque molécule a une fonction. Rien de superflu.
+                    <p className="font-mono text-sm text-white/40 mt-4 tracking-wide max-w-xl mx-auto">
+                        Chaque molécule a une fonction. Rien de superflu.
                     </p>
                 </motion.div>
 
-                <div className="grid lg:grid-cols-2 gap-12 xl:gap-16 items-stretch">
+                {/* ━━━ MAIN LAYOUT — 3 columns: Left Panel | Tube | Right Panel ━━━ */}
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr_1fr] gap-6 xl:gap-8 items-stretch">
 
-                    {/* ━━━ LEFT: X-Ray Image ━━━ */}
+                    {/* ── LEFT GLASS PANEL: Nutritional Data ── */}
+                    <GlassPanel className="p-5 md:p-6 order-2 lg:order-1" delay={0.1}>
+                        {/* Panel header */}
+                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/[0.06]">
+                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                            <span className="font-mono text-[10px] tracking-[0.15em] text-white/50 uppercase">
+                                Apport Nutritionnel
+                            </span>
+                        </div>
+
+                        {/* Electrolytes */}
+                        <CategoryHeader label="Électrolytes" color="#FF6B00" />
+                        {ELECTROLYTES.map((ingredient, i) => (
+                            <IngredientRow
+                                key={ingredient.id}
+                                ingredient={ingredient}
+                                index={i}
+                                accentColor="#FF6B00"
+                                maxAmount={maxElectrolyteAmount}
+                            />
+                        ))}
+
+                        <div className="h-4" />
+
+                        {/* Vitamins */}
+                        <CategoryHeader label="Vitamines & minéraux" color="#CCFF00" />
+                        {VITAMINS.map((ingredient, i) => (
+                            <IngredientRow
+                                key={ingredient.id}
+                                ingredient={ingredient}
+                                index={i + ELECTROLYTES.length}
+                                accentColor="#CCFF00"
+                            />
+                        ))}
+
+                        {/* AJR footer */}
+                        <div className="mt-4 pt-3 border-t border-white/[0.04]">
+                            <span className="font-mono text-[9px] text-white/15 tracking-wider">
+                                *% AJR — Apports Journaliers Recommandés · UE Reg. 1169/2011
+                            </span>
+                        </div>
+                    </GlassPanel>
+
+                    {/* ── CENTER: 3D Tube — Majestic & Levitating ── */}
                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8 }}
-                        className="relative h-full min-h-[50vh] lg:min-h-0 flex flex-col"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true, margin: '-100px' }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative order-1 lg:order-2 min-h-[45vh] md:min-h-[55vh] lg:min-h-0 flex items-center justify-center"
                     >
-                        <div className="relative w-[120%] -ml-[10%] lg:w-full lg:ml-0 flex-1 h-full flex items-center justify-center -mt-10 lg:mt-0">
+                        {/* Ambient glow ring */}
+                        <div
+                            className="absolute inset-0 pointer-events-none opacity-30"
+                            style={{
+                                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 60%)',
+                            }}
+                        />
+                        <div className="w-full h-full min-h-[400px] lg:min-h-[550px]">
                             <XRayTubeCanvas />
-
-                            {/* Floating Label */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full max-w-xs flex items-center justify-center gap-3 opacity-50 pointer-events-none">
-                                <div className="h-px flex-1 bg-white/[0.06]" />
-                                <span className="font-mono text-[10px] text-white/50 tracking-[0.15em] whitespace-nowrap">
-                                    RADIOGRAPHIE 3D — TEMPS RÉEL
-                                </span>
-                                <div className="h-px flex-1 bg-white/[0.06]" />
-                            </div>
                         </div>
                     </motion.div>
 
-                    {/* ━━━ RIGHT: Ingredient Datasheet ━━━ */}
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, margin: "-100px" }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        {/* Datasheet Container */}
-                        <div className="border border-white/[0.06] bg-white/[0.01] relative">
-                            {/* HUD Corners */}
-                            <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-white/20" />
-                            <div className="absolute top-0 right-0 w-4 h-4 border-t border-r border-white/20" />
-                            <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white/20" />
-                            <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white/20" />
-
-                            {/* Header Bar — Tab Buttons */}
-                            <div className="px-6 py-3 border-b border-white/[0.06] flex items-center gap-2">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                                <button
-                                    onClick={() => setActiveTab('ingredients')}
-                                    className={`font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm transition-all duration-300 ${activeTab === 'ingredients'
-                                        ? 'bg-white/10 text-white border border-white/20'
-                                        : 'text-white/40 hover:text-white/60 border border-transparent'
-                                        }`}
-                                >
-                                    Ingrédients
-                                </button>
-                                <button
-                                    onClick={() => setActiveTab('nutrition')}
-                                    className={`font-mono text-[10px] tracking-[0.15em] uppercase px-3 py-1.5 rounded-sm transition-all duration-300 ${activeTab === 'nutrition'
-                                        ? 'bg-white/10 text-white border border-white/20'
-                                        : 'text-white/40 hover:text-white/60 border border-transparent'
-                                        }`}
-                                >
-                                    Apport Nutritionnel
-                                </button>
-                            </div>
-
-                            {/* Content */}
-                            <div className="px-6 py-5">
-
-                                {activeTab === 'nutrition' ? (
-                                    <>
-                                        {/* ── ELECTROLYTES ── */}
-                                        <CategoryHeader
-                                            label="Électrolytes"
-                                            count={ELECTROLYTES.length}
-                                            color="#FF6B00"
-                                        />
-                                        {ELECTROLYTES.map((ingredient, i) => (
-                                            <IngredientRow
-                                                key={ingredient.id}
-                                                ingredient={ingredient}
-                                                index={i}
-                                                accentColor="#FF6B00"
-                                                barMode="amount"
-                                                maxAmount={Math.max(...ELECTROLYTES.map(e => e.amount))}
-                                            />
-                                        ))}
-
-                                        {/* Spacer */}
-                                        <div className="h-6" />
-
-                                        {/* ── VITAMINS ── */}
-                                        <CategoryHeader
-                                            label="Vitamines et minéraux"
-                                            count={VITAMINS.length}
-                                            color="#CCFF00"
-                                        />
-                                        {VITAMINS.map((ingredient, i) => (
-                                            <IngredientRow
-                                                key={ingredient.id}
-                                                ingredient={ingredient}
-                                                index={i + ELECTROLYTES.length}
-                                                accentColor="#CCFF00"
-                                            />
-                                        ))}
-                                    </>
-                                ) : (
-                                    /* ── INGREDIENTS LIST ── */
-                                    <div className="space-y-3">
-                                        <div className="font-mono text-[10px] text-white/30 tracking-[0.15em] uppercase mb-4">
-                                            Liste des ingrédients — 1 pastille effervescente
-                                        </div>
-                                        <p className="font-mono text-xs text-white/60 leading-relaxed">
-                                            Acide citrique, bicarbonate de sodium, carbonate de sodium, sorbitol, chlorure de potassium,
-                                            citrate de potassium, acide L-ascorbique (vitamine C), citrate de magnésium, arôme naturel Yuzu & Pêche,
-                                            citrate de zinc, niacine (vitamine B3), D-pantothénate de calcium (vitamine B5),
-                                            chlorhydrate de pyridoxine (vitamine B6), cyanocobalamine (vitamine B12),
-                                            édulcorant : sucralose.
-                                        </p>
-                                        <div className="h-4" />
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                                            <span className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">
-                                                Allergènes
-                                            </span>
-                                            <div className="flex-1 h-px bg-white/[0.06]" />
-                                        </div>
-                                        <p className="font-mono text-xs text-white/50 leading-relaxed">
-                                            Aucun allergène majeur. Sans gluten, sans lactose, sans OGM.
-                                        </p>
-                                        <div className="h-4" />
-                                        <div className="flex items-center gap-3 mb-2">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                                            <span className="font-mono text-[10px] tracking-[0.2em] text-white/40 uppercase">
-                                                Conseils d&apos;utilisation
-                                            </span>
-                                            <div className="flex-1 h-px bg-white/[0.06]" />
-                                        </div>
-                                        <p className="font-mono text-xs text-white/50 leading-relaxed">
-                                            Dissoudre 1 pastille dans un verre d&apos;eau froide (200 ml).
-                                            Ne pas dépasser la dose journalière recommandée.
-                                        </p>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Footer */}
-                            <div className="px-6 py-4 border-t border-white/[0.06] flex items-center justify-between">
-                                <span className="font-mono text-[10px] text-white/20 tracking-wider">
-                                    *% AJR — Apports Journaliers Recommandés
-                                </span>
-                                <span className="font-mono text-[10px] text-white/15 tracking-wider">
-                                    UE Reg. 1169/2011
-                                </span>
-                            </div>
+                    {/* ── RIGHT GLASS PANEL: Ingredient List ── */}
+                    <GlassPanel className="p-5 md:p-6 order-3" delay={0.2}>
+                        {/* Panel header */}
+                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/[0.06]">
+                            <div className="w-2 h-2 rounded-full bg-white/30 animate-pulse" />
+                            <span className="font-mono text-[10px] tracking-[0.15em] text-white/50 uppercase">
+                                Liste des ingrédients
+                            </span>
                         </div>
 
-                        {/* Bottom Note */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: 0.8 }}
-                            className="mt-4 font-mono text-[10px] text-white/15 tracking-wider text-right"
-                        >
+                        {/* Ingredient text */}
+                        <div className="font-mono text-[10px] text-white/25 tracking-[0.15em] uppercase mb-3">
+                            1 pastille effervescente
+                        </div>
+                        <p className="font-mono text-[11px] md:text-xs text-white/55 leading-[1.8] tracking-wide">
+                            Acide citrique, bicarbonate de sodium, carbonate de sodium, sorbitol, chlorure de potassium,
+                            citrate de potassium, acide L-ascorbique (vitamine C), citrate de magnésium, arôme naturel Yuzu &amp; Pêche,
+                            citrate de zinc, niacine (vitamine B3), D-pantothénate de calcium (vitamine B5),
+                            chlorhydrate de pyridoxine (vitamine B6), cyanocobalamine (vitamine B12),
+                            édulcorant : sucralose.
+                        </p>
 
-                        </motion.div>
-                    </motion.div>
+                        <div className="h-5" />
+
+                        {/* Allergènes */}
+                        <div className="flex items-center gap-2.5 mb-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                                Allergènes
+                            </span>
+                            <div className="flex-1 h-px bg-white/[0.06]" />
+                        </div>
+                        <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                            Aucun allergène majeur. Sans gluten, sans lactose, sans OGM.
+                        </p>
+
+                        <div className="h-5" />
+
+                        {/* Conseils d'utilisation */}
+                        <div className="flex items-center gap-2.5 mb-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                                Conseils d&apos;utilisation
+                            </span>
+                            <div className="flex-1 h-px bg-white/[0.06]" />
+                        </div>
+                        <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                            Dissoudre 1 pastille dans un verre d&apos;eau froide (200 ml).
+                            Ne pas dépasser la dose journalière recommandée.
+                        </p>
+
+                        <div className="h-5" />
+
+                        {/* Conservation */}
+                        <div className="flex items-center gap-2.5 mb-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                                Conservation
+                            </span>
+                            <div className="flex-1 h-px bg-white/[0.06]" />
+                        </div>
+                        <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                            Conserver dans un endroit frais et sec, à l&apos;abri de la lumière.
+                            Refermer le tube après chaque utilisation.
+                        </p>
+                    </GlassPanel>
                 </div>
             </div>
         </section>

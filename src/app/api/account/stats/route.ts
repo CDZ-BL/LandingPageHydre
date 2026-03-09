@@ -1,11 +1,13 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getServerSupabase } from '@/lib/supabase';
+import { applyRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/account/stats
  *
  * Returns comprehensive account data for the authenticated user's dashboard.
- * Includes profile info, vote history, referral count, and founder points breakdown.
+ * Includes profile info, vote history, referral count, founder points breakdown,
+ * and cashback wallet summary.
  *
  * **Auth:** Bearer token (JWT) in Authorization header
  * **Rate limiting:** Upstash Redis (3 req/IP/60s)
@@ -15,6 +17,10 @@ import { getServerSupabase } from '@/lib/supabase';
  */
 export async function GET(request: NextRequest) {
   try {
+    // Rate limit
+    const rateLimitResponse = await applyRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
     // Extract Bearer token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
@@ -43,7 +49,7 @@ export async function GET(request: NextRequest) {
     const userId = user.id;
 
     // Run all queries in parallel
-    const [profileRes, votesRes, referralsRes, founderPointsRes] = await Promise.all([
+    const [profileRes, votesRes, referralsRes, founderPointsRes, walletRes] = await Promise.all([
       // 1. Fetch user profile
       supabase
         .from('profiles')
@@ -78,6 +84,13 @@ export async function GET(request: NextRequest) {
         .select('id, amount, reason, created_at')
         .eq('user_id', userId)
         .order('created_at', { ascending: false }),
+
+      // 5. Fetch cashback wallet summary
+      supabase
+        .from('cashback_wallets')
+        .select('balance_cents, lifetime_earned_cents, lifetime_spent_cents')
+        .eq('user_id', userId)
+        .single(),
     ]);
 
     // Handle errors
@@ -126,6 +139,11 @@ export async function GET(request: NextRequest) {
       createdAt: point.created_at,
     })) || [];
 
+    // Wallet data (graceful fallback if table not yet migrated)
+    const wallet = walletRes.error
+      ? { balance_cents: 0, lifetime_earned_cents: 0, lifetime_spent_cents: 0 }
+      : walletRes.data;
+
     return NextResponse.json({
       profile: {
         id: profile.id,
@@ -139,6 +157,11 @@ export async function GET(request: NextRequest) {
       votes,
       referralCount,
       founderPoints,
+      wallet: {
+        balanceCents: wallet.balance_cents ?? 0,
+        lifetimeEarnedCents: wallet.lifetime_earned_cents ?? 0,
+        lifetimeSpentCents: wallet.lifetime_spent_cents ?? 0,
+      },
     });
   } catch (error) {
     console.error('Account stats error:', error);

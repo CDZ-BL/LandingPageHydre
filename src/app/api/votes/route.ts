@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     const parsed = CastVoteSchema.safeParse(body);
     if (!parsed.success) {
         return NextResponse.json(
-            { error: 'Invalid vote data', details: parsed.error.flatten() },
+            { error: 'Invalid request' },
             { status: 400 }
         );
     }

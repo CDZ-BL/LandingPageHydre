@@ -16,7 +16,7 @@ export function TheProblem() {
     const [selectedCompetitor, setSelectedCompetitor] = useState<Competitor>(COMPETITORS[0]);
 
     return (
-        <section className="relative py-32 bg-void overflow-hidden">
+        <section className="relative py-16 md:py-32 bg-void overflow-hidden">
             {/* Grid background */}
             <div
                 className="absolute inset-0 opacity-5"
@@ -38,10 +38,10 @@ export function TheProblem() {
                     transition={{ duration: 0.8 }}
                     className="mb-8"
                 >
-                    <h2 className="font-headline text-h1 text-white font-bold tracking-widest">
-                        AUDIT DE FORMULATION.
+                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide">
+                        Ce que contiennent vraiment vos boissons.
                     </h2>
-                    <p className="font-mono text-lg md:text-xl text-white/60 mt-4 tracking-wide">
+                    <p className="font-mono text-sm md:text-lg lg:text-xl text-white/60 mt-4 tracking-wide">
                         Les chiffres ne mentent pas. <span className="text-white">Le marketing, si.</span>
                     </p>
                 </motion.div>

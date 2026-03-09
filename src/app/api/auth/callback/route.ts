@@ -16,7 +16,9 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const code = searchParams.get('code');
-    const next = searchParams.get('next') ?? '/';
+    // Whitelist: only relative paths allowed — prevents open redirect attacks
+    const rawNext = searchParams.get('next') ?? '/';
+    const next = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/';
 
     if (!code) {
         // No code → redirect to home

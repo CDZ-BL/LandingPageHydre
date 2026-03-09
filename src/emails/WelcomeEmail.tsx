@@ -31,7 +31,7 @@ export function WelcomeEmail({ email }: WelcomeEmailProps) {
                 <Container style={containerStyle}>
                     <Section style={headerStyle}>
                         <Text style={logoStyle}>HYDRE</Text>
-                        <Text style={batchStyle}>AETHER [LABS] — BATCH 001</Text>
+                        <Text style={batchStyle}>SMART NUTRITION — BATCH 001</Text>
                     </Section>
 
                     <Hr style={hrStyle} />

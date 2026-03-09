@@ -8,6 +8,7 @@ import {
   FounderPointsCard,
   VoteHistory,
   ReferralDashboard,
+  CashbackWallet,
 } from '@/components/ui/AccountDashboard';
 import { cn } from '@/lib/utils';
 
@@ -40,6 +41,11 @@ interface AccountStats {
     }>;
     total: number;
     totalPoints: number;
+  };
+  wallet: {
+    balanceCents: number;
+    lifetimeEarnedCents: number;
+    lifetimeSpentCents: number;
   };
 }
 
@@ -154,7 +160,7 @@ export default function AccountPage() {
 
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-          {/* Left column (2/3): Votes */}
+          {/* Left column (2/3): Votes + Referrals */}
           <div className="lg:col-span-2 space-y-6">
             <VoteHistory votes={stats.votes} />
 
@@ -163,11 +169,14 @@ export default function AccountPage() {
               referrals={stats.referrals.list}
               totalReferrals={stats.referrals.total}
               totalPointsFromReferrals={stats.referrals.totalPoints}
+              cashback={{ lifetimeEarnedCents: stats.wallet.lifetimeEarnedCents }}
             />
           </div>
 
-          {/* Right column (1/3): Points */}
-          <div>
+          {/* Right column (1/3): Wallet + Points */}
+          <div className="space-y-6">
+            <CashbackWallet wallet={stats.wallet} />
+
             <FounderPointsCard
               points={stats.points}
               total={stats.profile.founderPointsTotal}

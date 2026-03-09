@@ -45,7 +45,7 @@ module.exports = {
             // Scales continuously from 320px to 1440px. Zero breakpoint reflows.
             fontSize: {
                 'display': 'clamp(2.5rem, 5vw + 1rem, 6rem)',
-                'h1': 'clamp(2.25rem, 4vw + 1rem, 4.5rem)',
+                'h1': 'clamp(2.25rem, 2.5vw + 0.5rem, 3.5rem)',
                 'h2': 'clamp(1.5rem, 3vw + 0.5rem, 3rem)',
                 'h3': 'clamp(1.25rem, 2vw + 0.5rem, 2.25rem)',
                 'body-lg': 'clamp(1rem, 1vw + 0.25rem, 1.125rem)',

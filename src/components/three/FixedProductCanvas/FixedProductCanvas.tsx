@@ -10,15 +10,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // ─────────────────────────────────────────────────────────
 // FRAME GUARD — pause the THREE.Clock on tab hide
-// Placed inside the Canvas so it has access to useThree().
-//
-// R3F computes delta via clock.getDelta() each frame.
-// When the tab is hidden the browser throttles rAF; on return
-// the accumulated real-time causes a huge delta spike.
-// Stopping the clock on hide means clock.getDelta() returns
-// ~0 on the first visible frame, eliminating the spike.
-// The MAX_DELTA clamp in HydreCoreAssembly acts as a second
-// line of defence in case this listener fires late.
 // ─────────────────────────────────────────────────────────
 function FrameGuard() {
     const { clock } = useThree();
@@ -28,7 +19,6 @@ function FrameGuard() {
             if (document.hidden) {
                 clock.stop();
             } else {
-                // start() resets oldTime → delta on next frame ≈ 0
                 clock.start();
             }
         };
@@ -52,8 +42,7 @@ const CAMERA_FOV = 20;
  * FixedProductCanvas
  *
  * Pinned to the right half of the viewport for the full hero section.
- * Product is centered in the canvas — pure ambient animation, no scroll binding.
- * Fades out as SystemFailure section arrives.
+ * Slow opacity fade as SystemFailure section arrives.
  */
 export function FixedProductCanvas() {
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -62,36 +51,37 @@ export function FixedProductCanvas() {
         if (!wrapperRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Pin canvas to viewport while hero section is active
+
+            // ── PIN — keep canvas fixed while hero is active ────────────
             ScrollTrigger.create({
-                trigger:      wrapperRef.current,
-                start:        'top top',
-                endTrigger:   '#system-failure-section',
-                end:          'top top',
-                pin:          true,
-                pinSpacing:   false,
+                trigger:    wrapperRef.current,
+                start:      'top top',
+                endTrigger: '#system-failure-section',
+                end:        'top top',
+                pin:        true,
+                pinSpacing: false,
             });
 
-            // Fade out as SystemFailure arrives
-            ScrollTrigger.create({
-                trigger: '#system-failure-section',
-                start:   'top 60%',
-                end:     'top top',
-                scrub:   1,
-                onUpdate: (self) => {
-                    if (wrapperRef.current)
-                        wrapperRef.current.style.opacity = String(1 - self.progress);
+            // ── SLOW FADE EXIT — gentle opacity dissolve ────────────────
+            gsap.to(wrapperRef.current, {
+                opacity: 0,
+                ease:    'power1.inOut',
+                scrollTrigger: {
+                    trigger: '#system-failure-section',
+                    start:   'top 85%',
+                    end:     'top 15%',
+                    scrub:   1.4,
+                    onLeave:     () => { if (wrapperRef.current) wrapperRef.current.style.visibility = 'hidden'; },
+                    onEnterBack: () => { if (wrapperRef.current) { wrapperRef.current.style.visibility = 'visible'; } },
                 },
-                onLeave:     () => { if (wrapperRef.current) wrapperRef.current.style.visibility = 'hidden'; },
-                onEnterBack: () => { if (wrapperRef.current) wrapperRef.current.style.visibility = 'visible'; },
             });
+
         });
 
         return () => ctx.revert();
     }, []);
 
     return (
-        // Full right half, vertically centered in the viewport
         <div
             ref={wrapperRef}
             className="absolute top-0 right-0 w-full lg:w-1/2 h-screen z-50 pointer-events-none"
@@ -102,7 +92,6 @@ export function FixedProductCanvas() {
                 gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
                 style={{ background: 'transparent', pointerEvents: 'none' }}
             >
-                {/* IBL — product reflections */}
                 <Environment resolution={256} background={false}>
                     <Lightformer
                         form="rect"
@@ -119,7 +108,6 @@ export function FixedProductCanvas() {
                         scale={[8, 8, 1]}
                         color="#4060ff"
                     />
-                    {/* Rim light — silhouette separation */}
                     <Lightformer
                         form="rect"
                         intensity={15}
@@ -127,7 +115,6 @@ export function FixedProductCanvas() {
                         scale={[10, 20, 1]}
                         color="#ffffff"
                     />
-                    {/* Kicker — warm bone accent */}
                     <Lightformer
                         form="rect"
                         intensity={5}
@@ -142,9 +129,6 @@ export function FixedProductCanvas() {
 
                 <FrameGuard />
                 <Suspense fallback={null}>
-                    {/* scale=4.5 fills the right half generously.
-                        Y=-0.30: origin is at tube bottom, -0.30 centers the
-                        mid-tube in the viewport (≈tube-height/2 + 15vh offset) */}
                     <HydreCoreAssembly scale={4.5} position={[0, -0.34, 0]} />
                 </Suspense>
             </Canvas>

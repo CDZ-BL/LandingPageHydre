@@ -125,7 +125,7 @@ export function VerificationEmail({ email, code }: VerificationEmailProps) {
           {/* Header */}
           <Section style={headerStyle}>
             <Text style={titleStyle}>HYDRE</Text>
-            <Text style={subtitleStyle}>AETHER [LABS] — VÉRIFICATION</Text>
+            <Text style={subtitleStyle}>SMART NUTRITION — VÉRIFICATION</Text>
           </Section>
 
           {/* Main Content */}
@@ -154,7 +154,7 @@ export function VerificationEmail({ email, code }: VerificationEmailProps) {
               HYDRE — Ne partagez jamais ce code.
             </Text>
             <Text style={footerTextStyle}>
-              © {currentYear} AETHER [LABS]. Tous droits réservés.
+              © {currentYear} SMART NUTRITION. Tous droits réservés.
             </Text>
           </Section>
         </Container>

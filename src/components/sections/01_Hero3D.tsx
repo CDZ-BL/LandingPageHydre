@@ -24,14 +24,23 @@ export function HeroVoid() {
         >
             <div className="relative h-full flex">
 
-                {/* ━━━ FULLSCREEN VIDEO BACKGROUND ━━━━━━━━━━━━━━━━━━ */}
+                {/* ━━━ FULLSCREEN VIDEO BACKGROUND ━━━━━━━━━━━━━━━━━━
+                    Desktop only — saves 3.4MB on mobile.
+                    Mobile gets a rich CSS gradient fallback.            */}
                 <video
                     autoPlay
                     loop
                     muted
                     playsInline
-                    className="absolute inset-0 w-full h-full object-cover z-0"
+                    className="hidden md:block absolute inset-0 w-full h-full object-cover z-0"
                     src="/videos/Backgroundvideo3Dhero.webm"
+                />
+                {/* Mobile gradient fallback — no download cost */}
+                <div
+                    className="md:hidden absolute inset-0 z-0"
+                    style={{
+                        background: 'radial-gradient(ellipse 80% 60% at 70% 40%, #1a1a2e 0%, #0d0d1a 40%, #050505 100%)',
+                    }}
                 />
 
                 {/* ━━━ LEFT TEXT OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
@@ -42,18 +51,18 @@ export function HeroVoid() {
                         initial={{ opacity: 0, x: -40, filter: 'blur(10px)' }}
                         animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="font-display text-display font-bold tracking-tighter text-white leading-[0.95] mb-8"
+                        className="font-display text-display font-bold tracking-tight text-white leading-[0.95] mb-5 md:mb-8"
                     >
-                        L'HYDRATATION <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">ÉPURÉE.</span>
-                        <span className="text-[#E6DCC8] italic font-light tracking-normal block text-h3 mt-4 opacity-80">CONÇUE AVEC VOUS.</span>
+                        L'hydratation <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-white/50">épurée.</span>
+                        <span className="text-[#E6DCC8] italic font-light tracking-normal block text-h3 mt-4 opacity-80">Conçue avec vous.</span>
                     </motion.h1>
 
                     <motion.p
                         initial={{ opacity: 0, x: -30 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 1, delay: 0.4 }}
-                        className="text-base md:text-lg text-white/60 font-light tracking-wide mb-10 max-w-md"
+                        className="text-sm md:text-lg text-white/60 font-light tracking-wide mb-6 md:mb-10 max-w-md"
                     >
                         Pour vous. Pas pour le marketing.<br />
                     </motion.p>
@@ -66,10 +75,10 @@ export function HeroVoid() {
                         className="group relative cursor-pointer"
                     >
                         {/* Persistent diffuse orange glow behind button */}
-                        <div className="absolute -inset-4 bg-neon-orange/15 blur-[40px] rounded-full pointer-events-none group-hover:bg-neon-orange/25 transition-all duration-700" />
+                        <div className="absolute -inset-4 bg-neon-orange/8 blur-[40px] rounded-full pointer-events-none group-hover:bg-neon-orange/15 transition-all duration-700" />
 
                         {/* Outer border — TheClose-style diffuse orange glow */}
-                        <div className="relative border border-neon-orange/30 bg-white/[0.02] overflow-hidden shadow-[0_0_40px_rgba(255,107,0,0.3),0_0_80px_rgba(255,107,0,0.15)] group-hover:shadow-[0_0_50px_rgba(255,107,0,0.5),0_0_100px_rgba(255,107,0,0.25)] group-hover:border-neon-orange/60 ring-1 ring-neon-orange/10 transition-all duration-700">
+                        <div className="relative border border-neon-orange/20 bg-white/[0.02] overflow-hidden shadow-[0_0_25px_rgba(255,107,0,0.15),0_0_50px_rgba(255,107,0,0.08)] group-hover:shadow-[0_0_35px_rgba(255,107,0,0.25),0_0_70px_rgba(255,107,0,0.12)] group-hover:border-neon-orange/45 ring-1 ring-neon-orange/5 transition-all duration-700">
                             {/* Fill sweep */}
                             <div className="absolute inset-0 bg-neon-orange/10 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]" />
 

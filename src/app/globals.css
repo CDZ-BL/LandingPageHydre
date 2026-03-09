@@ -15,10 +15,14 @@
   /* === SOLID-STATE TEXT HIERARCHY ===
      Pre-calculated against #050505 to bypass GPU alpha-blending.
      Eliminates per-frame compositing tax over live WebGL canvas. */
-  --text-primary: #FFFFFF;     /* 100% — Headlines */
-  --text-secondary: #D9D9D9;   /* 85% optical equivalent — Body (Platine) */
-  --text-tertiary: #9E9E9E;    /* 60% optical equivalent — Labels (Métal) */
-  --text-muted: #6B6B6B;       /* 40% optical equivalent — Structure (Carbone) */
+  --text-primary: #FFFFFF;
+  /* 100% — Headlines */
+  --text-secondary: #D9D9D9;
+  /* 85% optical equivalent — Body (Platine) */
+  --text-tertiary: #9E9E9E;
+  /* 60% optical equivalent — Labels (Métal) */
+  --text-muted: #6B6B6B;
+  /* 40% optical equivalent — Structure (Carbone) */
 
   /* === STROKES & BORDERS === */
   --stroke: rgba(255, 255, 255, 0.10);
@@ -62,6 +66,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -161,7 +166,6 @@ body::before {
   /* === FONT FAMILIES === */
   .font-headline {
     font-family: var(--font-headline), system-ui, sans-serif;
-    text-transform: uppercase;
     letter-spacing: -0.03em;
   }
 
@@ -390,6 +394,27 @@ body::before {
 .animate-bar-shake {
   animation: shake-subtle 0.5s cubic-bezier(.36, .07, .19, .97) both;
   animation-delay: 1.5s;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CAROUSEL TAB GLOW — 3-tier blue glow system
+═══════════════════════════════════════════════════════════════════════════ */
+
+.carousel-tab-glow {
+  box-shadow: 0 0 8px rgba(100, 180, 255, 0.08), inset 0 0 4px rgba(100, 180, 255, 0.03);
+  transition: box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.5s, background 0.5s, color 0.5s;
+}
+
+.carousel-tab-glow:hover {
+  box-shadow: 0 0 16px rgba(100, 180, 255, 0.18), 0 0 4px rgba(100, 180, 255, 0.1), inset 0 0 6px rgba(100, 180, 255, 0.05);
+}
+
+.carousel-tab-glow--active {
+  box-shadow: 0 0 24px rgba(100, 180, 255, 0.3), 0 0 8px rgba(100, 180, 255, 0.2), inset 0 0 8px rgba(100, 180, 255, 0.08);
+}
+
+.carousel-tab-glow--active:hover {
+  box-shadow: 0 0 28px rgba(100, 180, 255, 0.35), 0 0 10px rgba(100, 180, 255, 0.25), inset 0 0 10px rgba(100, 180, 255, 0.1);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════

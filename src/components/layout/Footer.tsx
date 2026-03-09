@@ -65,7 +65,7 @@ export function Footer() {
                     {/* Col 1: Brand + Navigation */}
                     <div>
                         <h4 className="font-mono text-white text-sm tracking-widest mb-6">
-                            AETHER [LABS]
+                            SMART NUTRITION
                         </h4>
                         <nav className="space-y-3">
                             {NAV_LINKS.map((link) => (
@@ -124,7 +124,7 @@ export function Footer() {
                 {/* Divider */}
                 <div className="border-t border-void-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <div className="font-mono text-[10px] text-gray-600 tracking-wider">
-                        AETHER LABS © 2026. DATA DRIVEN PERFORMANCE.
+                        SMART NUTRITION © 2026. DATA DRIVEN PERFORMANCE.
                     </div>
                     <div className="font-mono text-[10px] text-gray-700 tracking-wider">
                         DESIGNED IN DARKNESS.

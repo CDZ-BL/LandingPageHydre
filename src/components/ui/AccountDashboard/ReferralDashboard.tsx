@@ -10,11 +10,16 @@ interface Referral {
   pointsEarned: number;
 }
 
+interface CashbackInfo {
+  lifetimeEarnedCents: number;
+}
+
 interface ReferralDashboardProps {
   referralCode: string;
   referrals: Referral[];
   totalReferrals: number;
   totalPointsFromReferrals: number;
+  cashback?: CashbackInfo;
 }
 
 const maskEmail = (email: string): string => {
@@ -24,11 +29,16 @@ const maskEmail = (email: string): string => {
   return `${masked}@${domain}`;
 };
 
+const formatEuro = (cents: number): string => {
+  return `${(cents / 100).toFixed(2)} €`;
+};
+
 export const ReferralDashboard = ({
   referralCode,
   referrals,
   totalReferrals,
   totalPointsFromReferrals,
+  cashback,
 }: ReferralDashboardProps) => {
   const [copied, setCopied] = useState(false);
 
@@ -119,7 +129,7 @@ export const ReferralDashboard = ({
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
+      <div className={cn('grid gap-4 mb-8', cashback ? 'grid-cols-3' : 'grid-cols-2')}>
         <div className="px-4 py-3 rounded bg-white/[0.02] border border-white/[0.04]">
           <p className="text-[10px] font-mono tracking-[0.15em] text-white/40 uppercase mb-2">
             Total Referrals
@@ -141,6 +151,28 @@ export const ReferralDashboard = ({
             +{totalPointsFromReferrals.toLocaleString()}
           </p>
         </div>
+
+        {cashback && (
+          <div className="px-4 py-3 rounded bg-white/[0.02] border border-[#FF6B00]/10">
+            <p className="text-[10px] font-mono tracking-[0.15em] text-white/40 uppercase mb-2">
+              Cashback gagné
+            </p>
+            <p className={cn(
+              'text-2xl font-headline font-bold',
+              'bg-gradient-to-r from-[#FF6B00]/90 to-[#E6DCC8]/80',
+              'bg-clip-text text-transparent'
+            )}>
+              +{formatEuro(cashback.lifetimeEarnedCents)}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Cashback incentive banner */}
+      <div className="mb-6 px-4 py-3 rounded border border-[#FF6B00]/15 bg-[#FF6B00]/[0.03]">
+        <p className="text-[10px] font-mono text-[#FF6B00]/70 leading-relaxed">
+          5% de cashback à vie sur chaque achat de vos filleuls — revenu passif automatique.
+        </p>
       </div>
 
       {/* Referrals list */}

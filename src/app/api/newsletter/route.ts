@@ -81,6 +81,9 @@ export async function POST(request: NextRequest) {
 // DELETE — Soft Unsubscribe
 // ─────────────────────────────────────────────────────────────
 export async function DELETE(request: NextRequest) {
+    const rateLimitResponse = await applyRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
     let body: unknown;
     try {
         body = await request.json();

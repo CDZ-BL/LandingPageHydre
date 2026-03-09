@@ -1,13 +1,16 @@
 'use client';
 
-import { useRef, Suspense } from 'react';
+import { useRef, Suspense, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, ContactShadows, TrackballControls } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import * as THREE from 'three';
 import { getAssetPath } from '@/lib/utils';
 
-useGLTF.preload(getAssetPath('/models/cardmodel.glb'));
+// Only preload on desktop — avoids 4.7MB GLB download on mobile
+if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+    useGLTF.preload(getAssetPath('/models/cardmodel.glb'));
+}
 
 // ═══════════════════════════════════════════════════════════════
 // CARD MODEL
@@ -32,9 +35,72 @@ function CardModel() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// MOBILE STATIC FALLBACK — zero JS weight, no GLB download
+// ═══════════════════════════════════════════════════════════════
+function FounderCardStatic() {
+    return (
+        <div className="relative w-full h-full flex items-center justify-center">
+            {/* Ambient glow */}
+            <div
+                className="absolute inset-0 pointer-events-none blur-[80px] opacity-50"
+                style={{ background: 'radial-gradient(circle at 50% 55%, rgba(0,220,255,0.4) 0%, transparent 60%)' }}
+            />
+            {/* Card shape */}
+            <motion.div
+                className="relative w-[280px] aspect-[1.586/1] rounded-xl overflow-hidden"
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 4, ease: 'easeInOut', repeat: Infinity }}
+                style={{
+                    background: 'linear-gradient(135deg, rgba(0,220,255,0.12) 0%, rgba(0,80,140,0.08) 50%, rgba(0,0,0,0.6) 100%)',
+                    border: '1px solid rgba(0,220,255,0.25)',
+                    boxShadow: '0 0 40px rgba(0,220,255,0.15), 0 0 80px rgba(0,150,255,0.08)',
+                }}
+            >
+                {/* Scan line */}
+                <motion.div
+                    className="absolute left-0 right-0 h-[1px]"
+                    style={{
+                        background: 'linear-gradient(90deg, transparent, rgba(0,220,255,0.8) 50%, transparent)',
+                        boxShadow: '0 0 8px rgba(0,220,255,0.4)',
+                    }}
+                    animate={{ top: ['-2%', '102%'] }}
+                    transition={{ duration: 3, ease: 'linear', repeat: Infinity, repeatDelay: 2 }}
+                />
+                {/* Content */}
+                <div className="absolute inset-0 flex flex-col items-start justify-end p-6">
+                    <p className="font-mono text-[9px] text-cyan-400/60 tracking-widest mb-1">SMART NUTRITION</p>
+                    <p className="font-headline text-white font-bold text-lg tracking-wide">FONDATEUR</p>
+                    <p className="font-mono text-[10px] text-white/30 tracking-wider mt-1">ACCÈS ANTICIPÉ · AN 1</p>
+                </div>
+                {/* Grid overlay */}
+                <div
+                    className="absolute inset-0 opacity-[0.04]"
+                    style={{
+                        backgroundImage: 'linear-gradient(rgba(0,220,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,220,255,1) 1px, transparent 1px)',
+                        backgroundSize: '30px 30px',
+                    }}
+                />
+            </motion.div>
+        </div>
+    );
+}
+
+// ═══════════════════════════════════════════════════════════════
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════
 export function FounderCard3D() {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        setIsMobile(window.innerWidth < 768);
+        const onResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', onResize, { passive: true });
+        return () => window.removeEventListener('resize', onResize);
+    }, []);
+
+    // On mobile: static CSS card — no GLB, no WebGL context
+    if (isMobile) return <FounderCardStatic />;
+
     return (
         <div className="relative w-full h-full overflow-visible">
             {/* Levitation glow — multi-layer */}

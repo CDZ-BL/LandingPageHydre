@@ -23,7 +23,7 @@
 
 import * as THREE from 'three';
 import { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture } from '@react-three/drei';
 import type { HydreCoreAssemblyProps } from './HydreCoreAssembly.types';
 
@@ -42,9 +42,11 @@ const MAX_DELTA = 0.05; // seconds
 // ASSETS
 // ─────────────────────────────────────────────────────────
 const MODEL_PATH = '/models/Tube+Lid+Tabs2.glb' as const;
-const ETIQUETTE_PATH = '/images/etiquettegradiant.png';
-useGLTF.preload(MODEL_PATH);
-useTexture.preload(ETIQUETTE_PATH);
+const ETIQUETTE_PATH = '/images/tubelabelgoutte.webp';
+if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+    useGLTF.preload(MODEL_PATH);
+    useTexture.preload(ETIQUETTE_PATH);
+}
 
 // ─────────────────────────────────────────────────────────
 // ASSEMBLY SPIN
@@ -107,11 +109,17 @@ export function HydreCoreAssembly(props: HydreCoreAssemblyProps) {
     const { nodes, materials } = useGLTF(MODEL_PATH) as any;
     const etiquetteTexture = useTexture(ETIQUETTE_PATH);
 
+    const { gl } = useThree();
+
     useMemo(() => {
         etiquetteTexture.colorSpace = THREE.SRGBColorSpace;
         etiquetteTexture.flipY = false;
+        etiquetteTexture.minFilter = THREE.LinearFilter;
+        etiquetteTexture.magFilter = THREE.LinearFilter;
+        etiquetteTexture.generateMipmaps = false;
+        etiquetteTexture.anisotropy = gl.capabilities.getMaxAnisotropy();
         etiquetteTexture.needsUpdate = true;
-    }, [etiquetteTexture]);
+    }, [etiquetteTexture, gl]);
 
     // ── REFS ──────────────────────────────────────────────
     const assemblyRef = useRef<THREE.Group>(null);

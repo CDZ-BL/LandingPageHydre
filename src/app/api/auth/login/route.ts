@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     const parsed = LoginSchema.safeParse(body);
     if (!parsed.success) {
         return NextResponse.json(
-            { error: 'Validation error', details: parsed.error.issues },
+            { error: 'Invalid request' },
             { status: 400 }
         );
     }
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
 
     if (authError) {
         // Anti-enumeration: Never distinguish between invalid email or password
-        console.warn('[HYDRE] Login attempt failed for email:', email);
+        console.warn('[HYDRE] Login attempt failed');
         return NextResponse.json(
             { error: 'Invalid credentials' },
             { status: 401 }

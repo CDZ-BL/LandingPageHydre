@@ -2,9 +2,7 @@ import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { HeroVoid } from '@/components/sections/01_Hero3D';
 import { SystemFailure } from '@/components/sections/02_SystemFailure';
-import { TheProblem } from '@/components/sections/03_TheProblem';
-import { ThePact } from '@/components/sections/04_ThePact';
-import { TheSpecs } from '@/components/sections/05_TheSpecs';
+import { CarouselHub } from '@/components/sections/CarouselHub';
 import { Alliance } from '@/components/sections/07_Alliance';
 import { Roadmap } from '@/components/sections/09_Roadmap';
 import { TheClose } from '@/components/sections/10_TheClose';
@@ -16,27 +14,17 @@ export default function Home() {
             <Header />
 
             {/* ━━━ VIEWPORT-FIXED 3D PRODUCT OVERLAY ━━━━━━━━━━━━━━━━ */}
-            {/* Pinned to right 50%, persists through sections 1-2 */}
             <FixedProductCanvas />
 
             {/* Block 1: Architecture Hero */}
             <HeroVoid />
 
-
-
-
             {/* Block 2: System Failure (Glitch) */}
             <SystemFailure />
 
-            {/* Block 3: The Problem (Radar + Competitors) */}
-            <TheProblem />
-
-            {/* Block 4: The Pact (Value) */}
-            <ThePact />
-
-            {/* Block 5: The Specs (Product) */}
+            {/* Block 3-5: Carousel Hub (Analyse + Engagement + Formule) */}
             <section id="specs">
-                <TheSpecs />
+                <CarouselHub />
             </section>
 
             {/* Block 6: Alliance (Reciprocity + Founder Circle) */}

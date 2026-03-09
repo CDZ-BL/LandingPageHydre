@@ -152,17 +152,21 @@ export function Roadmap() {
     }, { scope: sectionRef, dependencies: [activeIndex] });
 
     return (
-        <section ref={sectionRef} className="relative py-24 md:py-32 bg-[#050505] overflow-hidden border-t border-[#111]">
+        <section ref={sectionRef} className="relative py-14 md:py-24 lg:py-32 bg-[#050505] overflow-hidden border-t border-[#111]">
 
             {/* Background Grid */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundSize: '30px 30px', backgroundImage: 'linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px)' }} />
 
             <div className="relative z-10 w-[85%] max-w-[1400px] mx-auto">
 
-                {/* Header (Simplified GSAP target to avoid Framer) */}
-                <div className="mb-12 text-center">
-                    <h2 className="font-mono text-[#00E5FF] text-sm tracking-widest mb-4 uppercase"></h2>
-                    <h3 className="font-sans text-h1 text-white font-bold tracking-widest mb-4">NOTRE PROJET</h3>
+                {/* Header */}
+                <div className="mb-12 max-w-3xl">
+                    <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block uppercase">
+                        Feuille de route
+                    </span>
+                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide leading-[1.05] mb-4">
+                        Les prochaines étapes.
+                    </h2>
                 </div>
 
                 {/* Navigation Nodes */}
@@ -200,11 +204,11 @@ export function Roadmap() {
 
                                         <div className="card-surface relative z-10 p-6 md:p-8 bg-[#050505] border border-[#111] rounded-xl transition-colors duration-300">
 
-                                            <div className="flex items-center gap-3 mb-4">
-                                                <span className={`font-mono text-xs tracking-widest px-2 py-0.5 border transition-all ${isActive ? 'border-[#00E5FF] text-[#00E5FF] bg-[#00E5FF]/10' : 'border-[#333] text-gray-500'}`}>
+                                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                                                <span className={`font-mono text-[10px] md:text-xs tracking-wider md:tracking-widest px-2 py-0.5 border transition-all ${isActive ? 'border-[#00E5FF] text-[#00E5FF] bg-[#00E5FF]/10' : 'border-[#333] text-gray-500'}`}>
                                                     {item.phase} {'//'} {item.status}
                                                 </span>
-                                                <span className="font-mono text-xs text-gray-600">{item.date}</span>
+                                                <span className="font-mono text-[10px] md:text-xs text-gray-600">{item.date}</span>
                                             </div>
 
                                             <h4 className={`font-sans font-bold tracking-tight transition-all mb-2 ${isActive ? 'text-2xl md:text-3xl text-white' : 'text-lg text-gray-500'}`}>

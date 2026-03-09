@@ -21,7 +21,7 @@ const COMPETITOR_COST: CostSegment[] = [
     { label: 'Ingrédients actifs', percent: 15, color: 'rgba(255,255,255,0.15)' },
 ];
 
-const CLEAR_COST: CostSegment[] = [
+const SMART_COST: CostSegment[] = [
     { label: 'Ingrédients actifs', percent: 55, color: '#ffffff', glow: '0 0 20px rgba(255,255,255,0.4)' },
     { label: 'Production', percent: 20, color: 'rgba(255,255,255,0.6)' },
     { label: 'R&D + Labo', percent: 15, color: 'rgba(255,255,255,0.35)' },
@@ -29,7 +29,7 @@ const CLEAR_COST: CostSegment[] = [
 ];
 
 const COMPETITOR_PRICE = 9.99;
-const CLEAR_PRICE = 5.90;
+const SMART_PRICE = 5.90;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // STACKED BAR — Horizontal cost breakdown
@@ -130,10 +130,10 @@ function PrincipleCard({
 // ═══════════════════════════════════════════════════════════════════════════
 
 export function ThePact() {
-    const savings = Math.round(((COMPETITOR_PRICE - CLEAR_PRICE) / COMPETITOR_PRICE) * 100);
+    const savings = Math.round(((COMPETITOR_PRICE - SMART_PRICE) / COMPETITOR_PRICE) * 100);
 
     return (
-        <section className="relative py-32 md:py-40 bg-void overflow-hidden">
+        <section className="relative py-16 md:py-32 lg:py-40 bg-void overflow-hidden">
             {/* Subtle grid */}
             <div
                 className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -154,23 +154,23 @@ export function ThePact() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: '-100px' }}
                     transition={{ duration: 0.8 }}
-                    className="mb-20 max-w-3xl"
+                    className="mb-10 md:mb-20 max-w-3xl"
                 >
                     <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
 
                     </span>
-                    <h2 className="font-headline text-4xl md:text-5xl lg:text-6xl text-white font-bold tracking-wider leading-[1.05] mb-6">
-                        VOUS PAYEZ LE PRODUIT.<br />
+                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide leading-[1.05] mb-6">
+                        Vous payez le produit.<br />
                         <span className="text-[#E6DCC8] italic font-light tracking-normal">Pas le bruit.</span>
                     </h2>
                     <p className="font-mono text-sm md:text-base text-white/60 leading-relaxed tracking-wide">
                         Le modèle standard est cassé — 85% du prix finance le marketing, pas vos performances.
-                        CLEAR supprime l'inutile et investit tout dans la formule.
+                        Smart supprime l'inutile et investit tout dans la formule.
                     </p>
                 </motion.div>
 
                 {/* ━━━ COST COMPARISON — Side by side ━━━ */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-24">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12 md:mb-24">
 
                     {/* COMPETITOR */}
                     <motion.div
@@ -210,7 +210,7 @@ export function ThePact() {
                         </div>
                     </motion.div>
 
-                    {/* CLEAR */}
+                    {/* SMART */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
@@ -226,8 +226,8 @@ export function ThePact() {
 
                         <div className="flex items-baseline justify-between mb-6">
                             <div>
-                                <span className="font-mono text-[10px] text-white/40 tracking-[0.2em] block mb-1">CLEAR PROTOCOLE</span>
-                                <span className="font-mono text-2xl md:text-3xl text-white tabular-nums">{CLEAR_PRICE.toFixed(2)}€</span>
+                                <span className="font-mono text-[10px] text-white/40 tracking-[0.2em] block mb-1">SMART PROTOCOLE</span>
+                                <span className="font-mono text-2xl md:text-3xl text-white tabular-nums">{SMART_PRICE.toFixed(2)}€</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#E6DCC8] animate-pulse" />
@@ -237,8 +237,8 @@ export function ThePact() {
                             </div>
                         </div>
 
-                        <CostBar segments={CLEAR_COST} delay={0.4} />
-                        <CostLegend segments={CLEAR_COST} />
+                        <CostBar segments={SMART_COST} delay={0.4} />
+                        <CostLegend segments={SMART_COST} />
 
                         {/* Callout */}
                         <div className="mt-6 pt-4 border-t border-white/[0.06]">
@@ -269,7 +269,7 @@ export function ThePact() {
                     </div>
                 </motion.div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                     <PrincipleCard
                         number="001"
                         title="DIRECT-TO-CONSUMER"
