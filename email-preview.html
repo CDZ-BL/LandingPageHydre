@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HYDRE — Email Previews</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #1a1a1a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 40px 20px;
+      color: #fff;
+    }
+    .nav {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .nav button {
+      padding: 8px 20px;
+      background: transparent;
+      border: 1px solid #444;
+      color: #aaa;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+      transition: all 0.2s;
+    }
+    .nav button.active, .nav button:hover {
+      border-color: #FF6B00;
+      color: #FF6B00;
+    }
+    .preview-label {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 16px;
+      font-family: 'Courier New', monospace;
+    }
+    .email-wrapper {
+      max-width: 640px;
+      margin: 0 auto;
+      border: 1px solid #333;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .email-client-bar {
+      background: #2a2a2a;
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      border-bottom: 1px solid #333;
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot.red { background: #FF5F57; }
+    .dot.yellow { background: #FFBD2E; }
+    .dot.green { background: #28C840; }
+    .email-meta {
+      background: #222;
+      padding: 14px 20px;
+      border-bottom: 1px solid #333;
+      font-size: 12px;
+      color: #777;
+      font-family: 'Courier New', monospace;
+    }
+    .email-meta span { color: #aaa; }
+    .email-page { display: none; }
+    .email-page.active { display: block; }
+
+    /* ── VERIFICATION EMAIL ─────────────────────── */
+    .ve-body {
+      background-color: #050505;
+      padding: 40px 20px;
+    }
+    .ve-container {
+      max-width: 600px;
+      margin: 0 auto;
+      color: #EDEDED;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    }
+    .ve-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .ve-title {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #EDEDED;
+      margin: 0 0 8px 0;
+    }
+    .ve-subtitle {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      color: #666666;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .ve-body-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: #EDEDED;
+      margin: 0 0 20px 0;
+    }
+    .ve-code-container {
+      background-color: #111111;
+      border: 1px solid #FF6B00;
+      border-radius: 4px;
+      padding: 32px;
+      margin: 32px 0;
+      text-align: center;
+    }
+    .ve-code {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: 12px;
+      color: #FF6B00;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      margin: 0;
+      line-height: 1.4;
+    }
+    .ve-expiry {
+      font-size: 12px;
+      color: #FF6B00;
+      margin: 20px 0 0 0;
+      font-weight: 500;
+    }
+    .ve-email-display {
+      font-size: 12px;
+      color: #666666;
+      margin: 24px 0 0 0;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      word-break: break-all;
+    }
+    .ve-hr {
+      border: none;
+      border-top: 1px solid #FF6B00;
+      margin: 32px 0;
+    }
+    .ve-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #666666;
+      margin-top: 32px;
+    }
+    .ve-footer p { margin: 0 0 8px 0; }
+
+    /* ── WELCOME EMAIL ─────────────────────────── */
+    .we-body {
+      background-color: #050505;
+      padding: 40px 20px;
+    }
+    .we-container {
+      max-width: 600px;
+      margin: 0 auto;
+      color: #EDEDED;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    }
+    .we-eyebrow {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 2px;
+      color: #555555;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 0 0 8px 0;
+    }
+    .we-title {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #EDEDED;
+      text-align: center;
+      margin: 0 0 40px 0;
+    }
+    .we-body-text {
+      font-size: 14px;
+      line-height: 1.8;
+      color: #AAAAAA;
+      margin: 0 0 20px 0;
+    }
+    .we-highlight {
+      background-color: #111111;
+      border-left: 2px solid #FF6B00;
+      padding: 20px 24px;
+      margin: 32px 0;
+    }
+    .we-highlight-text {
+      font-size: 13px;
+      color: #EDEDED;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .we-hr {
+      border: none;
+      border-top: 1px solid #222222;
+      margin: 32px 0;
+    }
+    .we-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #444444;
+    }
+    .we-footer p { margin: 0 0 8px 0; }
+
+    /* ── NEWSLETTER EMAIL ──────────────────────── */
+    .ne-body {
+      background-color: #050505;
+      padding: 40px 20px;
+    }
+    .ne-container {
+      max-width: 600px;
+      margin: 0 auto;
+      color: #EDEDED;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    }
+    .ne-logo {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #EDEDED;
+      text-align: center;
+      margin: 0 0 40px 0;
+    }
+    .ne-headline {
+      font-size: 32px;
+      font-weight: 700;
+      color: #EDEDED;
+      text-align: center;
+      margin: 0 0 16px 0;
+      line-height: 1.2;
+    }
+    .ne-sub {
+      font-size: 14px;
+      color: #777777;
+      text-align: center;
+      margin: 0 0 40px 0;
+      line-height: 1.6;
+    }
+    .ne-divider {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      margin: 32px 0;
+    }
+    .ne-footer {
+      text-align: center;
+      font-size: 11px;
+      color: #444444;
+    }
+    .ne-footer p { margin: 0 0 6px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="nav">
+    <button class="active" onclick="show('verification')">📧 Vérification (signup)</button>
+    <button onclick="show('welcome')">🎉 Welcome (waitlist)</button>
+    <button onclick="show('newsletter')">📰 Newsletter</button>
+  </div>
+
+  <!-- ── VERIFICATION EMAIL ──────────────────────────────── -->
+  <div id="verification" class="email-page active">
+    <p class="preview-label">Email envoyé à l'inscription — objet : "HYDRE — Vérifiez votre email"</p>
+    <div class="email-wrapper">
+      <div class="email-client-bar">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="email-meta">
+        <div><span>De :</span> contact@smarthydratation.fr</div>
+        <div style="margin-top:4px"><span>À :</span> utilisateur@exemple.com</div>
+        <div style="margin-top:4px"><span>Objet :</span> HYDRE — Vérifiez votre email</div>
+        <div style="margin-top:4px"><span>Aperçu :</span> Votre code de vérification HYDRE</div>
+      </div>
+      <div class="ve-body">
+        <div class="ve-container">
+          <div class="ve-header">
+            <p class="ve-title">HYDRE</p>
+            <p class="ve-subtitle">SMART NUTRITION — VÉRIFICATION</p>
+          </div>
+          <div>
+            <p class="ve-body-text">Votre code de vérification :</p>
+            <div class="ve-code-container">
+              <p class="ve-code">4  8  7  2  3  1</p>
+              <p class="ve-expiry">Ce code expire dans 10 minutes.</p>
+              <p class="ve-email-display">utilisateur@exemple.com</p>
+            </div>
+            <p class="ve-body-text">
+              Si vous n'avez pas demandé ce code, veuillez ignorer cet e-mail.
+            </p>
+          </div>
+          <hr class="ve-hr" />
+          <div class="ve-footer">
+            <p>HYDRE — Ne partagez jamais ce code.</p>
+            <p>© 2026 SMART NUTRITION. Tous droits réservés.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WELCOME EMAIL ───────────────────────────────────── -->
+  <div id="welcome" class="email-page">
+    <p class="preview-label">Email envoyé à l'inscription waitlist — objet : "Bienvenue dans l'Alliance HYDRE"</p>
+    <div class="email-wrapper">
+      <div class="email-client-bar">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="email-meta">
+        <div><span>De :</span> contact@smarthydratation.fr</div>
+        <div style="margin-top:4px"><span>À :</span> utilisateur@exemple.com</div>
+        <div style="margin-top:4px"><span>Objet :</span> Bienvenue dans l'Alliance HYDRE</div>
+      </div>
+      <div class="we-body">
+        <div class="we-container">
+          <p class="we-eyebrow">HYDRE — SMART NUTRITION — BATCH 001</p>
+          <p class="we-title">Bienvenue dans l'Alliance.</p>
+          <p class="we-body-text">
+            Vous faites maintenant partie d'un groupe restreint de personnes qui ont rejoint l'Alliance HYDRE avant le lancement officiel.
+          </p>
+          <p class="we-body-text">
+            Votre place est réservée. Vous serez parmi les premiers à accéder au produit.
+          </p>
+          <div class="we-highlight">
+            <p class="we-highlight-text">→ Accès prioritaire garanti<br/>→ Tarif fondateur réservé<br/>→ Notifications de lancement en avant-première</p>
+          </div>
+          <p class="we-body-text">
+            Pour vous. Pas pour le marketing.
+          </p>
+          <hr class="we-hr" />
+          <div class="we-footer">
+            <p>HYDRE — L'hydratation épurée.</p>
+            <p>© 2026 SMART NUTRITION. Tous droits réservés.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── NEWSLETTER EMAIL ────────────────────────────────── -->
+  <div id="newsletter" class="email-page">
+    <p class="preview-label">Email envoyé à l'inscription newsletter — objet : "Inscription confirmée — HYDRE"</p>
+    <div class="email-wrapper">
+      <div class="email-client-bar">
+        <div class="dot red"></div>
+        <div class="dot yellow"></div>
+        <div class="dot green"></div>
+      </div>
+      <div class="email-meta">
+        <div><span>De :</span> contact@smarthydratation.fr</div>
+        <div style="margin-top:4px"><span>À :</span> utilisateur@exemple.com</div>
+        <div style="margin-top:4px"><span>Objet :</span> Inscription confirmée — HYDRE</div>
+      </div>
+      <div class="ne-body">
+        <div class="ne-container">
+          <p class="ne-logo">HYDRE</p>
+          <p class="ne-headline">Connexion établie.</p>
+          <p class="ne-sub">Vous recevrez nos transmissions directement.</p>
+          <hr class="ne-divider" />
+          <div class="ne-footer">
+            <p>HYDRE — L'hydratation épurée.</p>
+            <p>© 2026 SMART NUTRITION. Tous droits réservés.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function show(id) {
+      document.querySelectorAll('.email-page').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
