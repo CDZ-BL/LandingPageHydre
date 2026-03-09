@@ -15,6 +15,7 @@ import {
     NewsletterUnsubscribeSchema,
 } from '@/lib/validations/newsletter';
 import { NewsletterConfirmation } from '@/emails/NewsletterConfirmation';
+import { render } from '@react-email/components';
 
 const PG_UNIQUE_VIOLATION = '23505';
 
@@ -64,11 +65,12 @@ export async function POST(request: NextRequest) {
     // Confirmation email (non-blocking)
     try {
         const resend = getResend();
+        const html = await render(NewsletterConfirmation({ email }));
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
             subject: 'Inscription confirmée — HYDRE',
-            react: NewsletterConfirmation({ email }),
+            html,
         });
     } catch (emailError) {
         console.error('[HYDRE] Newsletter confirmation email failed:', emailError);

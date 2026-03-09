@@ -15,6 +15,7 @@ import { getServerSupabase } from '@/lib/supabase';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { WaitlistSchema } from '@/lib/validations/waitlist';
 import { WelcomeEmail } from '@/emails/WelcomeEmail';
+import { render } from '@react-email/components';
 
 /** Postgres unique_violation error code */
 const PG_UNIQUE_VIOLATION = '23505';
@@ -67,11 +68,12 @@ export async function POST(request: NextRequest) {
     // ── 4. SEND WELCOME EMAIL ───────────────────────────────
     try {
         const resend = getResend();
+        const html = await render(WelcomeEmail({ email }));
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
             subject: 'Bienvenue dans l\'Alliance HYDRE',
-            react: WelcomeEmail({ email }),
+            html,
         });
     } catch (emailError) {
         // Non-blocking: email failure should not break the waitlist flow

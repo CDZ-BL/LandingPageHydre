@@ -17,6 +17,7 @@ import { getServerSupabase } from '@/lib/supabase';
 import { getResend, FROM_EMAIL } from '@/lib/resend';
 import { ResendCodeSchema } from '@/lib/validations/auth';
 import { VerificationEmail } from '@/emails/VerificationEmail';
+import { render } from '@react-email/components';
 import { randomInt } from 'crypto';
 
 export async function POST(request: NextRequest) {
@@ -122,14 +123,12 @@ export async function POST(request: NextRequest) {
     // ── 7. SEND VERIFICATION EMAIL ───────────────────────────
     try {
         const resend = getResend();
+        const html = await render(VerificationEmail({ email, code: verificationCode }));
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
-            subject: 'HYDRE — Your Verification Code',
-            react: VerificationEmail({
-                email,
-                code: verificationCode,
-            }),
+            subject: 'HYDRE — Votre code de vérification',
+            html,
         });
     } catch (emailError) {
         // Non-blocking: email failure should not break the flow
