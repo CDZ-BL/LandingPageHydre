@@ -421,12 +421,42 @@ export function AuthModal() {
 					}));
 					verificationInputRefs.current[0]?.focus();
 				} else {
-					// Fetch user profile
-					const profileResponse = await fetch('/api/account/stats');
-					const userProfile = await profileResponse.json();
+					// Email verified — now auto-login with stored credentials
+					// to get a session token, then fetch profile
+					const loginResponse = await fetch('/api/auth/login', {
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({
+							email: pendingVerificationEmail,
+							password: formState.password,
+						}),
+					});
 
-					if (profileResponse.ok) {
-						setUser(userProfile);
+					const loginData = await loginResponse.json();
+
+					if (loginResponse.ok && loginData.session?.access_token) {
+						// Store token for future authenticated requests
+						localStorage.setItem('hydre_auth_token', loginData.session.access_token);
+
+						// Fetch full profile with the fresh token
+						const profileResponse = await fetch('/api/account/stats', {
+							headers: {
+								Authorization: `Bearer ${loginData.session.access_token}`,
+							},
+						});
+						const statsData = await profileResponse.json();
+
+						if (profileResponse.ok) {
+							setUser({
+								id: statsData.profile.id,
+								email: statsData.profile.email,
+								displayName: statsData.profile.displayName,
+								emailVerified: statsData.profile.emailVerified,
+								referralCode: statsData.profile.referralCode,
+								founderPointsTotal: statsData.profile.founderPointsTotal,
+								walletBalanceCents: statsData.wallet?.balanceCents ?? 0,
+							});
+						}
 					}
 
 					handleClose();
@@ -439,7 +469,7 @@ export function AuthModal() {
 				setLoading(false);
 			}
 		},
-		[formState.verificationCodes, pendingVerificationEmail, handleClose, setUser]
+		[formState.verificationCodes, formState.password, pendingVerificationEmail, handleClose, setUser]
 	);
 
 	const handleResendCode = useCallback(async () => {
