@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Raleway, JetBrains_Mono } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { LenisProvider } from '@/components/providers/LenisProvider';
+import { AuthRehydrator } from '@/components/providers/AuthRehydrator';
 import { AuthModal } from '@/components/ui/AuthModal';
 import './globals.css';
 
@@ -53,6 +54,7 @@ export default function RootLayout({
         <html lang="fr" className={`${instrumentSans.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
             <body className="antialiased bg-obsidian text-[#D9D9D9]">
                 <LenisProvider>
+                    <AuthRehydrator />
                     {children}
                     <AuthModal />
                 </LenisProvider>
