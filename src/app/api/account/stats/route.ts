@@ -143,13 +143,16 @@ export async function GET(request: NextRequest) {
     const profile = profileRes.data;
 
     // Transform votes response
-    const votes = votesRes.data?.map((vote: VoteRow) => ({
-      campaignId: vote.campaign_id,
-      campaignTitle: vote.vote_campaigns[0]?.title ?? '',
-      selectedOption: vote.selected_option,
-      votedAt: vote.voted_at,
-      isActive: vote.vote_campaigns[0]?.is_active ?? false,
-    })) || [];
+    const votes = votesRes.data?.map((vote: VoteRow) => {
+      const campaign = Array.isArray(vote.vote_campaigns) ? vote.vote_campaigns[0] : vote.vote_campaigns;
+      return {
+        campaignId: vote.campaign_id,
+        campaignTitle: campaign?.title ?? '',
+        selectedOption: vote.selected_option,
+        votedAt: vote.voted_at,
+        isActive: campaign?.is_active ?? false,
+      };
+    }) || [];
 
     // Transform referrals
     const referralsList = referralsRes.data?.map((ref: ReferralRow) => ({
@@ -159,9 +162,9 @@ export async function GET(request: NextRequest) {
     })) || [];
 
     // Calculate referral points from founder_points for accuracy
-    const referralPoints = founderPointsRes.data
-      ?.filter((p: FounderPointRow) => p.reason === 'referral')
-      .reduce((sum: number, p: FounderPointRow) => sum + p.amount, 0) ?? 0;
+    const referralPoints = (founderPointsRes.data || [])
+      .filter((p: FounderPointRow) => p.reason === 'referral')
+      .reduce((sum: number, p: FounderPointRow) => sum + p.amount, 0);
 
     // Transform founder points
     const points = founderPointsRes.data?.map((point: FounderPointRow) => ({
