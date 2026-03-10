@@ -387,7 +387,14 @@ export function AuthModal() {
 					...prev,
 					verificationCodes: ['', '', '', '', '', ''],
 				}));
-				setResendTimer(60);
+				// If Resend failed to deliver, unlock resend button immediately
+				// so the user does not have to wait 60s before retrying.
+				if (data.emailSent === false) {
+					setResendTimer(0);
+					setError({ message: 'Email non reçu ? Cliquez sur "Renvoyer le code".' });
+				} else {
+					setResendTimer(60);
+				}
 			}
 		} catch (err) {
 			setError({

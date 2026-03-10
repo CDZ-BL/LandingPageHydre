@@ -1,12 +1,13 @@
 /**
  * Auth Signup — POST /api/auth/signup
- * V2.0.0-HYDRE Auth System
+ * V2.1.0-HYDRE Auth System
  *
  * SECURITY PIPELINE:
  * Rate Limit → Zod Validation → Supabase Auth (USER_CREATE) →
  * Generate Verification Code → Verify Code Insert → Resend Email
  *
- * Anti-enumeration: Already-registered users return 200 OK silently.
+ * Anti-enumeration: Already-registered users silently receive a new code
+ * (if unverified) or a silent 200 (if already verified). No enumeration signal.
  * Email verification is required before account activation.
  */
 
@@ -21,6 +22,52 @@ import { randomInt } from 'crypto';
 
 /** Supabase auth error for user already registered */
 const AUTH_USER_ALREADY_EXISTS = 'user_already_exists';
+
+/**
+ * Generates a fresh verification code, invalidates old ones, and sends the
+ * email. Returns true if email was sent successfully, false otherwise.
+ */
+async function sendVerificationCode(
+    userId: string,
+    email: string
+): Promise<boolean> {
+    const supabase = getServerSupabase();
+
+    // Invalidate any existing unused codes
+    await supabase
+        .from('verification_codes')
+        .update({ used_at: new Date().toISOString() })
+        .eq('user_id', userId)
+        .is('used_at', null);
+
+    // Generate new code
+    const code = String(randomInt(100000, 1000000));
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+    const { error: insertError } = await supabase
+        .from('verification_codes')
+        .insert({ user_id: userId, code, expires_at: expiresAt });
+
+    if (insertError) {
+        console.error('[HYDRE] Code insert error:', insertError);
+        return false;
+    }
+
+    try {
+        const resend = getResend();
+        const html = await render(VerificationEmail({ email, code }));
+        await resend.emails.send({
+            from: FROM_EMAIL,
+            to: email,
+            subject: 'HYDRE — Vérifiez votre email',
+            html,
+        });
+        return true;
+    } catch (emailError) {
+        console.error('[HYDRE] Verification email failed:', emailError);
+        return false;
+    }
+}
 
 export async function POST(request: NextRequest) {
     // ── 1. RATE LIMIT ───────────────────────────────────────
@@ -47,9 +94,9 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, password, referralCode } = parsed.data;
+    const supabase = getServerSupabase();
 
     // ── 3. CREATE AUTH USER (NO AUTO-CONFIRM) ────────────────
-    const supabase = getServerSupabase();
     const { data: authData, error: authError } =
         await supabase.auth.admin.createUser({
             email,
@@ -58,12 +105,45 @@ export async function POST(request: NextRequest) {
         });
 
     if (authError) {
-        // Anti-enumeration: user already exists → silent 200
+        // ── 3a. USER ALREADY EXISTS ──────────────────────────
+        // Instead of silent 200 (no email), look up the existing user and:
+        // - If unverified: send them a fresh code
+        // - If already verified: return silent 200 (they should log in)
         if (
             authError.message.includes(AUTH_USER_ALREADY_EXISTS) ||
             authError.message.includes('already been registered')
         ) {
-            return NextResponse.json({ success: true }, { status: 200 });
+            try {
+                const { data: existingUsers } = await supabase.auth.admin.listUsers();
+                const existingUser = existingUsers?.users.find((u) => u.email === email);
+
+                if (!existingUser) {
+                    // Anti-enumeration: treat as success
+                    return NextResponse.json({ success: true }, { status: 200 });
+                }
+
+                // Check if already verified
+                const { data: profile } = await supabase
+                    .from('profiles')
+                    .select('email_verified')
+                    .eq('id', existingUser.id)
+                    .single();
+
+                if (profile?.email_verified) {
+                    // Already verified → silent 200, they should log in
+                    return NextResponse.json({ success: true }, { status: 200 });
+                }
+
+                // Unverified → send fresh code
+                const emailSent = await sendVerificationCode(existingUser.id, email);
+                return NextResponse.json(
+                    { success: true, emailSent },
+                    { status: 200 }
+                );
+            } catch {
+                // Fallback: silent 200 (anti-enumeration)
+                return NextResponse.json({ success: true }, { status: 200 });
+            }
         }
 
         console.error('[HYDRE] Auth user creation error:', authError);
@@ -90,50 +170,15 @@ export async function POST(request: NextRequest) {
                 user_metadata: { pending_referral: referralCode },
             });
         } catch (metaError) {
-            // Non-blocking: metadata update failure should not break signup
             console.warn('[HYDRE] Failed to store referral code:', metaError);
         }
     }
 
-    // ── 5. GENERATE 6-DIGIT VERIFICATION CODE ────────────────
-    // crypto.randomInt is cryptographically secure — never use Math.random() for secrets
-    const verificationCode = String(randomInt(100000, 1000000));
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-
-    // ── 6. INSERT VERIFICATION CODE ──────────────────────────
-    const { error: codeError } = await supabase
-        .from('verification_codes')
-        .insert({
-            user_id: userId,
-            code: verificationCode,
-            expires_at: expiresAt,
-        });
-
-    if (codeError) {
-        console.error('[HYDRE] Verification code insert error:', codeError);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
-    }
-
-    // ── 7. SEND VERIFICATION EMAIL ───────────────────────────
-    try {
-        const resend = getResend();
-        const html = await render(VerificationEmail({ email, code: verificationCode }));
-        await resend.emails.send({
-            from: FROM_EMAIL,
-            to: email,
-            subject: 'HYDRE — Vérifiez votre email',
-            html,
-        });
-    } catch (emailError) {
-        // Non-blocking: email failure should not break the signup flow
-        console.error('[HYDRE] Verification email failed:', emailError);
-    }
+    // ── 5. SEND VERIFICATION CODE ─────────────────────────────
+    const emailSent = await sendVerificationCode(userId, email);
 
     return NextResponse.json(
-        { success: true, message: 'Verification code sent' },
+        { success: true, emailSent },
         { status: 201 }
     );
 }
