@@ -48,6 +48,9 @@
   --scrollbar-thumb: #6B6B6B;
   --scrollbar-thumb-hover: #9E9E9E;
 
+  /* === ACCENT OVERRIDES === */
+  --vitamin-accent: #CCFF00;
+
   /* === LEGACY COMPAT === */
   --void: #050505;
   --void-light: #111111;
@@ -111,6 +114,8 @@
   --scrollbar-bg: #F0EAE0;
   --scrollbar-thumb: #A09488;
   --scrollbar-thumb-hover: #7A6E62;
+
+  --vitamin-accent: #4A8000;
 
   --void: #F0EAE0;
   --void-light: #E8E0D4;

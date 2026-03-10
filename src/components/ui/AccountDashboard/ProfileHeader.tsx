@@ -99,7 +99,7 @@ export const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
                 )}
               >
                 <span className="font-mono text-sm text-white/80">
-                  HYDRE-{profile.referralCode.toUpperCase()}
+                  SMART-{profile.referralCode.toUpperCase()}
                 </span>
                 <svg
                   className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors"

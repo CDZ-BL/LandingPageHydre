@@ -119,12 +119,12 @@ export function VerificationEmail({ email, code }: VerificationEmailProps) {
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Preview>Votre code de vérification HYDRE</Preview>
+      <Preview>Votre code de vérification SMART NUTRITION</Preview>
       <Body style={containerStyle}>
         <Container style={contentStyle}>
           {/* Header */}
           <Section style={headerStyle}>
-            <Text style={titleStyle}>HYDRE</Text>
+            <Text style={titleStyle}>SMART NUTRITION</Text>
             <Text style={subtitleStyle}>SMART NUTRITION — VÉRIFICATION</Text>
           </Section>
 
@@ -151,7 +151,7 @@ export function VerificationEmail({ email, code }: VerificationEmailProps) {
           {/* Footer */}
           <Section style={footerStyle}>
             <Text style={footerTextStyle}>
-              HYDRE — Ne partagez jamais ce code.
+              SMART NUTRITION — Ne partagez jamais ce code.
             </Text>
             <Text style={footerTextStyle}>
               © {currentYear} SMART NUTRITION. Tous droits réservés.

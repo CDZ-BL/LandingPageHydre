@@ -27,4 +27,4 @@ export function getResend(): Resend {
 
 /** Sender address — defaults to Resend sandbox */
 export const FROM_EMAIL =
-    process.env.RESEND_FROM_EMAIL ?? 'onboarding@resend.dev';
+    process.env.RESEND_FROM_EMAIL ?? 'Smart Nutrition <onboarding@resend.dev>';

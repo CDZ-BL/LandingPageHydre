@@ -61,7 +61,7 @@ async function sendVerificationCode(
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
-            subject: 'HYDRE — Vérifiez votre email',
+            subject: 'SMART NUTRITION — Vérifiez votre email',
             html,
         });
         return true;

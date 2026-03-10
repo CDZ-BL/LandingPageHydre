@@ -239,13 +239,13 @@ export function TheSpecs() {
                         <div className="h-4" />
 
                         {/* Vitamins */}
-                        <CategoryHeader label="Vitamines & minéraux" color="#CCFF00" />
+                        <CategoryHeader label="Vitamines & minéraux" color="var(--vitamin-accent)" />
                         {VITAMINS.map((ingredient, i) => (
                             <IngredientRow
                                 key={ingredient.id}
                                 ingredient={ingredient}
                                 index={i + ELECTROLYTES.length}
-                                accentColor="#CCFF00"
+                                accentColor="var(--vitamin-accent)"
                             />
                         ))}
 

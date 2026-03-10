@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
-            subject: 'Inscription confirmée — HYDRE',
+            subject: 'Inscription confirmée — SMART NUTRITION',
             html,
         });
     } catch (emailError) {

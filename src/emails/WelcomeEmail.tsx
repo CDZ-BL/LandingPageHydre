@@ -26,12 +26,12 @@ export function WelcomeEmail({ email }: WelcomeEmailProps) {
     return (
         <Html>
             <Head />
-            <Preview>Bienvenue dans l'Alliance HYDRE</Preview>
+            <Preview>Bienvenue l'Alliance SMART NUTRITION</Preview>
             <Body style={bodyStyle}>
                 <Container style={containerStyle}>
                     <Section style={headerStyle}>
-                        <Text style={logoStyle}>HYDRE</Text>
-                        <Text style={batchStyle}>SMART NUTRITION — BATCH 001</Text>
+                        <Text style={logoStyle}>SMART NUTRITION</Text>
+                        <Text style={batchStyle}>BATCH 001</Text>
                     </Section>
 
                     <Hr style={hrStyle} />
@@ -42,7 +42,7 @@ export function WelcomeEmail({ email }: WelcomeEmailProps) {
 
                     <Text style={textStyle}>
                         Vous êtes désormais sur la liste d'accès prioritaire.
-                        Nous vous contacterons dès que HYDRE sera disponible.
+                        Nous vous contacterons dès que SMART NUTRITION sera disponible.
                     </Text>
 
                     <Text style={metaStyle}>
@@ -52,7 +52,7 @@ export function WelcomeEmail({ email }: WelcomeEmailProps) {
                     <Hr style={hrStyle} />
 
                     <Text style={footerStyle}>
-                        HYDRE — L'hydratation épurée.
+                        SMART NUTRITION — L'hydratation épurée.
                         <br />
                         Pour vous. Pas pour le marketing.
                     </Text>

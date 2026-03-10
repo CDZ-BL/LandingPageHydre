@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
-            subject: 'HYDRE — Votre code de vérification',
+            subject: 'SMART NUTRITION — Votre code de vérification',
             html,
         });
     } catch (emailError) {

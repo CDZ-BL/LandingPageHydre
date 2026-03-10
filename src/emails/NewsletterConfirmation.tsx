@@ -23,11 +23,11 @@ export function NewsletterConfirmation({ email }: NewsletterConfirmationProps) {
     return (
         <Html>
             <Head />
-            <Preview>Inscription confirmée — HYDRE Newsletter</Preview>
+            <Preview>Inscription confirmée — SMART NUTRITION Newsletter</Preview>
             <Body style={bodyStyle}>
                 <Container style={containerStyle}>
                     <Section style={headerStyle}>
-                        <Text style={logoStyle}>HYDRE</Text>
+                        <Text style={logoStyle}>SMART NUTRITION</Text>
                         <Text style={batchStyle}>NEURAL SYNC // NEWSLETTER</Text>
                     </Section>
 
@@ -49,7 +49,7 @@ export function NewsletterConfirmation({ email }: NewsletterConfirmationProps) {
                     <Hr style={hrStyle} />
 
                     <Text style={footerStyle}>
-                        HYDRE — L'hydratation épurée.
+                        SMART NUTRITION — L'hydratation épurée.
                     </Text>
                 </Container>
             </Body>

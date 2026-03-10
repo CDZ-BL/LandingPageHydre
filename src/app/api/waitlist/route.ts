@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
         await resend.emails.send({
             from: FROM_EMAIL,
             to: email,
-            subject: 'Bienvenue dans l\'Alliance HYDRE',
+            subject: 'Bienvenue dans l\'Alliance SMART NUTRITION',
             html,
         });
     } catch (emailError) {

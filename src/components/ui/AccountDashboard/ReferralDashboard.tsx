@@ -104,7 +104,7 @@ export const ReferralDashboard = ({
             )}
           >
             <span className="font-mono text-[11px] text-white/70 truncate">
-              hydre.app/?ref={referralCode.toUpperCase()}
+              smartnutrition.fr/?ref={referralCode.toUpperCase()}
             </span>
             <svg
               className="w-4 h-4 text-white/40 group-hover:text-white/60 transition-colors flex-shrink-0"

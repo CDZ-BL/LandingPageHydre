@@ -916,7 +916,7 @@ export function AuthModal() {
 											</label>
 											<input
 												type="text"
-												placeholder="HYDRE-XXX"
+												placeholder="SMART-XXX"
 												value={formState.referralCode}
 												onChange={(e) =>
 													handleInputChange(
