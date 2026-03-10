@@ -116,25 +116,22 @@ export async function POST(request: NextRequest) {
             authError.message.includes('already been registered')
         ) {
             try {
-                // Indexed lookup — profiles.email is unique-indexed
-                const { data: existingProfile } = await supabase
-                    .from('profiles')
-                    .select('id, email_verified')
-                    .eq('email', email)
-                    .single();
+                // Use admin API (requires SERVICE_ROLE key) since email is not on profiles
+                const { data: userList } = await supabase.auth.admin.listUsers();
+                const existingUser = userList.users.find(u => u.email === email);
 
-                if (!existingProfile) {
+                if (!existingUser) {
                     // Anti-enumeration: treat as success
                     return NextResponse.json({ success: true }, { status: 200 });
                 }
 
-                if (existingProfile.email_verified) {
+                if (existingUser.email_confirmed_at) {
                     // Already verified → silent 200, they should log in
                     return NextResponse.json({ success: true }, { status: 200 });
                 }
 
-                // Unverified → send fresh code
-                const emailSent = await sendVerificationCode(existingProfile.id, email);
+                // Unverified → check if they have a profile, if not create one via trigger, but we just send code
+                const emailSent = await sendVerificationCode(existingUser.id, email);
                 return NextResponse.json(
                     { success: true, emailSent },
                     { status: 200 }

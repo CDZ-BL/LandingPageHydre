@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
       // 1. Fetch user profile
       supabase
         .from('profiles')
-        .select('id, email, display_name, referral_code, email_verified, founder_points_total, created_at')
+        .select('id, display_name, referral_code, email_verified, founder_points_total, created_at')
         .eq('id', userId)
         .single(),
 
@@ -181,7 +181,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       profile: {
         id: profile.id,
-        email: profile.email,
+        email: user.email, // fallback to auth user's email since profiles.email doesn't exist
         displayName: profile.display_name,
         referralCode: profile.referral_code,
         emailVerified: profile.email_verified,

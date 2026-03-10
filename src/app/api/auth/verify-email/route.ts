@@ -46,24 +46,21 @@ export async function POST(request: NextRequest) {
     const supabase = getServerSupabase();
 
     try {
-        // ── 3. RESOLVE USER BY EMAIL (indexed O(1)) ─────────
-        // Must resolve user_id first to scope the code lookup.
-        // This eliminates the need for a getUserById() roundtrip
-        // and prevents any cross-user code collision edge cases.
-        const { data: userProfile } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('email', email)
-            .single();
+        // ── 3. RESOLVE USER BY EMAIL (O(1)) ─────────
+        // We look up the auth user directly
+        const { data: userList, error: listError } = await supabase.auth.admin.listUsers();
+        if (listError) throw listError;
 
-        if (!userProfile) {
+        const authTarget = userList.users.find((u) => u.email === email);
+
+        if (!authTarget) {
             return NextResponse.json(
                 { error: INVALID_CODE_ERROR },
                 { status: 400 }
             );
         }
 
-        const userId = userProfile.id as string;
+        const userId = authTarget.id;
 
         // ── 4. LOOK UP ACTIVE CODE (scoped by user_id + code) ─
         // Filtering by BOTH user_id AND code eliminates any

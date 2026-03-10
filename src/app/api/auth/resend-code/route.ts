@@ -52,30 +52,23 @@ export async function POST(request: NextRequest) {
     let userId: string | null = null;
 
     try {
-        const { data: profileData, error: profileError } = await supabase
-            .from('profiles')
-            .select('id')
-            .eq('email', email)
-            .maybeSingle();
-
+        const { data: userList, error: profileError } = await supabase.auth.admin.listUsers();
+        
         if (profileError) {
             console.error('[HYDRE] Profile lookup error:', profileError);
-            // Silently return success (anti-enumeration)
-            return NextResponse.json(
-                { success: true, message: 'If an account exists, a new code has been sent' },
-                { status: 200 }
-            );
+            throw profileError;
         }
 
-        if (!profileData) {
+        const existingUser = userList.users.find(u => u.email === email);
+        if (existingUser) {
+            userId = existingUser.id;
+        } else {
             // Anti-enumeration: user doesn’t exist, return success silently
             return NextResponse.json(
                 { success: true, message: 'If an account exists, a new code has been sent' },
                 { status: 200 }
             );
         }
-
-        userId = profileData.id;
     } catch (err) {
         console.error('[HYDRE] User lookup exception:', err);
         return NextResponse.json(
