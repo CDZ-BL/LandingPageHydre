@@ -46,6 +46,35 @@ export function getServerSupabase(): SupabaseClient {
 }
 
 // ─────────────────────────────────────────────────────────────
+// SERVER ANON CLIENT — For signInWithPassword in API routes.
+// signInWithPassword must use the anon key, not the service role.
+// ─────────────────────────────────────────────────────────────
+let serverAnonClient: SupabaseClient | null = null;
+
+export function getServerAnonSupabase(): SupabaseClient {
+    if (serverAnonClient) return serverAnonClient;
+
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!url || !key) {
+        throw new Error(
+            '[HYDRE] Missing SUPABASE env vars: ' +
+            'NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY'
+        );
+    }
+
+    serverAnonClient = createClient(url, key, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+        },
+    });
+
+    return serverAnonClient;
+}
+
+// ─────────────────────────────────────────────────────────────
 // BROWSER CLIENT — RLS-enforced, user-scoped
 // Singleton for the client-side Auth flow.
 // ─────────────────────────────────────────────────────────────

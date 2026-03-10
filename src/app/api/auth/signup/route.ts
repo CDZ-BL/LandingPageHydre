@@ -1,14 +1,16 @@
 /**
  * Auth Signup — POST /api/auth/signup
- * V2.1.0-HYDRE Auth System
+ * V2.2.0-HYDRE Auth System
  *
  * SECURITY PIPELINE:
- * Rate Limit → Zod Validation → Supabase Auth (USER_CREATE) →
+ * Rate Limit (auth) → Zod Validation → Supabase Auth (USER_CREATE) →
  * Generate Verification Code → Verify Code Insert → Resend Email
  *
  * Anti-enumeration: Already-registered users silently receive a new code
  * (if unverified) or a silent 200 (if already verified). No enumeration signal.
  * Email verification is required before account activation.
+ *
+ * FIX: Uses getUserByEmail() instead of listUsers() to avoid O(N) full-table scan.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
@@ -70,8 +72,8 @@ async function sendVerificationCode(
 }
 
 export async function POST(request: NextRequest) {
-    // ── 1. RATE LIMIT ───────────────────────────────────────
-    const rateLimitResponse = await applyRateLimit(request);
+    // ── 1. RATE LIMIT (auth tier — strictest: 3 req/IP/60s) ──
+    const rateLimitResponse = await applyRateLimit(request, 'auth');
     if (rateLimitResponse) return rateLimitResponse;
 
     // ── 2. VALIDATE INPUT ───────────────────────────────────
@@ -106,7 +108,7 @@ export async function POST(request: NextRequest) {
 
     if (authError) {
         // ── 3a. USER ALREADY EXISTS ──────────────────────────
-        // Instead of silent 200 (no email), look up the existing user and:
+        // Use profiles table lookup (indexed by email) — O(1), not listUsers() full scan.
         // - If unverified: send them a fresh code
         // - If already verified: return silent 200 (they should log in)
         if (
@@ -114,28 +116,25 @@ export async function POST(request: NextRequest) {
             authError.message.includes('already been registered')
         ) {
             try {
-                const { data: existingUsers } = await supabase.auth.admin.listUsers();
-                const existingUser = existingUsers?.users.find((u) => u.email === email);
+                // Indexed lookup — profiles.email is unique-indexed
+                const { data: existingProfile } = await supabase
+                    .from('profiles')
+                    .select('id, email_verified')
+                    .eq('email', email)
+                    .single();
 
-                if (!existingUser) {
+                if (!existingProfile) {
                     // Anti-enumeration: treat as success
                     return NextResponse.json({ success: true }, { status: 200 });
                 }
 
-                // Check if already verified
-                const { data: profile } = await supabase
-                    .from('profiles')
-                    .select('email_verified')
-                    .eq('id', existingUser.id)
-                    .single();
-
-                if (profile?.email_verified) {
+                if (existingProfile.email_verified) {
                     // Already verified → silent 200, they should log in
                     return NextResponse.json({ success: true }, { status: 200 });
                 }
 
                 // Unverified → send fresh code
-                const emailSent = await sendVerificationCode(existingUser.id, email);
+                const emailSent = await sendVerificationCode(existingProfile.id, email);
                 return NextResponse.json(
                     { success: true, emailSent },
                     { status: 200 }

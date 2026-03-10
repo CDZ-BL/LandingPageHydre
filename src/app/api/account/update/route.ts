@@ -12,9 +12,8 @@
 
 import { NextResponse, type NextRequest } from 'next/server';
 import { applyRateLimit } from '@/lib/rate-limit';
-import { getServerSupabase } from '@/lib/supabase';
+import { getServerSupabase, getServerAnonSupabase } from '@/lib/supabase';
 import { UpdateProfileSchema } from '@/lib/validations/auth';
-import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
     // ── 1. RATE LIMIT ───────────────────────────────────────
@@ -97,11 +96,9 @@ export async function POST(request: NextRequest) {
 
         // ── 5. CHANGE PASSWORD ──────────────────────────────
         if (newPassword && currentPassword) {
-            // Verify current password by attempting signIn
-            const verifyClient = createClient(
-                process.env.NEXT_PUBLIC_SUPABASE_URL!,
-                process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-            );
+            // Verify current password using the anon client singleton.
+            // signInWithPassword validates credentials without permanently mutating state.
+            const verifyClient = getServerAnonSupabase();
 
             const { error: verifyError } = await verifyClient.auth.signInWithPassword({
                 email: user.email!,

@@ -287,7 +287,7 @@ export function AuthModal() {
 					setResendTimer(60);
 				} else {
 					setError({
-						message: data.message || 'Erreur de connexion',
+						message: data.error || data.message || 'Erreur de connexion',
 					});
 				}
 			} else {
@@ -377,7 +377,7 @@ export function AuthModal() {
 
 			if (!response.ok) {
 				setError({
-					message: data.message || 'Erreur lors de l\'inscription',
+					message: data.error || data.message || 'Erreur lors de l\'inscription',
 				});
 			} else {
 				setPendingVerificationEmail(formState.email);
@@ -437,7 +437,7 @@ export function AuthModal() {
 
 				if (!response.ok) {
 					setError({
-						message: data.message || 'Code invalide',
+						message: data.error || data.message || 'Code invalide',
 					});
 					setFormState((prev) => ({
 						...prev,
@@ -511,7 +511,7 @@ export function AuthModal() {
 			if (!response.ok) {
 				const data = await response.json();
 				setError({
-					message: data.message || 'Erreur lors de l\'envoi du code',
+					message: data.error || data.message || 'Erreur lors de l\'envoi du code',
 				});
 			} else {
 				setResendTimer(60);

@@ -2,15 +2,16 @@
  * Rate Limiter — Upstash Redis Sliding Window
  * V4.0.0-HYDRE-APEX Compliant
  *
- * SECURITY:
- * ┌─────────────────────────────────────────────────────────┐
- * │  Algorithm: Sliding Window (accurate, no burst spikes)  │
- * │  Limit:     3 requests per IP per 60-second window      │
- * │  Breach:    429 Too Many Requests                       │
- * └─────────────────────────────────────────────────────────┘
+ * SECURITY — Per-route tiered buckets:
+ * ┌──────────────────────────────────────────────────────────────┐
+ * │  AUTH   (auth:*)        →  3  req / IP / 60s  (strictest)   │
+ * │  MUTATION (waitlist, …) →  5  req / IP / 60s               │
+ * │  READ   (stats, wallet) →  20 req / IP / 60s               │
+ * │  Breach → 429 Too Many Requests                              │
+ * └──────────────────────────────────────────────────────────────┘
  *
- * Applied to all mutation endpoints (/api/waitlist,
- * /api/newsletter, /api/votes POST).
+ * Using separate Redis key prefixes per tier so one endpoint
+ * cannot consume another's budget.
  */
 
 import { Ratelimit } from '@upstash/ratelimit';
@@ -19,13 +20,16 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // ─────────────────────────────────────────────────────────────
-// RATE LIMITER INSTANCE — Module-scope singleton
+// Tier types
 // ─────────────────────────────────────────────────────────────
-let rateLimiter: Ratelimit | null = null;
+export type RateLimitTier = 'auth' | 'mutation' | 'read';
 
-function getRateLimiter(): Ratelimit {
-    if (rateLimiter) return rateLimiter;
+// ─────────────────────────────────────────────────────────────
+// Singleton limiter instances — one per tier
+// ─────────────────────────────────────────────────────────────
+const limiters: Partial<Record<RateLimitTier, Ratelimit>> = {};
 
+function getRedis(): Redis {
     const url = process.env.UPSTASH_REDIS_REST_URL;
     const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
@@ -36,22 +40,36 @@ function getRateLimiter(): Ratelimit {
         );
     }
 
-    rateLimiter = new Ratelimit({
-        redis: new Redis({ url, token }),
-        limiter: Ratelimit.slidingWindow(3, '60 s'),
+    return new Redis({ url, token });
+}
+
+const TIER_CONFIG: Record<RateLimitTier, { requests: number; window: `${number} ${'s' | 'm' | 'h'}` }> = {
+    /** Auth-sensitive — login, signup, resend-code (3 req/IP/60s) */
+    auth: { requests: 3, window: '60 s' },
+    /** Public mutations — waitlist, newsletter, votes POST (5 req/IP/60s) */
+    mutation: { requests: 5, window: '60 s' },
+    /** Authenticated reads — stats, wallet, referrals (20 req/IP/60s) */
+    read: { requests: 20, window: '60 s' },
+};
+
+function getLimiter(tier: RateLimitTier): Ratelimit {
+    if (limiters[tier]) return limiters[tier]!;
+
+    const { requests, window } = TIER_CONFIG[tier];
+
+    limiters[tier] = new Ratelimit({
+        redis: getRedis(),
+        limiter: Ratelimit.slidingWindow(requests, window),
         analytics: true,
-        prefix: 'hydre:ratelimit',
+        prefix: `hydre:rl:${tier}`,
     });
 
-    return rateLimiter;
+    return limiters[tier]!;
 }
 
 // ─────────────────────────────────────────────────────────────
-// RATE LIMIT GUARD — Call at the top of mutation handlers
-// Returns null if allowed, or a 429 Response if breached.
+// IP extraction — Vercel-compatible
 // ─────────────────────────────────────────────────────────────
-
-/** IP extraction from request headers (Vercel-compatible) */
 function getClientIp(request: NextRequest): string {
     return (
         request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
@@ -60,15 +78,24 @@ function getClientIp(request: NextRequest): string {
     );
 }
 
+// ─────────────────────────────────────────────────────────────
+// RATE LIMIT GUARD
+// Returns null if allowed, 429 NextResponse if breached.
+// ─────────────────────────────────────────────────────────────
+
 /**
- * Enforces rate limiting on a request.
- * @returns `null` if the request is within limits, or a `NextResponse` 429 if breached.
+ * Enforces rate limiting on a request using the specified tier.
+ *
+ * @param request - The incoming NextRequest
+ * @param tier    - Rate limit tier: 'auth' | 'mutation' | 'read'
+ * @returns `null` if within limits, or a 429 `NextResponse` if breached.
  */
 export async function applyRateLimit(
-    request: NextRequest
+    request: NextRequest,
+    tier: RateLimitTier = 'mutation'
 ): Promise<NextResponse | null> {
     const ip = getClientIp(request);
-    const limiter = getRateLimiter();
+    const limiter = getLimiter(tier);
     const { success, limit, remaining, reset } = await limiter.limit(ip);
 
     if (!success) {

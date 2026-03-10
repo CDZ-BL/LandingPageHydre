@@ -21,10 +21,8 @@ import { render } from '@react-email/components';
 import { randomInt } from 'crypto';
 
 export async function POST(request: NextRequest) {
-    // ── 1. RATE LIMIT (STRICT - AUTH-SENSITIVE) ──────────────
-    // Using the standard applyRateLimit for now; consider a stricter
-    // variant in production (e.g., 1 req per IP per 60s for resends).
-    const rateLimitResponse = await applyRateLimit(request);
+    // ── 1. RATE LIMIT (auth tier — strictest: 3 req/IP/60s) ──
+    const rateLimitResponse = await applyRateLimit(request, 'auth');
     if (rateLimitResponse) return rateLimitResponse;
 
     // ── 2. VALIDATE INPUT ───────────────────────────────────
@@ -48,18 +46,20 @@ export async function POST(request: NextRequest) {
 
     const { email } = parsed.data;
 
-    // ── 3. LOOKUP USER BY EMAIL ─────────────────────────────
+    // ── 3. LOOKUP USER BY EMAIL (indexed, O(1)) ────────────────
+    // Uses the profiles.email index — avoids listUsers() full-table scan.
     const supabase = getServerSupabase();
-
-    // Use admin API to list users and find by email
-    // Note: For large-scale production, consider a dedicated lookup table
     let userId: string | null = null;
-    try {
-        const { data: users, error: listError } =
-            await supabase.auth.admin.listUsers();
 
-        if (listError) {
-            console.error('[HYDRE] Failed to list users:', listError);
+    try {
+        const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (profileError) {
+            console.error('[HYDRE] Profile lookup error:', profileError);
             // Silently return success (anti-enumeration)
             return NextResponse.json(
                 { success: true, message: 'If an account exists, a new code has been sent' },
@@ -67,20 +67,17 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        // Find user by email
-        const user = users.users.find((u) => u.email === email);
-        if (!user) {
-            // Anti-enumeration: user doesn't exist, return success silently
+        if (!profileData) {
+            // Anti-enumeration: user doesn’t exist, return success silently
             return NextResponse.json(
                 { success: true, message: 'If an account exists, a new code has been sent' },
                 { status: 200 }
             );
         }
 
-        userId = user.id;
+        userId = profileData.id;
     } catch (err) {
         console.error('[HYDRE] User lookup exception:', err);
-        // Silently return success on any lookup failure
         return NextResponse.json(
             { success: true, message: 'If an account exists, a new code has been sent' },
             { status: 200 }

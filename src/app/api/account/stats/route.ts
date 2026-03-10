@@ -2,6 +2,27 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { getServerSupabase } from '@/lib/supabase';
 import { applyRateLimit } from '@/lib/rate-limit';
 
+/** Row shapes from Supabase join queries */
+interface VoteRow {
+    campaign_id: string;
+    selected_option: string;
+    voted_at: string;
+    // Supabase returns !inner joined tables as arrays
+    vote_campaigns: Array<{ id: string; title: string; is_active: boolean }>;
+}
+
+interface ReferralRow {
+    referred_id: string;
+    created_at: string;
+}
+
+interface FounderPointRow {
+    id: string;
+    amount: number;
+    reason: string;
+    created_at: string;
+}
+
 /**
  * GET /api/account/stats
  *
@@ -17,8 +38,8 @@ import { applyRateLimit } from '@/lib/rate-limit';
  */
 export async function GET(request: NextRequest) {
   try {
-    // Rate limit
-    const rateLimitResponse = await applyRateLimit(request);
+    // Rate limit — read tier (20 req/IP/60s)
+    const rateLimitResponse = await applyRateLimit(request, 'read');
     if (rateLimitResponse) return rateLimitResponse;
 
     // Extract Bearer token from Authorization header
@@ -122,16 +143,16 @@ export async function GET(request: NextRequest) {
     const profile = profileRes.data;
 
     // Transform votes response
-    const votes = votesRes.data?.map((vote: any) => ({
+    const votes = votesRes.data?.map((vote: VoteRow) => ({
       campaignId: vote.campaign_id,
-      campaignTitle: vote.vote_campaigns.title,
+      campaignTitle: vote.vote_campaigns[0]?.title ?? '',
       selectedOption: vote.selected_option,
       votedAt: vote.voted_at,
-      isActive: vote.vote_campaigns.is_active,
+      isActive: vote.vote_campaigns[0]?.is_active ?? false,
     })) || [];
 
     // Transform referrals
-    const referralsList = referralsRes.data?.map((ref: any) => ({
+    const referralsList = referralsRes.data?.map((ref: ReferralRow) => ({
       referredName: `Membre #${(ref.referred_id as string).slice(0, 6)}`,
       joinedAt: ref.created_at,
       pointsEarned: 200, // Fixed points per referral
@@ -139,11 +160,11 @@ export async function GET(request: NextRequest) {
 
     // Calculate referral points from founder_points for accuracy
     const referralPoints = founderPointsRes.data
-      ?.filter((p: any) => p.reason === 'referral')
-      .reduce((sum: number, p: any) => sum + p.amount, 0) ?? 0;
+      ?.filter((p: FounderPointRow) => p.reason === 'referral')
+      .reduce((sum: number, p: FounderPointRow) => sum + p.amount, 0) ?? 0;
 
     // Transform founder points
-    const points = founderPointsRes.data?.map((point: any) => ({
+    const points = founderPointsRes.data?.map((point: FounderPointRow) => ({
       amount: point.amount,
       reason: point.reason,
       createdAt: point.created_at,

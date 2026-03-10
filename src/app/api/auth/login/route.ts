@@ -1,23 +1,32 @@
 /**
  * Auth Login — POST /api/auth/login
- * V2.0.0-HYDRE Auth System
+ * V2.2.0-HYDRE Auth System
  *
  * SECURITY PIPELINE:
- * Rate Limit → Zod Validation → Supabase Auth (signInWithPassword) →
- * Email Verification Check → Session Return
+ * Rate Limit (auth) → Zod Validation → Supabase Auth (signInWithPassword, anon key) →
+ * Email Verification Check (service role) → Session Return
  *
- * Anti-enumeration: Invalid credentials return generic 401 error.
- * Email verification is required before login succeeds.
+ * IMPORTANT: signInWithPassword MUST use the anon key client.
+ * Using the service role key for sign-in returns auth errors even
+ * with correct credentials. Service role is only for DB reads/writes.
+ *
+ * Anti-enumeration: All invalid credential states return identical generic 401.
+ * The previous 404 vs 401 distinction was a credential enumeration vulnerability
+ * — it has been removed. A generic 401 is returned for both user-not-found
+ * and wrong-password scenarios.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
 import { applyRateLimit } from '@/lib/rate-limit';
-import { getServerSupabase } from '@/lib/supabase';
+import { getServerSupabase, getServerAnonSupabase } from '@/lib/supabase';
 import { LoginSchema } from '@/lib/validations/auth';
 
+/** Generic error message — used for ALL auth failures to prevent enumeration */
+const GENERIC_AUTH_ERROR = 'Identifiants invalides.';
+
 export async function POST(request: NextRequest) {
-    // ── 1. RATE LIMIT ───────────────────────────────────────
-    const rateLimitResponse = await applyRateLimit(request);
+    // ── 1. RATE LIMIT (auth tier — strictest: 3 req/IP/60s) ──
+    const rateLimitResponse = await applyRateLimit(request, 'auth');
     if (rateLimitResponse) return rateLimitResponse;
 
     // ── 2. VALIDATE INPUT ───────────────────────────────────
@@ -41,19 +50,18 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = parsed.data;
 
-    // ── 3. ATTEMPT SIGN IN ──────────────────────────────────
-    const supabase = getServerSupabase();
+    // ── 3. ATTEMPT SIGN IN (anon key — required for signInWithPassword) ──
+    // NOTE: We do NOT pre-check if the user exists. That was an enumeration
+    // vulnerability (distinct 404 vs 401). signInWithPassword handles both
+    // "user not found" and "wrong password" with the same error code.
+    const anonClient = getServerAnonSupabase();
     const { data: authData, error: authError } =
-        await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
+        await anonClient.auth.signInWithPassword({ email, password });
 
     if (authError) {
-        // Anti-enumeration: Never distinguish between invalid email or password
-        console.warn('[HYDRE] Login attempt failed');
+        console.warn('[HYDRE] Login attempt failed:', authError.message);
         return NextResponse.json(
-            { error: 'Invalid credentials' },
+            { error: GENERIC_AUTH_ERROR, message: GENERIC_AUTH_ERROR },
             { status: 401 }
         );
     }
@@ -66,17 +74,16 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // ── 4. CHECK EMAIL VERIFICATION ─────────────────────────
-    // Query the profiles table for email_verified status
-    const { data: profile, error: profileError } = await supabase
+    // ── 4. CHECK EMAIL VERIFICATION (service role — bypasses RLS) ────────
+    const adminClient = getServerSupabase();
+    const { data: profile, error: profileError } = await adminClient
         .from('profiles')
         .select('email_verified')
         .eq('id', authData.user.id)
         .single();
 
     if (profileError) {
-        // If profile doesn't exist or query fails, treat as not verified
-        console.warn('[HYDRE] Profile lookup failed for user:', authData.user.id);
+        console.warn('[HYDRE] Profile lookup failed for user:', authData.user.id, profileError.message);
         return NextResponse.json(
             { error: 'Email not verified', needsVerification: true },
             { status: 403 }

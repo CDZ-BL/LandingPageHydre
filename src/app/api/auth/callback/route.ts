@@ -33,7 +33,12 @@ export async function GET(request: NextRequest) {
         return NextResponse.redirect(new URL('/', request.url));
     }
 
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+            autoRefreshToken: false,
+            persistSession: false,
+        },
+    });
 
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 

@@ -16,8 +16,8 @@ import { applyRateLimit } from '@/lib/rate-limit';
  */
 export async function GET(request: NextRequest) {
     try {
-        // ── Rate limit ───────────────────────────────
-        const rateLimitResponse = await applyRateLimit(request);
+        // ── Rate limit (read tier — 20 req/IP/60s) ──
+        const rateLimitResponse = await applyRateLimit(request, 'read');
         if (rateLimitResponse) return rateLimitResponse;
 
         // ── Auth ─────────────────────────────────────
@@ -108,7 +108,16 @@ export async function GET(request: NextRequest) {
         const wallet = walletRes.data;
 
         // ── Transform transactions (strip PII) ──────
-        const transactions = (transactionsRes.data || []).map((tx: any) => ({
+        interface TransactionRow {
+            id: string;
+            type: string;
+            amount_cents: number;
+            source_order_id: string | null;
+            created_at: string;
+            metadata: Record<string, unknown> | null;
+        }
+
+        const transactions = (transactionsRes.data || []).map((tx: TransactionRow) => ({
             id: tx.id,
             type: tx.type,
             amountCents: tx.amount_cents,

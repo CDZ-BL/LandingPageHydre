@@ -21,10 +21,14 @@ export function AuthRehydrator() {
         const rehydrate = async () => {
             const token = localStorage.getItem('hydre_auth_token');
 
-            // No token → nothing to rehydrate
-            if (!token) return;
-
+            // Always signal loading so pages can wait before deciding to redirect
             setAuthLoading(true);
+
+            // No token → nothing to rehydrate, but still mark loading as done
+            if (!token) {
+                setAuthLoading(false);
+                return;
+            }
 
             try {
                 const response = await fetch('/api/account/stats', {

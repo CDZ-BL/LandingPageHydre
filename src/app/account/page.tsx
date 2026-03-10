@@ -53,23 +53,25 @@ interface AccountStats {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { user, openAuthModal } = useHydreStore();
+  const { user, isAuthLoading, openAuthModal } = useHydreStore();
   const [stats, setStats] = useState<AccountStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
+    // Wait for AuthRehydrator to finish before deciding to redirect.
+    // Without this, the page redirects before the token is validated.
+    if (isAuthLoading) return;
+
     const fetchAccountStats = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        // Get token from localStorage (set during auth flow)
         const token = typeof window !== 'undefined' ? localStorage.getItem('hydre_auth_token') : null;
 
         if (!token) {
-          // No token found, redirect to home and open auth modal
           router.push('/');
           openAuthModal('login');
           return;
@@ -84,7 +86,6 @@ export default function AccountPage() {
         });
 
         if (response.status === 401) {
-          // Unauthorized, clear token and redirect
           localStorage.removeItem('hydre_auth_token');
           router.push('/');
           openAuthModal('login');
@@ -109,13 +110,13 @@ export default function AccountPage() {
     if (user) {
       fetchAccountStats();
     } else {
-      // No user in store, redirect
+      // No token and no user after rehydration completes → redirect
       router.push('/');
       openAuthModal('login');
     }
-  }, [user, router, openAuthModal, refreshKey]);
+  }, [user, isAuthLoading, router, openAuthModal, refreshKey]);
 
-  if (isLoading) {
+  if (isAuthLoading || isLoading) {
     return (
       <div className="min-h-screen bg-[#050505] pt-24 pb-16 px-6 md:px-10 lg:px-14 flex items-center justify-center">
         <div className="text-center">

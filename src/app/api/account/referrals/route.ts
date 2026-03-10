@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { getServerSupabase } from '@/lib/supabase';
+import { applyRateLimit } from '@/lib/rate-limit';
 
 /**
  * GET /api/account/referrals
@@ -14,8 +15,32 @@ import { getServerSupabase } from '@/lib/supabase';
  * @param request - NextRequest with Authorization header
  * @returns 200 with referrals list | 401 if token invalid/missing
  */
+
+/** Row shapes returned by Supabase queries */
+interface ReferralRow {
+    id: string;
+    referred_id: string;
+    created_at: string;
+}
+
+interface FounderPointRow {
+    id: string;
+    amount: number;
+    created_at: string;
+    metadata: Record<string, unknown> | null;
+}
+
+interface ProfileRow {
+    id: string;
+    email: string;
+    display_name: string | null;
+    created_at: string;
+}
 export async function GET(request: NextRequest) {
   try {
+    // Rate limit — read tier (20 req/IP/60s)
+    const rateLimitResponse = await applyRateLimit(request, 'read');
+    if (rateLimitResponse) return rateLimitResponse;
     // Extract Bearer token from Authorization header
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
@@ -93,15 +118,14 @@ export async function GET(request: NextRequest) {
     };
 
     // Transform referrals response
-    const referrals = referralsRes.data?.map((referral: any) => {
-      const referredProfile = referral.profiles;
+    const referrals = referralsRes.data?.map((referral: ReferralRow & { profiles: ProfileRow[] | null }) => {
+      const referredProfile = referral.profiles?.[0] ?? null;
       const referredEmail = referredProfile?.email || 'unknown@email.com';
 
       // Find points earned for this referral
-      const pointsEarned = founderPointsRes.data?.reduce((sum: number, point: any) => {
-        // Attempt to match by metadata if available, otherwise sum all referral points
-        // If metadata contains referred_id, match it; otherwise include all
-        if (point.metadata?.referred_id === referral.referred_id) {
+      const pointsEarned = founderPointsRes.data?.reduce((sum: number, point: FounderPointRow) => {
+        // Match by metadata.referred_id if available
+        if ((point.metadata as Record<string, unknown>)?.referred_id === referral.referred_id) {
           return sum + point.amount;
         }
         return sum;
@@ -118,7 +142,7 @@ export async function GET(request: NextRequest) {
     // Calculate totals
     const totalReferrals = referrals.length;
     const totalPointsFromReferrals = founderPointsRes.data?.reduce(
-      (sum: number, point: any) => sum + point.amount,
+      (sum: number, point: FounderPointRow) => sum + point.amount,
       0
     ) || 0;
 

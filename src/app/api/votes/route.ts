@@ -8,7 +8,6 @@
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import { applyRateLimit } from '@/lib/rate-limit';
 import { getServerSupabase } from '@/lib/supabase';
 import { CastVoteSchema } from '@/lib/validations/votes';
@@ -79,7 +78,7 @@ export async function GET() {
 // ─────────────────────────────────────────────────────────────
 export async function POST(request: NextRequest) {
     // ── 1. RATE LIMIT ───────────────────────────────────────
-    const rateLimitResponse = await applyRateLimit(request);
+    const rateLimitResponse = await applyRateLimit(request, 'mutation');
     if (rateLimitResponse) return rateLimitResponse;
 
     // ── 2. AUTHENTICATE — Extract user from JWT ─────────────
@@ -93,22 +92,11 @@ export async function POST(request: NextRequest) {
 
     const token = authHeader.slice(7);
 
-    // Create a temporary client with the user's JWT to verify identity
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-    if (!supabaseUrl || !supabaseAnonKey) {
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
-    }
-
-    const userClient = createClient(supabaseUrl, supabaseAnonKey, {
-        global: { headers: { Authorization: `Bearer ${token}` } },
-    });
-
-    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    // Validate the user's JWT using the service role client.
+    // supabase.auth.getUser(token) verifies the token server-side
+    // without needing to create a new client per request.
+    const supabase = getServerSupabase();
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
 
     if (authError || !user) {
         return NextResponse.json(
@@ -139,8 +127,6 @@ export async function POST(request: NextRequest) {
     const { campaignId, selectedOption } = parsed.data;
 
     // ── 4. VERIFY CAMPAIGN & OPTION ─────────────────────────
-    const supabase = getServerSupabase();
-
     const { data: campaign } = await supabase
         .from('vote_campaigns')
         .select('options, is_active, ends_at')
