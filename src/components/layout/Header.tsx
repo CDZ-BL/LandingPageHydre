@@ -45,9 +45,17 @@ export function Header() {
     };
 
     const handleLogout = () => {
+        // Fire-and-forget server-side session invalidation
+        const token = localStorage.getItem('hydre_auth_token');
+        if (token) {
+            fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+            }).catch(() => { /* non-blocking */ });
+        }
+
         logout();
-        localStorage.removeItem('hydre_access_token');
-        localStorage.removeItem('hydre_refresh_token');
+        localStorage.removeItem('hydre_auth_token');
         if (pathname === '/account') {
             router.push('/');
         }

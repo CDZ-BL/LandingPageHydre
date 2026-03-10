@@ -1,23 +1,24 @@
 /**
  * Auth Logout — POST /api/auth/logout
- * V2.0.0-HYDRE Auth System
+ * V2.1.0-HYDRE Auth System
  *
- * IMPLEMENTATION NOTES:
- * The actual session termination happens client-side via the
- * Supabase Auth SDK (supabase.auth.signOut()).
+ * SECURITY PIPELINE:
+ * Rate Limit → Token Extraction → Supabase Session Invalidation
  *
- * This endpoint exists for:
- * - Server-side session invalidation hooks (if needed in future)
- * - Client convenience / symmetry with login endpoint
- * - Potential server-side audit logging of logout events
- *
- * Currently, it simply validates the token presence and returns success.
+ * Server-side sign-out ensures the session token is revoked
+ * even if the client fails to clear it properly.
  */
 
 import { NextResponse, type NextRequest } from 'next/server';
+import { applyRateLimit } from '@/lib/rate-limit';
+import { createClient } from '@supabase/supabase-js';
 
 export async function POST(request: NextRequest) {
-    // ── 1. EXTRACT SESSION TOKEN ─────────────────────────────
+    // ── 1. RATE LIMIT ───────────────────────────────────────
+    const rateLimitResponse = await applyRateLimit(request);
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // ── 2. EXTRACT SESSION TOKEN ─────────────────────────────
     const authHeader = request.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
 
@@ -28,12 +29,35 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    // ── 2. RETURN SUCCESS ────────────────────────────────────
-    // Token validation could be added here if needed for audit purposes.
-    // For now, we trust the client to have a valid session.
+    // ── 3. INVALIDATE SESSION VIA SUPABASE ────────────────────
+    try {
+        // Create a client authenticated with the user's token
+        const supabase = createClient(
+            process.env.NEXT_PUBLIC_SUPABASE_URL!,
+            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            {
+                global: {
+                    headers: { Authorization: `Bearer ${token}` },
+                },
+            }
+        );
 
-    return NextResponse.json(
-        { success: true, message: 'Logged out successfully' },
-        { status: 200 }
-    );
+        const { error } = await supabase.auth.signOut();
+
+        if (error) {
+            console.warn('[HYDRE] Logout signOut warning:', error.message);
+            // Still return success — client should clear token regardless
+        }
+
+        return NextResponse.json(
+            { success: true },
+            { status: 200 }
+        );
+    } catch (err) {
+        console.error('[HYDRE] Logout error:', err);
+        return NextResponse.json(
+            { success: true },
+            { status: 200 }
+        );
+    }
 }

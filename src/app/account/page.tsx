@@ -9,6 +9,7 @@ import {
   VoteHistory,
   ReferralDashboard,
   CashbackWallet,
+  ProfileEditor,
 } from '@/components/ui/AccountDashboard';
 import { cn } from '@/lib/utils';
 
@@ -16,6 +17,7 @@ interface AccountStats {
   profile: {
     id: string;
     email: string;
+    displayName: string | null;
     referralCode: string;
     founderPointsTotal: number;
     createdAt: string;
@@ -55,6 +57,7 @@ export default function AccountPage() {
   const [stats, setStats] = useState<AccountStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     const fetchAccountStats = async () => {
@@ -110,7 +113,7 @@ export default function AccountPage() {
       router.push('/');
       openAuthModal('login');
     }
-  }, [user, router, openAuthModal]);
+  }, [user, router, openAuthModal, refreshKey]);
 
   if (isLoading) {
     return (
@@ -173,8 +176,14 @@ export default function AccountPage() {
             />
           </div>
 
-          {/* Right column (1/3): Wallet + Points */}
+          {/* Right column (1/3): Profile Edit + Wallet + Points */}
           <div className="space-y-6">
+            <ProfileEditor
+              displayName={stats.profile.displayName}
+              email={stats.profile.email}
+              onUpdate={() => setRefreshKey((k) => k + 1)}
+            />
+
             <CashbackWallet wallet={stats.wallet} />
 
             <FounderPointsCard

@@ -72,11 +72,12 @@ export async function GET(request: NextRequest) {
         .eq('user_id', userId)
         .order('voted_at', { ascending: false }),
 
-      // 3. Count referrals
+      // 3. Fetch referrals with details
       supabase
         .from('referrals')
-        .select('id', { count: 'exact' })
-        .eq('referrer_id', userId),
+        .select('id, referred_id, created_at')
+        .eq('referrer_id', userId)
+        .order('created_at', { ascending: false }),
 
       // 4. Fetch founder points breakdown
       supabase
@@ -129,11 +130,20 @@ export async function GET(request: NextRequest) {
       isActive: vote.vote_campaigns.is_active,
     })) || [];
 
-    // Get referral count (Supabase count returns count on meta)
-    const referralCount = referralsRes.count || 0;
+    // Transform referrals
+    const referralsList = referralsRes.data?.map((ref: any) => ({
+      referredName: `Membre #${(ref.referred_id as string).slice(0, 6)}`,
+      joinedAt: ref.created_at,
+      pointsEarned: 200, // Fixed points per referral
+    })) || [];
+
+    // Calculate referral points from founder_points for accuracy
+    const referralPoints = founderPointsRes.data
+      ?.filter((p: any) => p.reason === 'referral')
+      .reduce((sum: number, p: any) => sum + p.amount, 0) ?? 0;
 
     // Transform founder points
-    const founderPoints = founderPointsRes.data?.map((point: any) => ({
+    const points = founderPointsRes.data?.map((point: any) => ({
       amount: point.amount,
       reason: point.reason,
       createdAt: point.created_at,
@@ -155,8 +165,12 @@ export async function GET(request: NextRequest) {
         createdAt: profile.created_at,
       },
       votes,
-      referralCount,
-      founderPoints,
+      points,
+      referrals: {
+        list: referralsList,
+        total: referralsList.length,
+        totalPoints: referralPoints,
+      },
       wallet: {
         balanceCents: wallet.balance_cents ?? 0,
         lifetimeEarnedCents: wallet.lifetime_earned_cents ?? 0,

@@ -291,12 +291,29 @@ export function AuthModal() {
 					});
 				}
 			} else {
-				// Fetch user profile
-				const profileResponse = await fetch('/api/account/stats');
-				const userProfile = await profileResponse.json();
+				// Store token for future authenticated requests
+				if (data.session?.access_token) {
+					localStorage.setItem('hydre_auth_token', data.session.access_token);
+				}
+
+				// Fetch user profile with the fresh token
+				const profileResponse = await fetch('/api/account/stats', {
+					headers: {
+						Authorization: `Bearer ${data.session.access_token}`,
+					},
+				});
+				const statsData = await profileResponse.json();
 
 				if (profileResponse.ok) {
-					setUser(userProfile);
+					setUser({
+						id: statsData.profile.id,
+						email: statsData.profile.email,
+						displayName: statsData.profile.displayName,
+						emailVerified: statsData.profile.emailVerified,
+						referralCode: statsData.profile.referralCode,
+						founderPointsTotal: statsData.profile.founderPointsTotal,
+						walletBalanceCents: statsData.wallet?.balanceCents ?? 0,
+					});
 				}
 
 				handleClose();

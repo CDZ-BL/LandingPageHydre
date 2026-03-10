@@ -29,7 +29,17 @@ export const ProfileHeader = ({ profile }: ProfileHeaderProps) => {
   };
 
   const handleLogout = () => {
+    // Fire-and-forget server-side session invalidation
+    const token = localStorage.getItem('hydre_auth_token');
+    if (token) {
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => { /* non-blocking */ });
+    }
+
     logout();
+    localStorage.removeItem('hydre_auth_token');
     router.push('/');
   };
 

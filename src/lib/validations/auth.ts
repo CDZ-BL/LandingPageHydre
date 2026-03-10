@@ -74,3 +74,29 @@ export const ResendCodeSchema = z.object({
 });
 
 export type ResendCodeInput = z.infer<typeof ResendCodeSchema>;
+
+// ── UPDATE PROFILE ──────────────────────────────────────────
+
+export const UpdateProfileSchema = z.object({
+    displayName: z
+        .string()
+        .min(2, 'Display name must be at least 2 characters')
+        .max(50, 'Display name must be at most 50 characters')
+        .regex(/^[a-zA-ZÀ-ÿ0-9 _-]+$/, 'Only letters, numbers, spaces, hyphens allowed')
+        .optional(),
+    currentPassword: z
+        .string()
+        .min(1, 'Current password is required')
+        .max(PASSWORD_MAX)
+        .optional(),
+    newPassword: passwordSchema.optional(),
+}).refine(
+    (data) => {
+        // If newPassword is provided, currentPassword must also be provided
+        if (data.newPassword && !data.currentPassword) return false;
+        return true;
+    },
+    { message: 'Current password is required to set a new password', path: ['currentPassword'] }
+);
+
+export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;
