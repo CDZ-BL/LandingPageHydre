@@ -110,7 +110,7 @@ export async function GET(request: NextRequest) {
       // 5. Fetch cashback wallet summary
       supabase
         .from('cashback_wallets')
-        .select('balance_cents, lifetime_earned_cents, lifetime_spent_cents')
+        .select('cashback_balance_cents, lifetime_cashback_earned_cents, lifetime_cashback_spent_cents, commission_balance_cents, lifetime_commission_earned_cents, lifetime_commission_withdrawn_cents')
         .eq('user_id', userId)
         .single(),
     ]);
@@ -174,14 +174,13 @@ export async function GET(request: NextRequest) {
     })) || [];
 
     // Wallet data (graceful fallback if table not yet migrated)
-    const wallet = walletRes.error
-      ? { balance_cents: 0, lifetime_earned_cents: 0, lifetime_spent_cents: 0 }
-      : walletRes.data;
+    const wallet = walletRes.data;
+    const hasMigrated = !walletRes.error;
 
     return NextResponse.json({
       profile: {
         id: profile.id,
-        email: user.email, // fallback to auth user's email since profiles.email doesn't exist
+        email: user.email,
         displayName: profile.display_name,
         referralCode: profile.referral_code,
         emailVerified: profile.email_verified,
@@ -195,10 +194,15 @@ export async function GET(request: NextRequest) {
         total: referralsList.length,
         totalPoints: referralPoints,
       },
-      wallet: {
-        balanceCents: wallet.balance_cents ?? 0,
-        lifetimeEarnedCents: wallet.lifetime_earned_cents ?? 0,
-        lifetimeSpentCents: wallet.lifetime_spent_cents ?? 0,
+      cashback: {
+        balanceCents: hasMigrated ? (wallet?.cashback_balance_cents ?? 0) : 0,
+        lifetimeEarnedCents: hasMigrated ? (wallet?.lifetime_cashback_earned_cents ?? 0) : 0,
+        lifetimeSpentCents: hasMigrated ? (wallet?.lifetime_cashback_spent_cents ?? 0) : 0,
+      },
+      commission: {
+        balanceCents: hasMigrated ? (wallet?.commission_balance_cents ?? 0) : 0,
+        lifetimeEarnedCents: hasMigrated ? (wallet?.lifetime_commission_earned_cents ?? 0) : 0,
+        lifetimeWithdrawnCents: hasMigrated ? (wallet?.lifetime_commission_withdrawn_cents ?? 0) : 0,
       },
     });
   } catch (error) {

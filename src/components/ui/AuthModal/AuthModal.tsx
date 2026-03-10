@@ -312,7 +312,8 @@ export function AuthModal() {
 						emailVerified: statsData.profile.emailVerified,
 						referralCode: statsData.profile.referralCode,
 						founderPointsTotal: statsData.profile.founderPointsTotal,
-						walletBalanceCents: statsData.wallet?.balanceCents ?? 0,
+						cashbackBalanceCents: statsData.cashback?.balanceCents ?? 0,
+						commissionBalanceCents: statsData.commission?.balanceCents ?? 0,
 					});
 				}
 
@@ -478,7 +479,8 @@ export function AuthModal() {
 								emailVerified: statsData.profile.emailVerified,
 								referralCode: statsData.profile.referralCode,
 								founderPointsTotal: statsData.profile.founderPointsTotal,
-								walletBalanceCents: statsData.wallet?.balanceCents ?? 0,
+								cashbackBalanceCents: statsData.cashback?.balanceCents ?? 0,
+								commissionBalanceCents: statsData.commission?.balanceCents ?? 0,
 							});
 						}
 					}

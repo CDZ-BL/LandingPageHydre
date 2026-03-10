@@ -32,6 +32,18 @@ module.exports = {
                 },
                 // BIOLOGIC BONE - Alliance accent
                 bone: '#E6DCC8',
+                // SEMANTIC THEME TOKENS (CSS variable-backed)
+                surface: {
+                    DEFAULT: 'var(--bg-primary)',
+                    '2': 'var(--bg-secondary)',
+                    '3': 'var(--bg-surface)',
+                    elevated: 'var(--bg-elevated)',
+                },
+                heading: 'var(--text-primary)',
+                body: 'var(--text-secondary)',
+                subtle: 'var(--text-tertiary)',
+                'theme-muted': 'var(--text-muted)',
+                'theme-stroke': 'var(--stroke)',
             },
             fontFamily: {
                 headline: ['var(--font-headline)', 'system-ui', 'sans-serif'],
@@ -90,8 +102,8 @@ module.exports = {
                 },
             },
             backgroundImage: {
-                'gradient-void': 'linear-gradient(180deg, #050505 0%, #111111 50%, #050505 100%)',
-                'gradient-radial': 'radial-gradient(circle at center, #1A1A1A 0%, #050505 70%)',
+                'gradient-void': 'linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%)',
+                'gradient-radial': 'radial-gradient(circle at center, var(--bg-elevated) 0%, var(--bg-primary) 70%)',
             },
             boxShadow: {
                 'glow': '0 0 60px rgba(255, 107, 0, 0.15)',

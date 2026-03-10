@@ -26,13 +26,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         hover:shadow-glow-orange
       `,
             secondary: `
-        bg-charcoal-700 text-charcoal-50 border border-charcoal-600
-        hover:bg-charcoal-600 hover:scale-105 active:scale-95
-        hover:border-orange-600/50
+        bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--stroke)]
+        hover:bg-[var(--bg-elevated)] hover:scale-105 active:scale-95
+        hover:border-neon-orange/50
       `,
             ghost: `
-        bg-transparent border border-charcoal-50/30 text-charcoal-50
-        hover:bg-charcoal-50/10 hover:border-charcoal-50/50
+        bg-transparent border border-[var(--stroke)] text-[var(--text-primary)]
+        hover:bg-[var(--bg-surface)]/10 hover:border-[var(--stroke-hover)]
       `,
             lab: `
         bg-gradient-to-r from-lab-600 to-lab-500

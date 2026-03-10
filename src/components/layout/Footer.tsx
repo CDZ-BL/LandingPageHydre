@@ -56,7 +56,7 @@ const LEGAL_LINKS = [
 
 export function Footer() {
     return (
-        <footer className="bg-black border-t border-void-700">
+        <footer className="bg-[var(--bg-primary)] border-t border-[var(--stroke)]">
             <div className="w-[85%] max-w-[1400px] mx-auto py-16">
 
                 {/* Main Grid */}
@@ -64,7 +64,7 @@ export function Footer() {
 
                     {/* Col 1: Brand + Navigation */}
                     <div>
-                        <h4 className="font-mono text-white text-sm tracking-widest mb-6">
+                        <h4 className="font-mono text-[var(--text-primary)] text-sm tracking-widest mb-6">
                             SMART NUTRITION
                         </h4>
                         <nav className="space-y-3">
@@ -72,7 +72,7 @@ export function Footer() {
                                 <Link
                                     key={link.label}
                                     href={link.href}
-                                    className="block font-mono text-xs text-gray-500 hover:text-white transition-colors duration-200 tracking-wider"
+                                    className="block font-mono text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 tracking-wider"
                                 >
                                     {link.label}
                                 </Link>
@@ -82,7 +82,7 @@ export function Footer() {
 
                     {/* Col 2: Social */}
                     <div>
-                        <h4 className="font-mono text-white text-sm tracking-widest mb-6">
+                        <h4 className="font-mono text-[var(--text-primary)] text-sm tracking-widest mb-6">
                             SIGNAL
                         </h4>
                         <div className="flex gap-4">
@@ -91,20 +91,20 @@ export function Footer() {
                                     key={social.label}
                                     href={social.href}
                                     aria-label={social.label}
-                                    className="w-10 h-10 border border-void-700 flex items-center justify-center text-gray-500 hover:text-white hover:border-white/30 transition-all duration-200"
+                                    className="w-10 h-10 border border-[var(--stroke)] flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:border-[var(--stroke-hover)] transition-all duration-200"
                                 >
                                     {social.icon}
                                 </a>
                             ))}
                         </div>
-                        <p className="font-mono text-[10px] text-gray-600 mt-4 tracking-wider">
+                        <p className="font-mono text-[10px] text-[var(--text-muted)] mt-4 tracking-wider">
                             BIENTÔT ACTIF
                         </p>
                     </div>
 
                     {/* Col 3: Legal */}
                     <div>
-                        <h4 className="font-mono text-white text-sm tracking-widest mb-6">
+                        <h4 className="font-mono text-[var(--text-primary)] text-sm tracking-widest mb-6">
                             LÉGAL
                         </h4>
                         <nav className="space-y-3">
@@ -112,7 +112,7 @@ export function Footer() {
                                 <Link
                                     key={link.label}
                                     href={link.href}
-                                    className="block font-mono text-xs text-gray-500 hover:text-white transition-colors duration-200 tracking-wider"
+                                    className="block font-mono text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors duration-200 tracking-wider"
                                 >
                                     {link.label}
                                 </Link>
@@ -122,11 +122,11 @@ export function Footer() {
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-void-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="font-mono text-[10px] text-gray-600 tracking-wider">
+                <div className="border-t border-[var(--stroke)] pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
                         SMART NUTRITION © 2026. DATA DRIVEN PERFORMANCE.
                     </div>
-                    <div className="font-mono text-[10px] text-gray-700 tracking-wider">
+                    <div className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
                         DESIGNED IN DARKNESS.
                     </div>
                 </div>

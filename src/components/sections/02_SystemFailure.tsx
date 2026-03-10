@@ -343,7 +343,7 @@ export function SystemFailure() {
             <section
                 id="system-failure-section"
                 ref={containerRef}
-                className="relative z-[60] w-full bg-black min-h-screen flex items-center justify-center overflow-hidden"
+                className="relative z-[60] w-full bg-[var(--bg-primary)] min-h-screen flex items-center justify-center overflow-hidden"
             >
 
 
@@ -370,7 +370,7 @@ export function SystemFailure() {
                         {/* Main headline — triple layer glitch */}
                         <div className="relative mb-16">
                             <h2
-                                className="font-headline text-white font-black uppercase tracking-wider leading-[1.3] animate-text-distort will-change-transform"
+                                className="font-headline text-[var(--text-primary)] font-black uppercase tracking-wider leading-[1.3] animate-text-distort will-change-transform"
                                 style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
                             >
                                 /// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///
@@ -388,26 +388,26 @@ export function SystemFailure() {
                         </div>
 
                         {/* Info block */}
-                        <div className="space-y-4 font-mono border-l-4 border-white/10 pl-4 md:pl-6 my-5 text-left max-w-2xl mx-auto bg-black/40 backdrop-blur-sm p-4 md:p-5 rounded-r-lg">
+                        <div className="space-y-4 font-mono border-l-4 border-[var(--stroke)] pl-4 md:pl-6 my-5 text-left max-w-2xl mx-auto bg-[var(--bg-primary)]/40 backdrop-blur-sm p-4 md:p-5 rounded-r-lg">
                             <div className="text-emerald-400 text-[10px] tracking-widest uppercase mb-3 font-bold">
                                 [ PROTOCOLE_SMART // SUPPRESSION_MARGE // OPTIMISATION_COÛT ]
                             </div>
                             <h3
-                                className="font-headline text-white mb-4 tracking-widest leading-tight"
+                                className="font-headline text-[var(--text-primary)] mb-4 tracking-widest leading-tight"
                                 style={{ fontSize: 'clamp(1rem, 2vw + 0.25rem, 1.75rem)' }}
                             >
                                 /// DIAGNOSTIC : SURCOÛT SYSTÉMIQUE ///
                             </h3>
                             <div className="space-y-3 text-xs md:text-sm lg:text-base">
-                                <div className="text-white/90 leading-relaxed animate-line-teleport">
+                                <div className="text-[var(--text-secondary)] leading-relaxed animate-line-teleport">
                                     <span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} ANALYSE :</span>
                                     70% DE VOTRE ARGENT NE TOUCHE JAMAIS LE PRODUIT.
                                 </div>
-                                <div className="text-white/70 leading-relaxed animate-line-teleport">
+                                <div className="text-[var(--text-tertiary)] leading-relaxed animate-line-teleport">
                                     <span className="text-neon-orange font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CONSÉQUENCES :</span>
                                     VOUS SURPAYEZ. LE PRODUIT SOUS-PERFORME.
                                 </div>
-                                <div className="text-white/90 leading-relaxed animate-emergency-flash">
+                                <div className="text-[var(--text-secondary)] leading-relaxed animate-emergency-flash">
                                     <span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CORRECTIF :</span>
                                     RÉÉCRITURE DU MODÈLE. DE ZÉRO.
                                 </div>
@@ -506,7 +506,7 @@ export function SystemFailure() {
                             <span className="font-mono text-emerald-400 text-sm tracking-widest">SYSTÈME STABILISÉ</span>
                         </div>
 
-                        <h3 className="font-headline text-h2 text-white font-bold mb-6">
+                        <h3 className="font-headline text-h2 text-[var(--text-primary)] font-bold mb-6">
                             <span className="text-[#E6DCC8]">
                                 MISE À JOUR EFFECTUÉE
                                 <span className="inline-flex w-[1.5ch] justify-start">
@@ -517,13 +517,13 @@ export function SystemFailure() {
                             </span>
                         </h3>
 
-                        <p className="font-sans text-h3 text-[#D9D9D9] max-w-2xl mx-auto leading-relaxed">
+                        <p className="font-sans text-h3 text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
                             <span className="text-emerald-400 font-semibold">Moins cher. Plus concentré.</span><br />
                             <span className="text-[#E6DCC8] font-semibold">Sans intermédiaire.</span>
                         </p>
 
                     </div>
-                    <div className="mt-16 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                    <div className="mt-16 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-[var(--text-muted)]/30 to-transparent" />
                 </div>
 
             </section>

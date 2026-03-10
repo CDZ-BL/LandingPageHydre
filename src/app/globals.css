@@ -7,27 +7,46 @@
    Opacity Premium Method
 ═══════════════════════════════════════════════════════════════════════════ */
 
-:root {
+:root, [data-theme="dark"] {
   /* === ATMOSPHERE === */
   --obsidian: #050505;
   --bone: #E6DCC8;
 
-  /* === SOLID-STATE TEXT HIERARCHY ===
-     Pre-calculated against #050505 to bypass GPU alpha-blending.
-     Eliminates per-frame compositing tax over live WebGL canvas. */
+  /* === THEME-AWARE SURFACES === */
+  --bg-primary: #050505;
+  --bg-secondary: #0D0D0D;
+  --bg-surface: #1A1A1A;
+  --bg-elevated: #222222;
+
+  /* === SOLID-STATE TEXT HIERARCHY === */
   --text-primary: #FFFFFF;
-  /* 100% — Headlines */
   --text-secondary: #D9D9D9;
-  /* 85% optical equivalent — Body (Platine) */
   --text-tertiary: #9E9E9E;
-  /* 60% optical equivalent — Labels (Métal) */
   --text-muted: #6B6B6B;
-  /* 40% optical equivalent — Structure (Carbone) */
 
   /* === STROKES & BORDERS === */
   --stroke: rgba(255, 255, 255, 0.10);
-  /* 10% - Subtle borders */
   --stroke-hover: rgba(255, 255, 255, 0.20);
+
+  /* === GLASS === */
+  --glass-bg: rgba(10, 10, 10, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.10);
+
+  /* === FOUNDERS CARD === */
+  --card-bg-start: rgba(20, 20, 20, 0.9);
+  --card-bg-end: rgba(10, 10, 10, 0.9);
+  --card-shadow: rgba(0, 0, 0, 0.5);
+
+  /* === GRID LINES === */
+  --grid-color: rgba(255, 255, 255, 0.03);
+
+  /* === GLOW === */
+  --glow-color: rgba(255, 107, 0, 0.15);
+
+  /* === SCROLLBAR === */
+  --scrollbar-bg: #050505;
+  --scrollbar-thumb: #6B6B6B;
+  --scrollbar-thumb-hover: #9E9E9E;
 
   /* === LEGACY COMPAT === */
   --void: #050505;
@@ -58,6 +77,48 @@
   --duration-epic: 2000ms;
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT THEME — Warm Bone Palette
+═══════════════════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  --obsidian: #F0EAE0;
+  --bone: #4A3F33;
+
+  --bg-primary: #F0EAE0;
+  --bg-secondary: #E8E0D4;
+  --bg-surface: #FFFFFF;
+  --bg-elevated: #F5EFE5;
+
+  --text-primary: #1A1208;
+  --text-secondary: #4A3F33;
+  --text-tertiary: #7A6E62;
+  --text-muted: #A09488;
+
+  --stroke: rgba(0, 0, 0, 0.08);
+  --stroke-hover: rgba(0, 0, 0, 0.16);
+
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(0, 0, 0, 0.08);
+
+  --card-bg-start: rgba(255, 255, 255, 0.95);
+  --card-bg-end: rgba(245, 239, 229, 0.95);
+  --card-shadow: rgba(0, 0, 0, 0.08);
+
+  --grid-color: rgba(0, 0, 0, 0.04);
+
+  --glow-color: rgba(255, 107, 0, 0.12);
+
+  --scrollbar-bg: #F0EAE0;
+  --scrollbar-thumb: #A09488;
+  --scrollbar-thumb-hover: #7A6E62;
+
+  --void: #F0EAE0;
+  --void-light: #E8E0D4;
+  --text: #1A1208;
+  --text-muted-old: #7A6E62;
+  --border: rgba(0, 0, 0, 0.08);
+}
+
 * {
   box-sizing: border-box;
   padding: 0;
@@ -70,7 +131,7 @@ html {
 }
 
 body {
-  background: var(--obsidian);
+  background: var(--bg-primary);
   color: var(--text-secondary);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
   overflow-x: hidden;
@@ -145,16 +206,16 @@ body::before {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--obsidian);
+  background: var(--scrollbar-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--text-muted);
+  background: var(--scrollbar-thumb);
   border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
+  background: var(--scrollbar-thumb-hover);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -223,9 +284,9 @@ body::before {
 
   /* === GLASS EFFECT — GPU-Accelerated Compositing === */
   .glass {
-    background: rgba(10, 10, 10, 0.8);
+    background: var(--glass-bg);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--stroke);
+    border: 1px solid var(--glass-border);
     transform: translateZ(0);
     will-change: backdrop-filter;
   }
@@ -359,10 +420,10 @@ body::before {
 
 /* Founders Card */
 .founders-card {
-  background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(10, 10, 10, 0.9) 100%);
+  background: linear-gradient(135deg, var(--card-bg-start) 0%, var(--card-bg-end) 100%);
   backdrop-filter: blur(40px);
   border: 1px solid var(--stroke);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 1px var(--stroke), 0 20px 50px var(--card-shadow);
 }
 
 /* Bar Shake Animation */
@@ -512,11 +573,11 @@ body::before {
 
 /* Background Utilities */
 .bg-obsidian {
-  background-color: var(--obsidian);
+  background-color: var(--bg-primary);
 }
 
 .bg-void {
-  background-color: var(--void);
+  background-color: var(--bg-primary);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1136,4 +1197,18 @@ body::before {
   body::before {
     animation: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT THEME — Glitch Animation Color Overrides
+═══════════════════════════════════════════════════════════════════════════ */
+
+[data-theme="light"] .animate-emergency-flash,
+[data-theme="light"] .animate-emergency-flash * {
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .skip-to-content {
+  background: var(--bg-surface);
+  color: var(--text-primary);
 }

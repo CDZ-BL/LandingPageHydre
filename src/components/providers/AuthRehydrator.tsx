@@ -50,7 +50,8 @@ export function AuthRehydrator() {
                     emailVerified: data.profile.emailVerified,
                     referralCode: data.profile.referralCode,
                     founderPointsTotal: data.profile.founderPointsTotal,
-                    walletBalanceCents: data.wallet?.balanceCents ?? 0,
+                    cashbackBalanceCents: data.cashback?.balanceCents ?? 0,
+                    commissionBalanceCents: data.commission?.balanceCents ?? 0,
                 });
             } catch {
                 // Network error — leave user logged out, keep token for retry

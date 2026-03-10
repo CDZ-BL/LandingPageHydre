@@ -73,7 +73,7 @@ function CostLegend({ segments }: { segments: CostSegment[] }) {
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: seg.color, boxShadow: seg.glow || 'none' }}
                     />
-                    <span className="font-mono text-[10px] text-white/40 tracking-wider">
+                    <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
                         {seg.label} ({seg.percent}%)
                     </span>
                 </div>
@@ -105,21 +105,21 @@ function PrincipleCard({
             transition={{ duration: 0.7, delay }}
             className="group relative"
         >
-            <div className="relative border border-white/[0.06] bg-white/[0.01] p-6 md:p-8 hover:border-white/[0.12] transition-colors duration-500">
+            <div className="relative border border-[var(--stroke)] bg-[var(--bg-surface)]/5 p-6 md:p-8 hover:border-[var(--stroke-hover)] transition-colors duration-500">
                 {/* Number */}
-                <span className="font-mono text-[10px] text-white/15 tracking-[0.3em] block mb-4">
+                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.3em] block mb-4">
                     {number}
                 </span>
                 {/* Title */}
-                <h4 className="font-headline text-lg md:text-xl text-white tracking-wider mb-3">
+                <h4 className="font-headline text-lg md:text-xl text-[var(--text-primary)] tracking-wider mb-3">
                     {title}
                 </h4>
                 {/* Body */}
-                <p className="font-mono text-xs md:text-sm text-white/50 leading-relaxed tracking-wide">
+                <p className="font-mono text-xs md:text-sm text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                     {description}
                 </p>
                 {/* Bottom accent line */}
-                <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full bg-gradient-to-r from-white/30 to-transparent transition-all duration-700" />
+                <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full bg-gradient-to-r from-[var(--text-muted)]/30 to-transparent transition-all duration-700" />
             </div>
         </motion.div>
     );
@@ -133,7 +133,7 @@ export function ThePact() {
     const savings = Math.round(((COMPETITOR_PRICE - SMART_PRICE) / COMPETITOR_PRICE) * 100);
 
     return (
-        <section className="relative py-16 md:py-32 lg:py-40 bg-void overflow-hidden">
+        <section className="relative py-16 md:py-32 lg:py-40 bg-[var(--bg-primary)] overflow-hidden">
             {/* Subtle grid */}
             <div
                 className="absolute inset-0 opacity-[0.03] pointer-events-none"
@@ -156,14 +156,14 @@ export function ThePact() {
                     transition={{ duration: 0.8 }}
                     className="mb-10 md:mb-20 max-w-3xl"
                 >
-                    <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
+                    <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.3em] mb-5 block">
 
                     </span>
-                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide leading-[1.05] mb-6">
+                    <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide leading-[1.05] mb-6">
                         Vous payez le produit.<br />
                         <span className="text-[#E6DCC8] italic font-light tracking-normal">Pas le bruit.</span>
                     </h2>
-                    <p className="font-mono text-sm md:text-base text-white/60 leading-relaxed tracking-wide">
+                    <p className="font-mono text-sm md:text-base text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                         Le modèle standard est cassé — 85% du prix finance le marketing, pas vos performances.
                         Smart supprime l'inutile et investit tout dans la formule.
                     </p>
@@ -178,18 +178,18 @@ export function ThePact() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-80px' }}
                         transition={{ duration: 0.7 }}
-                        className="border border-white/[0.06] bg-white/[0.01] p-6 md:p-8 relative"
+                        className="border border-[var(--stroke)] bg-[var(--bg-surface)]/5 p-6 md:p-8 relative"
                     >
                         {/* HUD corners */}
-                        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/10" />
-                        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/10" />
-                        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/10" />
-                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/10" />
+                        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[var(--stroke)]" />
+                        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[var(--stroke)]" />
+                        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[var(--stroke)]" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[var(--stroke)]" />
 
                         <div className="flex items-baseline justify-between mb-6">
                             <div>
-                                <span className="font-mono text-[10px] text-white/20 tracking-[0.2em] block mb-1">CONCURRENT PREMIUM</span>
-                                <span className="font-mono text-2xl md:text-3xl text-white/40 tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
+                                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.2em] block mb-1">CONCURRENT PREMIUM</span>
+                                <span className="font-mono text-2xl md:text-3xl text-[var(--text-muted)] tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
                             </div>
                             <span className="font-mono text-[10px] text-neon-orange/60 tracking-wider">
                                 INEFFICIENT
@@ -200,7 +200,7 @@ export function ThePact() {
                         <CostLegend segments={COMPETITOR_COST} />
 
                         {/* Callout */}
-                        <div className="mt-6 pt-4 border-t border-white/[0.04]">
+                        <div className="mt-6 pt-4 border-t border-[var(--stroke)]">
                             <div className="flex items-center gap-2">
                                 <div className="w-1 h-1 rounded-full bg-neon-orange/60" />
                                 <span className="font-mono text-[10px] text-neon-orange/40 tracking-wider">
@@ -216,18 +216,18 @@ export function ThePact() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: '-80px' }}
                         transition={{ duration: 0.7, delay: 0.15 }}
-                        className="border border-white/[0.1] bg-white/[0.02] p-6 md:p-8 relative"
+                        className="border border-[var(--stroke-hover)] bg-[var(--bg-surface)]/5 p-6 md:p-8 relative"
                     >
                         {/* HUD corners */}
-                        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20" />
-                        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20" />
-                        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20" />
-                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20" />
+                        <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[var(--stroke-hover)]" />
+                        <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[var(--stroke-hover)]" />
+                        <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[var(--stroke-hover)]" />
+                        <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[var(--stroke-hover)]" />
 
                         <div className="flex items-baseline justify-between mb-6">
                             <div>
-                                <span className="font-mono text-[10px] text-white/40 tracking-[0.2em] block mb-1">SMART PROTOCOLE</span>
-                                <span className="font-mono text-2xl md:text-3xl text-white tabular-nums">{SMART_PRICE.toFixed(2)}€</span>
+                                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.2em] block mb-1">SMART PROTOCOLE</span>
+                                <span className="font-mono text-2xl md:text-3xl text-[var(--text-primary)] tabular-nums">{SMART_PRICE.toFixed(2)}€</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#E6DCC8] animate-pulse" />
@@ -241,10 +241,10 @@ export function ThePact() {
                         <CostLegend segments={SMART_COST} />
 
                         {/* Callout */}
-                        <div className="mt-6 pt-4 border-t border-white/[0.06]">
+                        <div className="mt-6 pt-4 border-t border-[var(--stroke)]">
                             <div className="flex items-center gap-2">
                                 <div className="w-1 h-1 rounded-full bg-white/60" />
-                                <span className="font-mono text-[10px] text-white/40 tracking-wider">
+                                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
                                     100% DU BUDGET AU SERVICE DE LA FORMULE
                                 </span>
                             </div>
@@ -261,11 +261,11 @@ export function ThePact() {
                     className="mb-10"
                 >
                     <div className="flex items-center gap-4 mb-10">
-                        <div className="h-px flex-1 bg-white/[0.06]" />
-                        <span className="font-mono text-[10px] text-white/20 tracking-[0.25em]">
+                        <div className="h-px flex-1 bg-[var(--stroke)]" />
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.25em]">
 
                         </span>
-                        <div className="h-px flex-1 bg-white/[0.06]" />
+                        <div className="h-px flex-1 bg-[var(--stroke)]" />
                     </div>
                 </motion.div>
 
@@ -298,7 +298,7 @@ export function ThePact() {
                     transition={{ duration: 0.8, delay: 0.5 }}
                     className="mt-16 text-center"
                 >
-                    <p className="font-mono text-[10px] text-white/10 tracking-[0.2em]">
+                    <p className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.2em]">
                         [DATA] VOTRE INVESTISSEMENT EST BIOLOGIQUE, PAS MÉDIATIQUE.
                     </p>
                 </motion.div>

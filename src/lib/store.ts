@@ -9,7 +9,8 @@ export interface HydreUser {
   emailVerified: boolean;
   referralCode: string;
   founderPointsTotal: number;
-  walletBalanceCents: number;
+  cashbackBalanceCents: number;
+  commissionBalanceCents: number;
 }
 
 export type AuthModal = 'closed' | 'login' | 'signup' | 'verify';
@@ -29,6 +30,7 @@ interface HydreState {
   isConversionModalOpen: boolean;
   activeSection: number;
   isLowPowerMode: boolean;
+  theme: 'dark' | 'light';
 
   // ── Waitlist ─────────────────────────────────
   waitlistCount: number;
@@ -55,6 +57,8 @@ interface HydreState {
   setConversionModalOpen: (open: boolean) => void;
   setActiveSection: (section: number) => void;
   setLowPowerMode: (low: boolean) => void;
+  toggleTheme: () => void;
+  setTheme: (theme: 'dark' | 'light') => void;
 
   // ── Waitlist Actions ─────────────────────────
   setWaitlistCount: (count: number) => void;
@@ -84,6 +88,7 @@ export const useHydreStore = create<HydreState>((set) => ({
   isConversionModalOpen: false,
   activeSection: 0,
   isLowPowerMode: false,
+  theme: 'dark',
 
   // ── Waitlist State ───────────────────────────
   waitlistCount: 0,
@@ -155,6 +160,30 @@ export const useHydreStore = create<HydreState>((set) => ({
   setLowPowerMode: (low) =>
     set({
       isLowPowerMode: low,
+    }),
+
+  toggleTheme: () =>
+    set((state) => {
+      const next = state.theme === 'dark' ? 'light' : 'dark';
+      if (typeof window !== 'undefined') {
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem('hydre-theme', next);
+        // Update meta theme-color
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', next === 'light' ? '#F0EAE0' : '#050505');
+      }
+      return { theme: next };
+    }),
+
+  setTheme: (theme) =>
+    set(() => {
+      if (typeof window !== 'undefined') {
+        document.documentElement.dataset.theme = theme;
+        localStorage.setItem('hydre-theme', theme);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#F0EAE0' : '#050505');
+      }
+      return { theme };
     }),
 
   // ── Waitlist Actions ─────────────────────────

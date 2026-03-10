@@ -5,6 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { useThree } from '@react-three/fiber';
 import { Environment, Lightformer } from '@react-three/drei';
 import { HydreCoreAssembly } from '@/components/three/HydreCoreAssembly';
+import { useHydreStore } from '@/lib/store';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -46,6 +47,7 @@ const CAMERA_FOV = 20;
  */
 export function FixedProductCanvas() {
     const wrapperRef = useRef<HTMLDivElement>(null);
+    const theme = useHydreStore((s) => s.theme);
 
     useEffect(() => {
         if (!wrapperRef.current) return;
@@ -125,7 +127,7 @@ export function FixedProductCanvas() {
                 </Environment>
 
                 <directionalLight position={[5, 10, 5]} intensity={2}    color="#ffffff" />
-                <ambientLight                            intensity={0.15}              />
+                <ambientLight intensity={theme === 'light' ? 0.4 : 0.15} />
 
                 <FrameGuard />
                 <Suspense fallback={null}>

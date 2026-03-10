@@ -11,6 +11,7 @@ import * as THREE from 'three';
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer, PresentationControls } from '@react-three/drei';
+import { useHydreStore } from '@/lib/store';
 
 // ─────────────────────────────────────────────────────────
 // ASSETS
@@ -228,6 +229,14 @@ function XRayScene() {
 }
 
 // ─────────────────────────────────────────────────────────
+// THEME-AWARE AMBIENT LIGHT
+// ─────────────────────────────────────────────────────────
+function ThemeAwareAmbientLight() {
+    const theme = useHydreStore((s) => s.theme);
+    return <ambientLight intensity={theme === 'light' ? 0.35 : 0.15} />;
+}
+
+// ─────────────────────────────────────────────────────────
 // CANVAS WRAPPER
 // ─────────────────────────────────────────────────────────
 export function XRayTubeCanvas() {
@@ -245,7 +254,7 @@ export function XRayTubeCanvas() {
                 style={{ background: 'transparent' }}
             >
                 {/* Lighting match Hero */}
-                <ambientLight intensity={0.15} />
+                <ThemeAwareAmbientLight />
                 <directionalLight position={[5, 10, 5]} intensity={0.7} color="#ffffff" />
 
                 <Environment resolution={256} background={false}>

@@ -51,8 +51,13 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="fr" className={`${instrumentSans.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
-            <body className="antialiased bg-obsidian text-[#D9D9D9]">
+        <html lang="fr" data-theme="dark" className={`${instrumentSans.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
+            <body className="antialiased bg-[var(--bg-primary)] text-[var(--text-secondary)]">
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `(function(){var t=localStorage.getItem('hydre-theme');if(t==='light'||t==='dark'){document.documentElement.dataset.theme=t;var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='light'?'#F0EAE0':'#050505');}})();`,
+                    }}
+                />
                 <LenisProvider>
                     <AuthRehydrator />
                     {children}

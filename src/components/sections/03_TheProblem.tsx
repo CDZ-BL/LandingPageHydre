@@ -16,7 +16,7 @@ export function TheProblem() {
     const [selectedCompetitor, setSelectedCompetitor] = useState<Competitor>(COMPETITORS[0]);
 
     return (
-        <section className="relative py-16 md:py-32 bg-void overflow-hidden">
+        <section className="relative py-16 md:py-32 bg-[var(--bg-primary)] overflow-hidden">
             {/* Grid background */}
             <div
                 className="absolute inset-0 opacity-5"
@@ -38,11 +38,11 @@ export function TheProblem() {
                     transition={{ duration: 0.8 }}
                     className="mb-8"
                 >
-                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide">
+                    <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide">
                         Ce que contiennent vraiment vos boissons.
                     </h2>
-                    <p className="font-mono text-sm md:text-lg lg:text-xl text-white/60 mt-4 tracking-wide">
-                        Les chiffres ne mentent pas. <span className="text-white">Le marketing, si.</span>
+                    <p className="font-mono text-sm md:text-lg lg:text-xl text-[var(--text-tertiary)] mt-4 tracking-wide">
+                        Les chiffres ne mentent pas. <span className="text-[var(--text-primary)]">Le marketing, si.</span>
                     </p>
                 </motion.div>
 
@@ -68,12 +68,12 @@ export function TheProblem() {
                     className="mb-16"
                 >
                     {/* Section Divider */}
-                    <div className="flex items-center gap-4 mb-12 pt-12 border-t border-white/10">
-                        <div className="flex-1 h-[1px] bg-white/10" />
+                    <div className="flex items-center gap-4 mb-12 pt-12 border-t border-[var(--stroke)]">
+                        <div className="flex-1 h-[1px] bg-[var(--stroke)]" />
                         <h3 className="font-data text-xs text-neon-orange tracking-widest">
                             [ ANALYSE COMPARATIVE ]
                         </h3>
-                        <div className="flex-1 h-[1px] bg-white/10" />
+                        <div className="flex-1 h-[1px] bg-[var(--stroke)]" />
                     </div>
 
                     {/* Two-column layout */}
@@ -99,12 +99,12 @@ export function TheProblem() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5 }}
-                        className="mt-12 p-6 border border-white/10 bg-white/[0.02] rounded-machined text-center"
+                        className="mt-12 p-6 border border-[var(--stroke)] bg-[var(--bg-surface)]/5 rounded-machined text-center"
                     >
                         <p className="font-data text-xs text-tertiary tracking-wider mb-2">
                             DIAGNOSTIC : {selectedCompetitor.codeName}
                         </p>
-                        <p className="text-white/80 text-sm leading-relaxed max-w-lg mx-auto">
+                        <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-lg mx-auto">
                             {selectedCompetitor.description}
                         </p>
                     </motion.div>

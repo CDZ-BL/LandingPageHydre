@@ -56,8 +56,8 @@ function GlassPanel({
             transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
             className={`
                 relative
-                border border-white/[0.08]
-                bg-white/[0.02]
+                border border-[var(--stroke)]
+                bg-[var(--bg-surface)]/5
                 backdrop-blur-xl
                 ${className}
             `}
@@ -67,10 +67,10 @@ function GlassPanel({
             }}
         >
             {/* HUD Corners */}
-            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20" />
+            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[var(--stroke-hover)]" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[var(--stroke-hover)]" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[var(--stroke-hover)]" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[var(--stroke-hover)]" />
             {children}
         </motion.div>
     );
@@ -102,19 +102,19 @@ function IngredientRow({
             transition={{ duration: 0.5, delay: index * 0.06 }}
             className="group"
         >
-            <div className="flex items-center gap-3 py-2.5 border-b border-white/[0.04] group-hover:border-white/10 transition-colors duration-300">
+            <div className="flex items-center gap-3 py-2.5 border-b border-[var(--stroke)] group-hover:border-[var(--stroke-hover)] transition-colors duration-300">
                 {/* Name */}
                 <div className="w-[100px] md:w-[130px] shrink-0">
-                    <div className="font-mono text-[11px] md:text-xs text-white font-bold tracking-wider group-hover:text-white transition-colors">
+                    <div className="font-mono text-[11px] md:text-xs text-[var(--text-primary)] font-bold tracking-wider group-hover:text-[var(--text-primary)] transition-colors">
                         {ingredient.name}
                     </div>
-                    <div className="font-mono text-[9px] text-white/20 tracking-wide mt-0.5 truncate">
+                    <div className="font-mono text-[9px] text-[var(--text-muted)] tracking-wide mt-0.5 truncate">
                         {ingredient.source}
                     </div>
                 </div>
 
                 {/* Bar */}
-                <div className="flex-1 h-[4px] bg-white/[0.04] rounded-full overflow-hidden relative">
+                <div className="flex-1 h-[4px] bg-[var(--stroke)] rounded-full overflow-hidden relative">
                     <motion.div
                         initial={{ width: 0 }}
                         whileInView={{ width: `${barWidth}%` }}

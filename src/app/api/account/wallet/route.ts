@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
             // 1. Wallet balance
             supabase
                 .from('cashback_wallets')
-                .select('id, balance_cents, lifetime_earned_cents, lifetime_spent_cents, updated_at')
+                .select('id, cashback_balance_cents, lifetime_cashback_earned_cents, lifetime_cashback_spent_cents, commission_balance_cents, lifetime_commission_earned_cents, lifetime_commission_withdrawn_cents, updated_at')
                 .eq('user_id', userId)
                 .single(),
 
@@ -79,10 +79,15 @@ export async function GET(request: NextRequest) {
         if (walletRes.error && walletRes.error.code === 'PGRST116') {
             // No wallet found — return empty state
             return NextResponse.json({
-                wallet: {
+                cashback: {
                     balanceCents: 0,
                     lifetimeEarnedCents: 0,
                     lifetimeSpentCents: 0,
+                },
+                commission: {
+                    balanceCents: 0,
+                    lifetimeEarnedCents: 0,
+                    lifetimeWithdrawnCents: 0,
                 },
                 transactions: [],
                 pagination: { limit, offset, hasMore: false },
@@ -134,10 +139,15 @@ export async function GET(request: NextRequest) {
         const hasMore = transactions.length === limit;
 
         return NextResponse.json({
-            wallet: {
-                balanceCents: wallet.balance_cents,
-                lifetimeEarnedCents: wallet.lifetime_earned_cents,
-                lifetimeSpentCents: wallet.lifetime_spent_cents,
+            cashback: {
+                balanceCents: wallet.cashback_balance_cents ?? 0,
+                lifetimeEarnedCents: wallet.lifetime_cashback_earned_cents ?? 0,
+                lifetimeSpentCents: wallet.lifetime_cashback_spent_cents ?? 0,
+            },
+            commission: {
+                balanceCents: wallet.commission_balance_cents ?? 0,
+                lifetimeEarnedCents: wallet.lifetime_commission_earned_cents ?? 0,
+                lifetimeWithdrawnCents: wallet.lifetime_commission_withdrawn_cents ?? 0,
             },
             transactions,
             pagination: { limit, offset, hasMore },
