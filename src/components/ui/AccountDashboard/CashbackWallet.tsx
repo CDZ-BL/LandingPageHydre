@@ -121,9 +121,12 @@ export const CashbackWallet = ({ cashback, commission }: CashbackWalletProps) =>
             transition={{ duration: 0.5, delay: 0.15 }}
             className="space-y-6"
         >
-            {/* ━━━ SECTION 1: Cashback (Store Credit) ━━━ */}
-            <div
-                className={cn(
+            {/* ━━━ TOP ROW: WALLETS SIDE-BY-SIDE ━━━ */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                {/* ━━━ SECTION 1: Cashback (Store Credit) ━━━ */}
+                <div
+                    className={cn(
                     'rounded-lg border border-white/[0.06] bg-white/[0.03] backdrop-blur',
                     'p-6 md:p-8'
                 )}
@@ -253,7 +256,9 @@ export const CashbackWallet = ({ cashback, commission }: CashbackWalletProps) =>
                 </div>
             </div>
 
-            {/* ━━━ SHARED TRANSACTION HISTORY ━━━ */}
+            </div> {/* ━━━ END TOP ROW ━━━ */}
+
+            {/* ━━━ BOTTOM ROW: SHARED TRANSACTION HISTORY ━━━ */}
             <div
                 className={cn(
                     'rounded-lg border border-white/[0.06] bg-white/[0.03] backdrop-blur',
