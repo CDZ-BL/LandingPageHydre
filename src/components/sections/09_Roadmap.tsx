@@ -146,13 +146,13 @@ export function Roadmap() {
                 });
 
                 // Restore static border
-                gsap.to(surface, { borderColor: '#111', duration: 0.3 });
+                gsap.to(surface, { borderColor: 'var(--stroke)', duration: 0.3 });
             }
         });
     }, { scope: sectionRef, dependencies: [activeIndex] });
 
     return (
-        <section ref={sectionRef} className="relative py-14 md:py-24 lg:py-32 bg-[#050505] overflow-hidden border-t border-[#111]">
+        <section ref={sectionRef} className="relative py-14 md:py-24 lg:py-32 bg-[var(--bg-primary)] overflow-hidden border-t border-[var(--stroke)]">
 
             {/* Background Grid */}
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundSize: '30px 30px', backgroundImage: 'linear-gradient(to right, #222 1px, transparent 1px), linear-gradient(to bottom, #222 1px, transparent 1px)' }} />
@@ -161,10 +161,10 @@ export function Roadmap() {
 
                 {/* Header */}
                 <div className="mb-12 max-w-3xl">
-                    <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block uppercase">
+                    <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.3em] mb-5 block uppercase">
                         Feuille de route
                     </span>
-                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide leading-[1.05] mb-4">
+                    <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide leading-[1.05] mb-4">
                         Les prochaines étapes.
                     </h2>
                 </div>
@@ -174,9 +174,9 @@ export function Roadmap() {
                 <div className="relative">
 
                     {/* The Timeline Track */}
-                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1.5 bg-[#111] rounded-full border border-white/5 transform -translate-x-1/2 z-0 overflow-hidden">
+                    <div className="absolute left-8 md:left-12 top-0 bottom-0 w-1.5 bg-[var(--bg-secondary)] rounded-full border border-[var(--stroke)] transform -translate-x-1/2 z-0 overflow-hidden">
                         {/* The GSAP Timeline Progress */}
-                        <div className="timeline-progress absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-[#111] via-gray-400 to-white shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+                        <div className="timeline-progress absolute top-0 left-0 right-0 w-full bg-gradient-to-b from-[var(--bg-secondary)] via-gray-400 to-white shadow-[0_0_15px_rgba(255,255,255,0.8)]">
                             <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-white to-transparent opacity-80" />
                         </div>
                     </div>
@@ -191,7 +191,7 @@ export function Roadmap() {
                                 <div key={`card-${index}`} onClick={() => handleEngagePhase(index)} className="relative cursor-pointer origin-left roadmap-card">
 
                                     {/* Connection Point (Left Dot) */}
-                                    <div className={`absolute -left-[40px] md:-left-[56px] top-4 w-4 h-4 rounded-full border-2 transition-all duration-300 z-20 ${isActive ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)] scale-125' : index < activeIndex ? 'bg-gray-600 border-gray-600 opacity-50' : 'bg-[#050505] border-[#333]'}`}>
+                                    <div className={`absolute -left-[40px] md:-left-[56px] top-4 w-4 h-4 rounded-full border-2 transition-all duration-300 z-20 ${isActive ? 'bg-white border-white shadow-[0_0_20px_rgba(255,255,255,0.8)] scale-125' : index < activeIndex ? 'bg-gray-600 border-gray-600 opacity-50' : 'bg-[var(--bg-primary)] border-[var(--stroke-hover)]'}`}>
                                         {isActive && <div className="absolute inset-0 rounded-full bg-white animate-ping opacity-40" />}
                                     </div>
 
@@ -202,27 +202,27 @@ export function Roadmap() {
                                             <div className="rotating-beam absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200%] h-[200%] bg-[conic-gradient(from_0deg,transparent_70%,rgba(0,229,255,1)_95%,transparent_100%)]" />
                                         </div>
 
-                                        <div className="card-surface relative z-10 p-6 md:p-8 bg-[#050505] border border-[#111] rounded-xl transition-colors duration-300">
+                                        <div className="card-surface relative z-10 p-6 md:p-8 bg-[var(--bg-primary)] border border-[var(--stroke)] rounded-xl transition-colors duration-300">
 
                                             <div className="flex flex-wrap items-center gap-2 mb-4">
-                                                <span className={`font-mono text-[10px] md:text-xs tracking-wider md:tracking-widest px-2 py-0.5 border transition-all ${isActive ? 'border-[#00E5FF] text-[#00E5FF] bg-[#00E5FF]/10' : 'border-[#333] text-gray-500'}`}>
+                                                <span className={`font-mono text-[10px] md:text-xs tracking-wider md:tracking-widest px-2 py-0.5 border transition-all ${isActive ? 'border-[#00E5FF] text-[#00E5FF] bg-[#00E5FF]/10' : 'border-[var(--stroke-hover)] text-[var(--text-muted)]'}`}>
                                                     {item.phase} {'//'} {item.status}
                                                 </span>
-                                                <span className="font-mono text-[10px] md:text-xs text-gray-600">{item.date}</span>
+                                                <span className="font-mono text-[10px] md:text-xs text-[var(--text-muted)]">{item.date}</span>
                                             </div>
 
-                                            <h4 className={`font-sans font-bold tracking-tight transition-all mb-2 ${isActive ? 'text-2xl md:text-3xl text-white' : 'text-lg text-gray-500'}`}>
+                                            <h4 className={`font-sans font-bold tracking-tight transition-all mb-2 ${isActive ? 'text-2xl md:text-3xl text-[var(--text-primary)]' : 'text-lg text-[var(--text-muted)]'}`}>
                                                 <DecryptTitle title={item.title} isFuture={isFuture} />
                                             </h4>
 
                                             <div className="card-content-wrapper overflow-hidden" style={{ height: isActive ? 'auto' : 0, opacity: isActive ? 1 : 0 }}>
-                                                <div className="pt-4 border-t border-white/5 mt-4">
-                                                    <p className="font-mono text-sm md:text-base text-gray-400 mb-6 leading-relaxed">
+                                                <div className="pt-4 border-t border-[var(--stroke)] mt-4">
+                                                    <p className="font-mono text-sm md:text-base text-[var(--text-tertiary)] mb-6 leading-relaxed">
                                                         {item.description}
                                                     </p>
                                                     <ul className="flex flex-wrap gap-2">
                                                         {item.features.map((feature, i) => (
-                                                            <li key={i} className="font-mono text-xs px-3 py-1.5 rounded border text-gray-300 bg-white/5 border-white/10">
+                                                            <li key={i} className="font-mono text-xs px-3 py-1.5 rounded border text-[var(--text-secondary)] bg-[var(--bg-surface)]/10 border-[var(--stroke)]">
                                                                 {feature}
                                                             </li>
                                                         ))}

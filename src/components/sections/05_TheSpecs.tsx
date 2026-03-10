@@ -133,10 +133,10 @@ function IngredientRow({
                     <span className="font-mono text-xs md:text-sm font-bold tabular-nums" style={{ color: accentColor }}>
                         {ingredient.amount}
                     </span>
-                    <span className="font-mono text-[9px] text-white/25 ml-0.5">
+                    <span className="font-mono text-[9px] text-[var(--text-muted)] ml-0.5">
                         {ingredient.unit}
                     </span>
-                    <span className="font-mono text-[9px] text-white/35 ml-1 tabular-nums">
+                    <span className="font-mono text-[9px] text-[var(--text-muted)] ml-1 tabular-nums">
                         {ajrPercent}%
                     </span>
                 </div>
@@ -156,10 +156,10 @@ function CategoryHeader({ label, color }: { label: string; color: string }) {
                 className="w-1.5 h-1.5 rounded-full"
                 style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}60` }}
             />
-            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+            <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">
                 {label}
             </span>
-            <div className="flex-1 h-px bg-white/[0.06]" />
+            <div className="flex-1 h-px bg-[var(--stroke)]" />
         </div>
     );
 }
@@ -172,7 +172,7 @@ export function TheSpecs() {
     const maxElectrolyteAmount = Math.max(...ELECTROLYTES.map(e => e.amount));
 
     return (
-        <section className="relative py-20 md:py-32 bg-void overflow-hidden">
+        <section className="relative py-20 md:py-32 bg-[var(--bg-primary)] overflow-hidden">
             {/* Subtle grid background */}
             <div
                 className="absolute inset-0 opacity-[0.03]"
@@ -203,10 +203,10 @@ export function TheSpecs() {
                     transition={{ duration: 0.8 }}
                     className="text-center mb-16 md:mb-20"
                 >
-                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide">
+                    <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide">
                         Composition de votre produit
                     </h2>
-                    <p className="font-mono text-sm text-white/40 mt-4 tracking-wide max-w-xl mx-auto">
+                    <p className="font-mono text-sm text-[var(--text-muted)] mt-4 tracking-wide max-w-xl mx-auto">
                         Chaque molécule a une fonction. Rien de superflu.
                     </p>
                 </motion.div>
@@ -217,9 +217,9 @@ export function TheSpecs() {
                     {/* ── LEFT GLASS PANEL: Nutritional Data ── */}
                     <GlassPanel className="p-5 md:p-6 order-2 lg:order-1" delay={0.1}>
                         {/* Panel header */}
-                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/[0.06]">
+                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[var(--stroke)]">
                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span className="font-mono text-[10px] tracking-[0.15em] text-white/50 uppercase">
+                            <span className="font-mono text-[10px] tracking-[0.15em] text-[var(--text-muted)] uppercase">
                                 Apport Nutritionnel
                             </span>
                         </div>
@@ -250,8 +250,8 @@ export function TheSpecs() {
                         ))}
 
                         {/* AJR footer */}
-                        <div className="mt-4 pt-3 border-t border-white/[0.04]">
-                            <span className="font-mono text-[9px] text-white/15 tracking-wider">
+                        <div className="mt-4 pt-3 border-t border-[var(--stroke)]">
+                            <span className="font-mono text-[9px] text-[var(--text-muted)] tracking-wider">
                                 *% AJR — Apports Journaliers Recommandés · UE Reg. 1169/2011
                             </span>
                         </div>
@@ -280,18 +280,18 @@ export function TheSpecs() {
                     {/* ── RIGHT GLASS PANEL: Ingredient List ── */}
                     <GlassPanel className="p-5 md:p-6 order-3" delay={0.2}>
                         {/* Panel header */}
-                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-white/[0.06]">
+                        <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[var(--stroke)]">
                             <div className="w-2 h-2 rounded-full bg-white/30 animate-pulse" />
-                            <span className="font-mono text-[10px] tracking-[0.15em] text-white/50 uppercase">
+                            <span className="font-mono text-[10px] tracking-[0.15em] text-[var(--text-muted)] uppercase">
                                 Liste des ingrédients
                             </span>
                         </div>
 
                         {/* Ingredient text */}
-                        <div className="font-mono text-[10px] text-white/25 tracking-[0.15em] uppercase mb-3">
+                        <div className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.15em] uppercase mb-3">
                             1 pastille effervescente
                         </div>
-                        <p className="font-mono text-[11px] md:text-xs text-white/55 leading-[1.8] tracking-wide">
+                        <p className="font-mono text-[11px] md:text-xs text-[var(--text-secondary)] leading-[1.8] tracking-wide">
                             Acide citrique, bicarbonate de sodium, carbonate de sodium, sorbitol, chlorure de potassium,
                             citrate de potassium, acide L-ascorbique (vitamine C), citrate de magnésium, arôme naturel Yuzu &amp; Pêche,
                             citrate de zinc, niacine (vitamine B3), D-pantothénate de calcium (vitamine B5),
@@ -304,12 +304,12 @@ export function TheSpecs() {
                         {/* Allergènes */}
                         <div className="flex items-center gap-2.5 mb-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                            <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">
                                 Allergènes
                             </span>
-                            <div className="flex-1 h-px bg-white/[0.06]" />
+                            <div className="flex-1 h-px bg-[var(--stroke)]" />
                         </div>
-                        <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                        <p className="font-mono text-[11px] text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                             Aucun allergène majeur. Sans gluten, sans lactose, sans OGM.
                         </p>
 
@@ -318,12 +318,12 @@ export function TheSpecs() {
                         {/* Conseils d'utilisation */}
                         <div className="flex items-center gap-2.5 mb-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                            <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">
                                 Conseils d&apos;utilisation
                             </span>
-                            <div className="flex-1 h-px bg-white/[0.06]" />
+                            <div className="flex-1 h-px bg-[var(--stroke)]" />
                         </div>
-                        <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                        <p className="font-mono text-[11px] text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                             Dissoudre 1 pastille dans un verre d&apos;eau froide (200 ml).
                             Ne pas dépasser la dose journalière recommandée.
                         </p>
@@ -333,12 +333,12 @@ export function TheSpecs() {
                         {/* Conservation */}
                         <div className="flex items-center gap-2.5 mb-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">
+                            <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">
                                 Conservation
                             </span>
-                            <div className="flex-1 h-px bg-white/[0.06]" />
+                            <div className="flex-1 h-px bg-[var(--stroke)]" />
                         </div>
-                        <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                        <p className="font-mono text-[11px] text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                             Conserver dans un endroit frais et sec, à l&apos;abri de la lumière.
                             Refermer le tube après chaque utilisation.
                         </p>

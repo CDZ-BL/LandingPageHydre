@@ -114,7 +114,7 @@ function CostLegend({ segments }: { segments: CostSegment[] }) {
                         className="w-2 h-2 rounded-full shrink-0"
                         style={{ backgroundColor: seg.color, boxShadow: seg.glow || 'none' }}
                     />
-                    <span className="font-mono text-[10px] text-white/40 tracking-wider">
+                    <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
                         {seg.label} ({seg.percent}%)
                     </span>
                 </div>
@@ -133,11 +133,11 @@ function PrincipleCard({ number, title, description, delay }: {
             transition={{ duration: 1, delay }}
             className="group relative"
         >
-            <div className="relative border border-white/[0.06] bg-white/[0.01] p-4 md:p-5 hover:border-white/[0.12] transition-colors duration-500">
-                <span className="font-mono text-[10px] text-white/15 tracking-[0.3em] block mb-2">{number}</span>
-                <h4 className="font-headline text-base md:text-lg text-white tracking-wider mb-2">{title}</h4>
-                <p className="font-mono text-[11px] md:text-xs text-white/50 leading-relaxed tracking-wide">{description}</p>
-                <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full bg-gradient-to-r from-white/30 to-transparent transition-all duration-700" />
+            <div className="relative border border-[var(--stroke)] bg-[var(--bg-surface)]/5 p-4 md:p-5 hover:border-[var(--stroke-hover)] transition-colors duration-500">
+                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.3em] block mb-2">{number}</span>
+                <h4 className="font-headline text-base md:text-lg text-[var(--text-primary)] tracking-wider mb-2">{title}</h4>
+                <p className="font-mono text-[11px] md:text-xs text-[var(--text-tertiary)] leading-relaxed tracking-wide">{description}</p>
+                <div className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full bg-gradient-to-r from-[var(--text-muted)]/30 to-transparent transition-all duration-700" />
             </div>
         </motion.div>
     );
@@ -158,13 +158,13 @@ function IngredientRow({ ingredient, index, accentColor, barMode = 'ajr', maxAmo
             transition={{ duration: 0.5, delay: index * 0.04 }}
             className="group"
         >
-            <div className="flex items-center gap-2 py-1 border-b border-white/[0.04] group-hover:border-white/10 transition-colors duration-300">
+            <div className="flex items-center gap-2 py-1 border-b border-[var(--stroke)] group-hover:border-[var(--stroke-hover)] transition-colors duration-300">
                 <div className="w-[90px] sm:w-[110px] md:w-[140px] shrink-0">
-                    <div className="font-mono text-[11px] md:text-xs text-white font-bold tracking-wider">
+                    <div className="font-mono text-[11px] md:text-xs text-[var(--text-primary)] font-bold tracking-wider">
                         {ingredient.name}
                     </div>
                 </div>
-                <div className="flex-1 max-w-[55%] h-[4px] bg-white/[0.04] rounded-full overflow-hidden relative">
+                <div className="flex-1 max-w-[55%] h-[4px] bg-[var(--stroke)] rounded-full overflow-hidden relative">
                     <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${barWidth}%` }}
@@ -180,8 +180,8 @@ function IngredientRow({ ingredient, index, accentColor, barMode = 'ajr', maxAmo
                     <span className="font-mono text-xs md:text-sm font-bold tabular-nums" style={{ color: accentColor }}>
                         {ingredient.amount}
                     </span>
-                    <span className="font-mono text-[9px] text-white/30 ml-0.5">{ingredient.unit}</span>
-                    <span className="font-mono text-[9px] text-white/40 ml-1 tabular-nums">{ajrPercent}%</span>
+                    <span className="font-mono text-[9px] text-[var(--text-muted)] ml-0.5">{ingredient.unit}</span>
+                    <span className="font-mono text-[9px] text-[var(--text-muted)] ml-1 tabular-nums">{ajrPercent}%</span>
                 </div>
             </div>
         </motion.div>
@@ -192,8 +192,8 @@ function CategoryHeader({ label, color }: { label: string; color: string }) {
     return (
         <div className="flex items-center gap-2 mb-1 mt-1">
             <div className="w-1 h-1 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 6px ${color}60` }} />
-            <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">{label}</span>
-            <div className="flex-1 h-px bg-white/[0.06]" />
+            <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">{label}</span>
+            <div className="flex-1 h-px bg-[var(--stroke)]" />
         </div>
     );
 }
@@ -221,22 +221,22 @@ function PanelAnalyse() {
         <div className="space-y-3">
             {/* Header */}
             <div>
-                <h2 className="font-headline text-h2 text-white font-bold tracking-wide">
+                <h2 className="font-headline text-h2 text-[var(--text-primary)] font-bold tracking-wide">
                     Ce que contiennent vraiment vos boissons.
                 </h2>
-                <p className="font-mono text-xs md:text-sm text-white/60 mt-2 tracking-wide">
-                    Les chiffres ne mentent pas. <span className="text-white">Le marketing, si.</span>
+                <p className="font-mono text-xs md:text-sm text-[var(--text-tertiary)] mt-2 tracking-wide">
+                    Les chiffres ne mentent pas. <span className="text-[var(--text-primary)]">Le marketing, si.</span>
                 </p>
             </div>
 
             {/* Comparative Analysis */}
             <div>
-                <div className="flex items-center gap-3 mb-3 pt-3 border-t border-white/10">
-                    <div className="flex-1 h-[1px] bg-white/10" />
+                <div className="flex items-center gap-3 mb-3 pt-3 border-t border-[var(--stroke)]">
+                    <div className="flex-1 h-[1px] bg-[var(--stroke)]" />
                     <h3 className="font-data text-[10px] text-neon-orange tracking-widest">
                         [ ANALYSE COMPARATIVE ]
                     </h3>
-                    <div className="flex-1 h-[1px] bg-white/10" />
+                    <div className="flex-1 h-[1px] bg-[var(--stroke)]" />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
@@ -257,12 +257,12 @@ function PanelAnalyse() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5 }}
-                    className="mt-3 p-3 border border-white/10 bg-white/[0.02] rounded-machined text-center"
+                    className="mt-3 p-3 border border-[var(--stroke)] bg-[var(--bg-surface)]/5 rounded-machined text-center"
                 >
                     <p className="font-data text-[10px] text-tertiary tracking-wider mb-1">
                         DIAGNOSTIC : {selectedCompetitor.codeName}
                     </p>
-                    <p className="text-white/80 text-xs leading-relaxed max-w-lg mx-auto">
+                    <p className="text-[var(--text-secondary)] text-xs leading-relaxed max-w-lg mx-auto">
                         {selectedCompetitor.description}
                     </p>
                 </motion.div>
@@ -278,11 +278,11 @@ function PanelEngagement() {
         <div className="space-y-6">
             {/* Header */}
             <div className="max-w-3xl">
-                <h2 className="font-headline text-h2 text-white font-bold tracking-wide leading-[1.05] mb-4">
+                <h2 className="font-headline text-h2 text-[var(--text-primary)] font-bold tracking-wide leading-[1.05] mb-4">
                     Vous payez le produit.<br />
                     <span className="text-[#E6DCC8] italic font-light tracking-normal">Pas le bruit.</span>
                 </h2>
-                <p className="font-mono text-xs md:text-sm text-white/60 leading-relaxed tracking-wide">
+                <p className="font-mono text-xs md:text-sm text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                     Le modèle standard est cassé — 85% du prix finance le marketing, pas vos performances.
                     Smart supprime l&apos;inutile et investit tout dans la formule.
                 </p>
@@ -295,22 +295,22 @@ function PanelEngagement() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7 }}
-                    className="border border-white/[0.06] bg-white/[0.01] p-5 md:p-6 relative"
+                    className="border border-[var(--stroke)] bg-[var(--bg-surface)]/5 p-5 md:p-6 relative"
                 >
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/10" />
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/10" />
-                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/10" />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/10" />
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[var(--stroke)]" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[var(--stroke)]" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[var(--stroke)]" />
+                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[var(--stroke)]" />
                     <div className="flex items-baseline justify-between mb-3">
                         <div>
-                            <span className="font-mono text-[10px] text-white/20 tracking-[0.2em] block mb-0.5">CONCURRENT PREMIUM</span>
-                            <span className="font-mono text-xl md:text-2xl text-white/40 tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.2em] block mb-0.5">CONCURRENT PREMIUM</span>
+                            <span className="font-mono text-xl md:text-2xl text-[var(--text-muted)] tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
                         </div>
                         <span className="font-mono text-[10px] text-neon-orange/60 tracking-wider">INEFFICIENT</span>
                     </div>
                     <CostBar segments={COMPETITOR_COST} delay={0.2} />
                     <CostLegend segments={COMPETITOR_COST} />
-                    <div className="mt-3 pt-2 border-t border-white/[0.04]">
+                    <div className="mt-3 pt-2 border-t border-[var(--stroke)]">
                         <div className="flex items-center gap-2">
                             <div className="w-1 h-1 rounded-full bg-neon-orange/60" />
                             <span className="font-mono text-[9px] text-neon-orange/40 tracking-wider">
@@ -325,16 +325,16 @@ function PanelEngagement() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.7, delay: 0.15 }}
-                    className="border border-white/[0.1] bg-white/[0.02] p-5 md:p-6 relative"
+                    className="border border-[var(--stroke-hover)] bg-[var(--bg-surface)]/5 p-5 md:p-6 relative"
                 >
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20" />
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20" />
-                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20" />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20" />
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[var(--stroke-hover)]" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[var(--stroke-hover)]" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[var(--stroke-hover)]" />
+                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[var(--stroke-hover)]" />
                     <div className="flex items-baseline justify-between mb-3">
                         <div>
-                            <span className="font-mono text-[10px] text-white/40 tracking-[0.2em] block mb-0.5">SMART PROTOCOLE</span>
-                            <span className="font-mono text-xl md:text-2xl text-white tabular-nums">{SMART_PRICE.toFixed(2)}€</span>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.2em] block mb-0.5">SMART PROTOCOLE</span>
+                            <span className="font-mono text-xl md:text-2xl text-[var(--text-primary)] tabular-nums">{SMART_PRICE.toFixed(2)}€</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <div className="w-1.5 h-1.5 rounded-full bg-[#E6DCC8] animate-pulse" />
@@ -343,10 +343,10 @@ function PanelEngagement() {
                     </div>
                     <CostBar segments={SMART_COST} delay={0.4} />
                     <CostLegend segments={SMART_COST} />
-                    <div className="mt-3 pt-2 border-t border-white/[0.06]">
+                    <div className="mt-3 pt-2 border-t border-[var(--stroke)]">
                         <div className="flex items-center gap-2">
                             <div className="w-1 h-1 rounded-full bg-white/60" />
-                            <span className="font-mono text-[9px] text-white/40 tracking-wider">
+                            <span className="font-mono text-[9px] text-[var(--text-muted)] tracking-wider">
                                 100% DU BUDGET AU SERVICE DE LA FORMULE
                             </span>
                         </div>
@@ -375,8 +375,8 @@ function CarouselGlassPanel({
         <div
             className={`
                 relative
-                border border-white/[0.08]
-                bg-white/[0.02]
+                border border-[var(--stroke)]
+                bg-[var(--bg-surface)]/5
                 backdrop-blur-xl
                 ${className}
             `}
@@ -385,10 +385,10 @@ function CarouselGlassPanel({
                 WebkitBackdropFilter: 'blur(16px) saturate(1.2)',
             }}
         >
-            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20" />
-            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20" />
-            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20" />
-            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/20" />
+            <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-[var(--stroke-hover)]" />
+            <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-[var(--stroke-hover)]" />
+            <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-[var(--stroke-hover)]" />
+            <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-[var(--stroke-hover)]" />
             {children}
         </div>
     );
@@ -401,10 +401,10 @@ function PanelFormule() {
         <div className="space-y-3">
             {/* Header */}
             <div className="text-center">
-                <h2 className="font-headline text-h2 text-white font-bold tracking-wide">
+                <h2 className="font-headline text-h2 text-[var(--text-primary)] font-bold tracking-wide">
                     Composition de votre produit
                 </h2>
-                <p className="font-mono text-xs text-white/40 mt-2 tracking-wide max-w-xl mx-auto">
+                <p className="font-mono text-xs text-[var(--text-muted)] mt-2 tracking-wide max-w-xl mx-auto">
                     Chaque molécule a une fonction. Rien de superflu.
                 </p>
             </div>
@@ -414,9 +414,9 @@ function PanelFormule() {
 
                 {/* LEFT — Nutritional Data */}
                 <CarouselGlassPanel className="p-4 order-2 lg:order-1">
-                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/[0.06]">
+                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[var(--stroke)]">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="font-mono text-[10px] tracking-[0.15em] text-white/50 uppercase">
+                        <span className="font-mono text-[10px] tracking-[0.15em] text-[var(--text-muted)] uppercase">
                             Apport Nutritionnel
                         </span>
                     </div>
@@ -443,8 +443,8 @@ function PanelFormule() {
                         />
                     ))}
 
-                    <div className="mt-3 pt-2 border-t border-white/[0.04]">
-                        <span className="font-mono text-[9px] text-white/15 tracking-wider">
+                    <div className="mt-3 pt-2 border-t border-[var(--stroke)]">
+                        <span className="font-mono text-[9px] text-[var(--text-muted)] tracking-wider">
                             *% AJR · UE Reg. 1169/2011
                         </span>
                     </div>
@@ -465,17 +465,17 @@ function PanelFormule() {
 
                 {/* RIGHT — Ingredient List */}
                 <CarouselGlassPanel className="p-4 order-3">
-                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-white/[0.06]">
+                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[var(--stroke)]">
                         <div className="w-2 h-2 rounded-full bg-white/30 animate-pulse" />
-                        <span className="font-mono text-[10px] tracking-[0.15em] text-white/50 uppercase">
+                        <span className="font-mono text-[10px] tracking-[0.15em] text-[var(--text-muted)] uppercase">
                             Liste des ingrédients
                         </span>
                     </div>
 
-                    <div className="font-mono text-[10px] text-white/25 tracking-[0.15em] uppercase mb-2">
+                    <div className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.15em] uppercase mb-2">
                         1 pastille effervescente
                     </div>
-                    <p className="font-mono text-[11px] text-white/55 leading-[1.8] tracking-wide">
+                    <p className="font-mono text-[11px] text-[var(--text-secondary)] leading-[1.8] tracking-wide">
                         Acide citrique, bicarbonate de sodium, carbonate de sodium, sorbitol, chlorure de potassium,
                         citrate de potassium, acide L-ascorbique (vitamine C), citrate de magnésium, arôme naturel Yuzu &amp; Pêche,
                         citrate de zinc, niacine (vitamine B3), D-pantothénate de calcium (vitamine B5),
@@ -487,10 +487,10 @@ function PanelFormule() {
 
                     <div className="flex items-center gap-2 mb-1.5">
                         <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                        <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">Allergènes</span>
-                        <div className="flex-1 h-px bg-white/[0.06]" />
+                        <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">Allergènes</span>
+                        <div className="flex-1 h-px bg-[var(--stroke)]" />
                     </div>
-                    <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                    <p className="font-mono text-[11px] text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                         Aucun allergène majeur. Sans gluten, sans lactose, sans OGM.
                     </p>
 
@@ -498,10 +498,10 @@ function PanelFormule() {
 
                     <div className="flex items-center gap-2 mb-1.5">
                         <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                        <span className="font-mono text-[9px] tracking-[0.2em] text-white/40 uppercase">Conseils d&apos;utilisation</span>
-                        <div className="flex-1 h-px bg-white/[0.06]" />
+                        <span className="font-mono text-[9px] tracking-[0.2em] text-[var(--text-muted)] uppercase">Conseils d&apos;utilisation</span>
+                        <div className="flex-1 h-px bg-[var(--stroke)]" />
                     </div>
-                    <p className="font-mono text-[11px] text-white/45 leading-relaxed tracking-wide">
+                    <p className="font-mono text-[11px] text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                         Dissoudre 1 pastille dans un verre d&apos;eau froide (200 ml).
                         Ne pas dépasser la dose journalière recommandée.
                     </p>
@@ -581,7 +581,7 @@ export function CarouselHub() {
     const progressPercent = ((activeIndex + 1) / PANELS.length) * 100;
 
     return (
-        <section className="relative py-16 md:py-24 bg-void overflow-hidden">
+        <section className="relative py-16 md:py-24 bg-[var(--bg-primary)] overflow-hidden">
             {/* Grid background */}
             <div
                 className="absolute inset-0 opacity-5"
@@ -616,8 +616,8 @@ export function CarouselHub() {
                                 font-mono text-xs tracking-[0.15em] uppercase
                                 transition-all duration-500 border carousel-tab-glow
                                 ${i === activeIndex
-                                    ? 'bg-white/[0.06] text-white border-white/20 carousel-tab-glow--active'
-                                    : 'bg-transparent text-white/50 border-white/[0.04] hover:text-white/80 hover:border-white/10 hover:bg-white/[0.02]'
+                                    ? 'bg-[var(--bg-surface)]/10 text-[var(--text-primary)] border-[var(--stroke-hover)] carousel-tab-glow--active'
+                                    : 'bg-transparent text-[var(--text-tertiary)] border-[var(--stroke)] hover:text-[var(--text-secondary)] hover:border-[var(--stroke-hover)] hover:bg-[var(--bg-surface)]/5'
                                 }
                             `}
                         >
@@ -641,7 +641,7 @@ export function CarouselHub() {
                             {/* Step counter */}
                             <span className={`
                                 font-mono text-[9px] ml-1 tabular-nums
-                                ${i === activeIndex ? 'text-white/40' : 'text-white/30'}
+                                ${i === activeIndex ? 'text-[var(--text-muted)]' : 'text-[var(--text-muted)]'}
                             `}>
                                 {String(i + 1).padStart(2, '0')}/{String(PANELS.length).padStart(2, '0')}
                             </span>
@@ -650,9 +650,9 @@ export function CarouselHub() {
 
                     {/* Spacer and keyboard hint */}
                     <div className="flex-1" />
-                    <div className="hidden md:flex items-center gap-2 text-white/15">
-                        <kbd className="font-mono text-[9px] px-1.5 py-0.5 border border-white/10 rounded">←</kbd>
-                        <kbd className="font-mono text-[9px] px-1.5 py-0.5 border border-white/10 rounded">→</kbd>
+                    <div className="hidden md:flex items-center gap-2 text-[var(--text-muted)]">
+                        <kbd className="font-mono text-[9px] px-1.5 py-0.5 border border-[var(--stroke)] rounded">←</kbd>
+                        <kbd className="font-mono text-[9px] px-1.5 py-0.5 border border-[var(--stroke)] rounded">→</kbd>
                     </div>
                 </div>
 
@@ -689,7 +689,7 @@ export function CarouselHub() {
                 </div>
 
                 {/* ━━━ BOTTOM NAVIGATION ━━━ */}
-                <div className="flex items-center justify-between mt-12 pt-6 border-t border-white/[0.06]">
+                <div className="flex items-center justify-between mt-12 pt-6 border-t border-[var(--stroke)]">
                     {/* Previous */}
                     <button
                         onClick={() => activeIndex > 0 && goTo(activeIndex - 1)}
@@ -698,13 +698,13 @@ export function CarouselHub() {
                             group flex items-center gap-3 px-4 py-2 font-mono text-xs tracking-wider
                             transition-all duration-300 rounded-sm border
                             ${activeIndex === 0
-                                ? 'text-white/20 border-transparent cursor-not-allowed'
-                                : 'text-white border-white/[0.06] hover:border-white/20 hover:bg-white/[0.03]'
+                                ? 'text-[var(--text-muted)] border-transparent cursor-not-allowed'
+                                : 'text-[var(--text-primary)] border-[var(--stroke)] hover:border-[var(--stroke-hover)] hover:bg-[var(--bg-surface)]/5'
                             }
                         `}
                     >
                         <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
-                        <span className="text-white">{activeIndex > 0 ? PANELS[activeIndex - 1].label : ''}</span>
+                        <span className="text-[var(--text-primary)]">{activeIndex > 0 ? PANELS[activeIndex - 1].label : ''}</span>
                     </button>
 
                     {/* Dot indicators */}
@@ -741,12 +741,12 @@ export function CarouselHub() {
                             group flex items-center gap-3 px-4 py-2 font-mono text-xs tracking-wider
                             transition-all duration-300 rounded-sm border
                             ${activeIndex === PANELS.length - 1
-                                ? 'text-white/20 border-transparent cursor-not-allowed'
-                                : 'text-white border-white/[0.06] hover:border-white/20 hover:bg-white/[0.03]'
+                                ? 'text-[var(--text-muted)] border-transparent cursor-not-allowed'
+                                : 'text-[var(--text-primary)] border-[var(--stroke)] hover:border-[var(--stroke-hover)] hover:bg-[var(--bg-surface)]/5'
                             }
                         `}
                     >
-                        <span className="text-white">{activeIndex < PANELS.length - 1 ? PANELS[activeIndex + 1].label : ''}</span>
+                        <span className="text-[var(--text-primary)]">{activeIndex < PANELS.length - 1 ? PANELS[activeIndex + 1].label : ''}</span>
                         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                     </button>
                 </div>

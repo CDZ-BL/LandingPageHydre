@@ -86,7 +86,7 @@ function VoteBar({
 
             {/* ── Button container with external box-shadow glow ── */}
             <div
-                className="relative border px-4 py-3 transition-all duration-500 bg-black/90"
+                className="relative border px-4 py-3 transition-all duration-500 bg-[var(--bg-primary)]/90"
                 style={{
                     borderColor: isSelected ? `${option.color}50` : 'rgba(255,255,255,0.06)',
                     boxShadow: isSelected
@@ -105,8 +105,8 @@ function VoteBar({
                                 boxShadow: `0 0 8px ${option.color}80`,
                             } : {}}
                         />
-                        <span className="font-mono text-xs text-white tracking-widest">{option.label}</span>
-                        <span className="hidden sm:inline font-mono text-[10px] text-white/30">— {option.subtitle}</span>
+                        <span className="font-mono text-xs text-[var(--text-primary)] tracking-widest">{option.label}</span>
+                        <span className="hidden sm:inline font-mono text-[10px] text-[var(--text-muted)]">— {option.subtitle}</span>
                     </div>
                     <span
                         className={`font-mono text-xs tabular-nums transition-opacity duration-300 ${hasVoted ? 'opacity-100' : 'opacity-0'}`}
@@ -117,7 +117,7 @@ function VoteBar({
                 </div>
 
                 {/* Vote bar */}
-                <div className="h-[3px] bg-void-800/60 w-full overflow-hidden rounded-full ml-[22px]" style={{ width: 'calc(100% - 22px)' }}>
+                <div className="h-[3px] bg-[var(--bg-secondary)] w-full overflow-hidden rounded-full ml-[22px]" style={{ width: 'calc(100% - 22px)' }}>
                     <motion.div
                         className="h-full rounded-full"
                         style={{ backgroundColor: option.color }}
@@ -138,28 +138,28 @@ function CommunityCounter() {
     const percentage = (COMMUNITY_CURRENT / COMMUNITY_TARGET) * 100;
 
     return (
-        <div className="border border-void-700/50 p-5">
+        <div className="border border-[var(--stroke)] p-5">
             <div className="flex items-baseline justify-between mb-3">
                 <div className="flex items-baseline gap-2">
                     <motion.span
-                        className="font-mono text-2xl md:text-3xl text-white tabular-nums"
+                        className="font-mono text-2xl md:text-3xl text-[var(--text-primary)] tabular-nums"
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
                         viewport={{ once: false }}
                     >
                         {COMMUNITY_CURRENT.toLocaleString('fr-FR')}
                     </motion.span>
-                    <span className="font-mono text-sm text-white/30">/</span>
-                    <span className="font-mono text-sm text-white/40">
+                    <span className="font-mono text-sm text-[var(--text-muted)]">/</span>
+                    <span className="font-mono text-sm text-[var(--text-muted)]">
                         {COMMUNITY_TARGET.toLocaleString('fr-FR')}
                     </span>
-                    <span className="font-mono text-[10px] text-white/30 tracking-wider ml-2">FONDATEURS</span>
+                    <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider ml-2">FONDATEURS</span>
                 </div>
-                <span className="font-mono text-[10px] text-white/30 tracking-wider">AN 1</span>
+                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">AN 1</span>
             </div>
 
             {/* Progress bar */}
-            <div className="h-1 bg-void-800/60 w-full overflow-hidden rounded-full">
+            <div className="h-1 bg-[var(--bg-secondary)] w-full overflow-hidden rounded-full">
                 <motion.div
                     className="h-full rounded-full bg-cyan-500"
                     initial={{ width: 0 }}
@@ -173,7 +173,7 @@ function CommunityCounter() {
             </div>
 
             <div className="flex justify-end mt-2">
-                <span className="font-mono text-[10px] text-white/25 tracking-wider">
+                <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-wider">
                     {(COMMUNITY_TARGET - COMMUNITY_CURRENT).toLocaleString('fr-FR')} RESTANTES
                 </span>
             </div>
@@ -207,7 +207,7 @@ export function Alliance() {
     const totalVotes = RD_OPTIONS.reduce((sum, opt) => sum + opt.baseVotes, 0);
 
     return (
-        <section className="relative py-16 md:py-32 lg:py-40 bg-black text-white">
+        <section className="relative py-16 md:py-32 lg:py-40 bg-[var(--bg-primary)] text-[var(--text-primary)]">
             {/* Background */}
             <div
                 className="absolute inset-0 opacity-100 pointer-events-none"
@@ -226,14 +226,14 @@ export function Alliance() {
                     transition={{ duration: 0.8 }}
                     className="mb-12 max-w-3xl"
                 >
-                    <span className="font-mono text-[10px] text-white/25 tracking-[0.3em] mb-5 block">
+                    <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.3em] mb-5 block">
 
                     </span>
-                    <h2 className="font-headline text-h1 text-white font-bold tracking-wide leading-[1.05] mb-4">
+                    <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide leading-[1.05] mb-4">
                         Construisons ensemble.<br />
                         <span className="text-[#E6DCC8] italic font-light tracking-normal">La marque que l'industrie n'a jamais osé faire.</span>
                     </h2>
-                    <p className="font-mono text-sm text-white/50 leading-relaxed tracking-wide mt-4">
+                    <p className="font-mono text-sm text-[var(--text-tertiary)] leading-relaxed tracking-wide mt-4">
                         Vous n'êtes pas un consommateur. Vous êtes co-fondateur. Votez, testez, décidez.
                     </p>
                 </motion.div>
@@ -284,12 +284,12 @@ export function Alliance() {
                         </AnimatePresence>
 
                         {/* Features */}
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/[0.06]">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[var(--stroke)]">
                             <div className="flex items-start gap-2">
                                 <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
-                                    <h4 className="font-mono text-[10px] text-white tracking-widest">VOUS VALIDEZ</h4>
-                                    <p className="font-mono text-[10px] text-white/40 mt-1">
+                                    <h4 className="font-mono text-[10px] text-[var(--text-primary)] tracking-widest">VOUS VALIDEZ</h4>
+                                    <p className="font-mono text-[10px] text-[var(--text-muted)] mt-1">
                                         Prototypes des futures saveurs (Samples gratuits).
                                     </p>
                                 </div>
@@ -298,8 +298,8 @@ export function Alliance() {
                             <div className="flex items-start gap-2">
                                 <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
-                                    <h4 className="font-mono text-[10px] text-white tracking-widest">VOUS DÉCIDEZ</h4>
-                                    <p className="font-mono text-[10px] text-white/40 mt-1">
+                                    <h4 className="font-mono text-[10px] text-[var(--text-primary)] tracking-widest">VOUS DÉCIDEZ</h4>
+                                    <p className="font-mono text-[10px] text-[var(--text-muted)] mt-1">
                                         Priorités R&D (cf. Vote ci-contre).
                                     </p>
                                 </div>
@@ -308,8 +308,8 @@ export function Alliance() {
                             <div className="flex items-start gap-2">
                                 <div className="mt-[5px] w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0" />
                                 <div>
-                                    <h4 className="font-mono text-[10px] text-white tracking-widest">VOUS SAVEZ</h4>
-                                    <p className="font-mono text-[10px] text-white/40 mt-1">
+                                    <h4 className="font-mono text-[10px] text-[var(--text-primary)] tracking-widest">VOUS SAVEZ</h4>
+                                    <p className="font-mono text-[10px] text-[var(--text-muted)] mt-1">
                                         Feuilles de route 6 mois avant le public.
                                     </p>
                                 </div>
