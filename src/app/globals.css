@@ -51,6 +51,38 @@
   /* === ACCENT OVERRIDES === */
   --vitamin-accent: #CCFF00;
 
+  /* === SCANLINE (SystemFailure section) === */
+  --scanline-color: rgba(0, 0, 0, 0.85);
+  --scanline-top-veil: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 50%, black 100%);
+
+  /* === RADAR CHART === */
+  --radar-grid-outer: rgba(255, 255, 255, 0.20);
+  --radar-grid-inner: rgba(255, 255, 255, 0.05);
+  --radar-axis: rgba(255, 255, 255, 0.08);
+  --radar-sonar: rgba(255, 255, 255, 0.25);
+  --radar-sweep: rgba(255, 255, 255, 0.10);
+  --radar-aether-fill: rgba(255, 255, 255, 0.03);
+  --radar-aether-stroke: rgba(255, 255, 255, 0.80);
+  --radar-dot: #FFFFFF;
+  --radar-label: #FFFFFF;
+  --radar-crosshair: rgba(255, 255, 255, 0.50);
+  --radar-table-bg: rgba(0, 0, 0, 0.40);
+  --radar-table-border: rgba(255, 255, 255, 0.10);
+  --radar-table-header-bg: rgba(255, 255, 255, 0.03);
+  --radar-table-row-alt: rgba(255, 255, 255, 0.01);
+  --radar-table-row-hover: rgba(255, 255, 255, 0.02);
+  --radar-table-cell-bg: rgba(255, 255, 255, 0.03);
+  --radar-table-col-border: rgba(255, 255, 255, 0.02);
+  --radar-table-footer-bg: rgba(255, 255, 255, 0.02);
+  --radar-table-footer-border: rgba(255, 255, 255, 0.05);
+  --radar-table-text: #FFFFFF;
+  --radar-table-text-dim: rgba(255, 255, 255, 0.40);
+  --radar-table-text-muted: rgba(255, 255, 255, 0.30);
+  --radar-idem-text: #FFFFFF;
+  --radar-neutral-pill-bg: rgba(255, 255, 255, 0.05);
+  --radar-neutral-pill-border: rgba(255, 255, 255, 0.10);
+  --radar-neutral-pill-text: rgba(255, 255, 255, 0.40);
+
   /* === LEGACY COMPAT === */
   --void: #050505;
   --void-light: #111111;
@@ -116,6 +148,38 @@
   --scrollbar-thumb-hover: #7A6E62;
 
   --vitamin-accent: #4A8000;
+
+  /* === SCANLINE (SystemFailure section) === */
+  --scanline-color: rgba(26, 18, 8, 0.06);
+  --scanline-top-veil: linear-gradient(to bottom, transparent 0%, rgba(240,234,224,0.5) 50%, #F0EAE0 100%);
+
+  /* === RADAR CHART === */
+  --radar-grid-outer: rgba(26, 18, 8, 0.18);
+  --radar-grid-inner: rgba(26, 18, 8, 0.06);
+  --radar-axis: rgba(26, 18, 8, 0.08);
+  --radar-sonar: rgba(26, 18, 8, 0.20);
+  --radar-sweep: rgba(26, 18, 8, 0.06);
+  --radar-aether-fill: rgba(26, 18, 8, 0.03);
+  --radar-aether-stroke: rgba(26, 18, 8, 0.75);
+  --radar-dot: #1A1208;
+  --radar-label: #1A1208;
+  --radar-crosshair: rgba(26, 18, 8, 0.40);
+  --radar-table-bg: rgba(255, 252, 248, 0.85);
+  --radar-table-border: rgba(26, 18, 8, 0.10);
+  --radar-table-header-bg: rgba(26, 18, 8, 0.04);
+  --radar-table-row-alt: rgba(26, 18, 8, 0.02);
+  --radar-table-row-hover: rgba(26, 18, 8, 0.03);
+  --radar-table-cell-bg: rgba(26, 18, 8, 0.03);
+  --radar-table-col-border: rgba(26, 18, 8, 0.04);
+  --radar-table-footer-bg: rgba(26, 18, 8, 0.02);
+  --radar-table-footer-border: rgba(26, 18, 8, 0.06);
+  --radar-table-text: #1A1208;
+  --radar-table-text-dim: rgba(26, 18, 8, 0.55);
+  --radar-table-text-muted: rgba(26, 18, 8, 0.40);
+  --radar-idem-text: #1A1208;
+  --radar-neutral-pill-bg: rgba(26, 18, 8, 0.05);
+  --radar-neutral-pill-border: rgba(26, 18, 8, 0.12);
+  --radar-neutral-pill-text: rgba(26, 18, 8, 0.50);
 
   --void: #F0EAE0;
   --void-light: #E8E0D4;

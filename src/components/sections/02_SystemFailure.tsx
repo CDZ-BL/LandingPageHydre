@@ -332,11 +332,11 @@ export function SystemFailure() {
                 />
             )}
 
-            {/* ── TOP GRADIENT VEIL — sits above the section, fades hero into black ── */}
+            {/* ── TOP GRADIENT VEIL — sits above the section, fades hero into background ── */}
             <div
                 className="relative z-[59] w-full h-24 -mb-24 pointer-events-none"
                 style={{
-                    background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 50%, black 100%)',
+                    background: 'var(--scanline-top-veil)',
                 }}
             />
 
@@ -355,7 +355,7 @@ export function SystemFailure() {
                 >
                     {/* Scanlines */}
                     <div className="absolute inset-0 pointer-events-none z-10 opacity-50"
-                        style={{ background: 'repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, rgba(0,0,0,0.9) 2px, rgba(0,0,0,0.9) 3px)' }} />
+                        style={{ background: 'repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, var(--scanline-color) 2px, var(--scanline-color) 3px)' }} />
                     {/* Noise */}
                     <div className="absolute inset-0 pointer-events-none z-5 opacity-10"
                         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />

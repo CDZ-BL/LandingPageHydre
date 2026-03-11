@@ -212,7 +212,7 @@ export function Alliance() {
             <div
                 className="absolute inset-0 opacity-100 pointer-events-none"
                 style={{
-                    background: 'radial-gradient(ellipse at center, #111111 0%, #050505 50%, #050505 100%)',
+                    background: 'radial-gradient(ellipse at center, var(--bg-secondary) 0%, var(--bg-primary) 50%, var(--bg-primary) 100%)',
                 }}
             />
 

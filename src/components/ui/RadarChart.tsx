@@ -164,8 +164,8 @@ export function RadarChart({ competitor }: RadarChartProps) {
                         </feMerge>
                     </filter>
                     <linearGradient id="scan-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="rgba(255, 255, 255, 0)" />
-                        <stop offset="100%" stopColor="rgba(255, 255, 255, 0.15)" />
+                        <stop offset="0%" stopColor="var(--radar-dot)" stopOpacity="0" />
+                        <stop offset="100%" stopColor="var(--radar-dot)" stopOpacity="0.12" />
                     </linearGradient>
                 </defs>
 
@@ -177,7 +177,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
                         cy={center}
                         r={radius * scale}
                         fill="none"
-                        stroke={i === 3 ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.05)"}
+                        stroke={i === 3 ? "var(--radar-grid-outer)" : "var(--radar-grid-inner)"}
                         strokeWidth={i === 3 ? 1.5 : 1}
                         strokeDasharray={i === 3 ? "0" : "4 4"}
                     />
@@ -195,7 +195,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
                             y1={center}
                             x2={x2}
                             y2={y2}
-                            stroke="rgba(255,255,255,0.08)"
+                            stroke="var(--radar-axis)"
                             strokeWidth="1"
                         />
                     );
@@ -210,7 +210,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
                     cy={center}
                     r={radius}
                     fill="none"
-                    stroke="rgba(255,255,255,0.25)"
+                    stroke="var(--radar-sonar)"
                     strokeWidth="1.5"
                     style={{
                         animation: `sonar-expand ${SONAR_DURATION_MS}ms cubic-bezier(0.25, 0.1, 0.25, 1.0) forwards`,
@@ -218,13 +218,12 @@ export function RadarChart({ competitor }: RadarChartProps) {
                     }}
                 />
 
-                {/* 3. AETHER Polygon (White/Blue) */}
+                {/* 3. AETHER Polygon */}
                 <motion.polygon
                     points={aetherString}
-                    fill="rgba(255, 255, 255, 0.03)"
-                    stroke="white"
+                    fill="var(--radar-aether-fill)"
+                    stroke="var(--radar-aether-stroke)"
                     strokeWidth="2"
-                    strokeOpacity="0.8"
                     filter="url(#glow-white)"
                 />
 
@@ -237,7 +236,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
                             cx={p.x}
                             cy={p.y}
                             r={isFlashing ? 4 : 2}
-                            fill="white"
+                            fill="var(--radar-dot)"
                             opacity={isFlashing ? 1 : 0.5}
                             filter={isFlashing ? "url(#glow-sonar-dot)" : undefined}
                             style={{
@@ -274,7 +273,7 @@ export function RadarChart({ competitor }: RadarChartProps) {
                             cx={p.x}
                             cy={p.y}
                             r="4"
-                            fill={isFlashing ? "#F97316" : "#000"}
+                            fill={isFlashing ? "#F97316" : "var(--bg-primary)"}
                             stroke="#F97316"
                             strokeWidth={isFlashing ? 3 : 2}
                             initial={{ scale: 0 }}
@@ -302,14 +301,14 @@ export function RadarChart({ competitor }: RadarChartProps) {
                         d={`M${center},${center} L${center},${center - radius} A${radius},${radius} 0 0,1 ${center + 10},${center - radius} Z`}
                         fill="url(#scan-gradient)"
                         className="opacity-50"
-                        transform={`translate(${center},${center}) scale(2) translate(-${center},-${center})`} // Hack to ensure large sweep
+                        transform={`translate(${center},${center}) scale(2) translate(-${center},-${center})`}
                     />
                     <line
                         x1={center}
                         y1={center}
                         x2={center}
                         y2={center - radius}
-                        stroke="rgba(255,255,255,0.1)"
+                        stroke="var(--radar-sweep)"
                         strokeWidth="1"
                     />
                 </motion.g>
@@ -322,10 +321,11 @@ export function RadarChart({ competitor }: RadarChartProps) {
                             y={axis.y}
                             textAnchor="middle"
                             dominantBaseline="middle"
-                            className={`
-                                font-mono text-[10px] tracking-widest transition-colors duration-300
-                                ${hoveredAxis === i ? 'fill-neon-orange font-bold drop-shadow-[0_0_8px_rgba(255,107,0,0.8)]' : 'fill-white drop-shadow-[0_0_4px_rgba(0,0,0,0.8)]'}
-                            `}
+                            fontSize="10"
+                            fontFamily="monospace"
+                            letterSpacing="0.1em"
+                            fill={hoveredAxis === i ? '#FF6B00' : 'var(--radar-label)'}
+                            style={{ transition: 'fill 0.3s ease' }}
                         >
                             {axis.label}
                         </text>
@@ -373,9 +373,9 @@ export function RadarChart({ competitor }: RadarChartProps) {
                 </AnimatePresence>
 
                 {/* Center Crosshair */}
-                <circle cx={center} cy={center} r="2" fill="white" />
-                <line x1={center - 5} y1={center} x2={center + 5} y2={center} stroke="white" strokeWidth="0.5" opacity="0.5" />
-                <line x1={center} y1={center - 5} x2={center} y2={center + 5} stroke="white" strokeWidth="0.5" opacity="0.5" />
+                <circle cx={center} cy={center} r="2" fill="var(--radar-dot)" />
+                <line x1={center - 5} y1={center} x2={center + 5} y2={center} stroke="var(--radar-crosshair)" strokeWidth="0.5" />
+                <line x1={center} y1={center - 5} x2={center} y2={center + 5} stroke="var(--radar-crosshair)" strokeWidth="0.5" />
             </svg>
 
             {/* Sonar wave keyframes */}
