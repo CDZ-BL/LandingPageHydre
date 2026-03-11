@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
 interface Vote {
@@ -18,22 +17,14 @@ interface VoteHistoryProps {
 export const VoteHistory = ({ votes }: VoteHistoryProps) => {
   const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: 'numeric', month: 'short', day: 'numeric',
     });
   };
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
+    visible: { opacity: 1, transition: { staggerChildren: 0.05 } },
   };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 4 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
@@ -44,70 +35,60 @@ export const VoteHistory = ({ votes }: VoteHistoryProps) => {
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={cn(
-        'rounded-lg border border-white/[0.06] bg-white/[0.03] backdrop-blur',
-        'p-6 md:p-8'
-      )}
+      className="rounded-lg backdrop-blur p-4 h-full"
+      style={{ border: '1px solid var(--stroke)', backgroundColor: 'color-mix(in srgb, var(--bg-surface) 40%, transparent)' }}
     >
       {/* Header */}
-      <div className="mb-6 pb-4 border-b border-white/[0.08]">
-        <h2 className="text-xl font-headline font-bold uppercase tracking-[0.2em] text-white">
+      <div className="flex items-center justify-between mb-3 pb-3" style={{ borderBottom: '1px solid var(--stroke)' }}>
+        <h2 className="text-sm font-headline font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--text-primary)' }}>
           VOTES
         </h2>
+        <span className="font-mono text-[9px] tracking-widest uppercase" style={{ color: 'var(--text-muted)' }}>
+          {votes.length} entrée{votes.length !== 1 ? 's' : ''}
+        </span>
       </div>
 
-      {/* Votes list */}
       {votes.length > 0 ? (
-        <motion.div
-          className="space-y-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <motion.div className="space-y-2" variants={containerVariants} initial="hidden" animate="visible">
           {votes.map((vote) => (
             <motion.div
               key={vote.campaignId}
               variants={itemVariants}
-              className={cn(
-                'flex items-start gap-4 p-4 rounded',
-                'bg-white/[0.02] border border-white/[0.04]',
-                'hover:bg-white/[0.05] hover:border-white/[0.08]',
-                'transition-colors duration-300'
-              )}
+              className="flex items-center gap-3 px-3 py-2 rounded transition-colors duration-300"
+              style={{ background: 'color-mix(in srgb, var(--bg-elevated) 40%, transparent)', border: '1px solid var(--stroke)' }}
             >
-              {/* Pulsing active indicator */}
               {vote.isActive && (
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
-                  className="flex-shrink-0 w-2 h-2 rounded-full bg-orange-500/80 mt-1.5"
+                  className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-orange-500/80"
                 />
               )}
-
-              {/* Vote details */}
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-mono font-medium text-white/80 mb-1">
+                <p className="text-xs font-mono truncate" style={{ color: 'var(--text-secondary)' }}>
                   {vote.campaignTitle}
                 </p>
-                <div className="flex flex-wrap items-center gap-2 text-[10px] font-mono text-white/50 uppercase tracking-[0.1em]">
-                  <span className="px-2 py-1 rounded bg-white/[0.05] border border-white/[0.08]">
+                <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                  <span
+                    className="inline-block px-1.5 py-0.5 rounded text-[9px] font-mono uppercase tracking-wide"
+                    style={{ background: 'color-mix(in srgb, var(--bg-elevated) 60%, transparent)', color: 'var(--text-tertiary)', border: '1px solid var(--stroke)' }}
+                  >
                     {vote.selectedOption}
                   </span>
                   {vote.isActive && (
-                    <span className="text-green-400/70 font-semibold">
-                      Active
-                    </span>
+                    <span className="text-[9px] font-mono text-green-400/80 font-semibold">Active</span>
                   )}
-                  <span className="text-white/30">•</span>
-                  <span>{formatDate(vote.votedAt)}</span>
+                  <span className="text-[9px] font-mono" style={{ color: 'var(--text-muted)' }}>
+                    {formatDate(vote.votedAt)}
+                  </span>
                 </div>
               </div>
             </motion.div>
           ))}
         </motion.div>
       ) : (
-        <div className="py-8 text-center">
-          <p className="text-sm font-mono text-white/50">
+        <div className="py-6 text-center">
+          <p className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
             Aucun vote pour le moment
           </p>
         </div>

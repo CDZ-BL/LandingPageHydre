@@ -6,11 +6,10 @@ import { motion } from 'framer-motion';
 import { useHydreStore } from '@/lib/store';
 import {
   ProfileHeader,
-  FounderPointsCard,
   VoteHistory,
   ReferralDashboard,
   CashbackWallet,
-  ProfileEditor,
+  FounderPointsCard,
 } from '@/components/ui/AccountDashboard';
 import { cn } from '@/lib/utils';
 
@@ -66,8 +65,6 @@ export default function AccountPage() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    // Wait for AuthRehydrator to finish before deciding to redirect.
-    // Without this, the page redirects before the token is validated.
     if (isAuthLoading) return;
 
     const fetchAccountStats = async () => {
@@ -116,51 +113,10 @@ export default function AccountPage() {
     if (user) {
       fetchAccountStats();
     } else {
-      // No token and no user after rehydration completes → redirect
       router.push('/');
       openAuthModal('login');
     }
   }, [user, isAuthLoading, router, openAuthModal, refreshKey]);
-
-  if (isAuthLoading || isLoading) {
-    return (
-      <div className="min-h-screen bg-[#050505] pt-24 pb-16 px-6 md:px-10 lg:px-14 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border border-white/[0.2] border-t-[#FF6B00] rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-sm font-mono text-white/50 uppercase tracking-[0.1em]">
-            Loading...
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !stats) {
-    return (
-      <div className="min-h-screen bg-[#050505] pt-24 pb-16 px-6 md:px-10 lg:px-14 flex items-center justify-center">
-        <div className="max-w-md text-center">
-          <h1 className="text-2xl font-headline font-bold uppercase tracking-[0.2em] text-white mb-4">
-            Error
-          </h1>
-          <p className="text-sm font-mono text-white/60 mb-6">
-            {error || 'Failed to load account data'}
-          </p>
-          <button
-            onClick={() => router.push('/')}
-            className={cn(
-              'px-6 py-3 text-sm font-mono font-medium tracking-[0.1em]',
-              'border border-white/[0.15] rounded',
-              'bg-white/[0.02] hover:bg-white/[0.05]',
-              'text-white/70 hover:text-white/90',
-              'transition-all duration-300'
-            )}
-          >
-            Back to Home
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   const handleLogout = () => {
     const token = localStorage.getItem('hydre_auth_token');
@@ -175,116 +131,135 @@ export default function AccountPage() {
     router.push('/');
   };
 
+  if (isAuthLoading || isLoading) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)] pt-24 pb-16 px-6 md:px-10 lg:px-14 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 border border-[var(--stroke-hover)] border-t-[#FF6B00] rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-xs font-mono text-[var(--text-muted)] uppercase tracking-[0.1em]">
+            Chargement...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !stats) {
+    return (
+      <div className="min-h-screen bg-[var(--bg-primary)] pt-24 pb-16 px-6 md:px-10 lg:px-14 flex items-center justify-center">
+        <div className="max-w-md text-center">
+          <h1 className="text-2xl font-headline font-bold uppercase tracking-[0.2em] text-[var(--text-primary)] mb-4">
+            Erreur
+          </h1>
+          <p className="text-sm font-mono text-[var(--text-tertiary)] mb-6">
+            {error || 'Failed to load account data'}
+          </p>
+          <button
+            onClick={() => router.push('/')}
+            className={cn(
+              'px-6 py-3 text-sm font-mono font-medium tracking-[0.1em]',
+              'border border-[var(--stroke)] rounded',
+              'bg-[var(--bg-surface)]/30 hover:bg-[var(--bg-surface)]/60',
+              'text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]',
+              'transition-all duration-300'
+            )}
+          >
+            Retour à l&apos;accueil
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#050505]">
-      {/* ━━━ ACCOUNT PAGE HEADER ━━━ */}
-      <nav className="sticky top-0 z-50 w-full bg-[#050505]/90 backdrop-blur-xl border-b border-white/[0.06]">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+
+      {/* ━━━ NAV ━━━ */}
+      <nav className="sticky top-0 z-50 w-full bg-[var(--bg-primary)]/90 backdrop-blur-xl border-b border-[var(--stroke)]">
         <motion.div
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="w-full px-6 md:px-10 lg:px-14 py-4 md:py-5 flex justify-between items-center"
+          className="w-full px-6 md:px-10 lg:px-14 py-3.5 flex justify-between items-center"
         >
-          {/* Left: Back arrow + Smart Nutrition wordmark */}
+          {/* Left: Back + Wordmark */}
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push('/')}
-              className="group flex items-center justify-center w-8 h-8 rounded border border-white/10 hover:border-white/25 bg-white/[0.02] hover:bg-white/[0.06] transition-all duration-300"
+              className="group flex items-center justify-center w-7 h-7 rounded border border-[var(--stroke)] hover:border-[var(--stroke-hover)] bg-[var(--bg-surface)]/20 hover:bg-[var(--bg-surface)]/50 transition-all duration-300"
               aria-label="Retour à l'accueil"
             >
-              <svg className="w-4 h-4 text-white/50 group-hover:text-white/90 transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
             </button>
 
-            <button
-              onClick={() => router.push('/')}
-              className="flex flex-col items-center select-none"
-              style={{ gap: '0.18em' }}
-            >
-              <span
-                className="font-headline font-black text-[#E6DCC8] uppercase leading-none"
-                style={{
-                  fontSize: 'clamp(1.2rem, 2vw, 1.8rem)',
-                  letterSpacing: '0.22em',
-                }}
-              >
+            <button onClick={() => router.push('/')} className="flex flex-col items-center select-none" style={{ gap: '0.18em' }}>
+              <span className="font-headline font-black text-[var(--text-primary)] uppercase leading-none" style={{ fontSize: 'clamp(1rem, 1.5vw, 1.5rem)', letterSpacing: '0.22em' }}>
                 SMART
               </span>
-              <span
-                className="font-sans font-light text-white/35 uppercase leading-none tracking-[0.55em]"
-                style={{ fontSize: 'clamp(0.45rem, 0.7vw, 0.6rem)', marginRight: '-0.55em' }}
-              >
+              <span className="font-sans font-light text-[var(--text-muted)] uppercase leading-none tracking-[0.55em]" style={{ fontSize: 'clamp(0.4rem, 0.6vw, 0.55rem)', marginRight: '-0.55em' }}>
                 Nutrition
               </span>
             </button>
           </div>
 
-          {/* Center: Page title */}
-          <p className="hidden md:block font-mono text-[10px] text-white/30 uppercase tracking-[0.25em]">
+          {/* Center */}
+          <p className="hidden md:block font-mono text-[10px] text-[var(--text-muted)] uppercase tracking-[0.25em]">
             Mon Compte
           </p>
 
-          {/* Right: Points + Logout */}
-          <div className="flex items-center gap-4">
-            <span className="hidden md:flex items-center gap-1.5 font-mono text-[10px] text-[#E6DCC8]/60 tracking-[0.15em]">
-              <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
-              </svg>
-              {user?.founderPointsTotal ?? 0}
-            </span>
-
-            <button
-              onClick={handleLogout}
-              className="font-mono text-[9px] text-[#E6DCC8]/25 tracking-[0.15em] uppercase hover:text-[#E6DCC8]/55 transition-colors duration-500"
-            >
-              Sortir
-            </button>
-          </div>
+          {/* Right: Logout */}
+          <button
+            onClick={handleLogout}
+            className="font-mono text-[9px] text-[var(--text-muted)] tracking-[0.15em] uppercase hover:text-[var(--text-tertiary)] transition-colors duration-500"
+          >
+            Sortir
+          </button>
         </motion.div>
       </nav>
 
-    <div className="pt-8 pb-16 px-6 md:px-10 lg:px-14">
-      <div className="max-w-5xl mx-auto">
-        {/* Profile Header */}
-        <ProfileHeader profile={stats.profile} />
+      {/* ━━━ CONTENT ━━━ */}
+      <div className="pt-6 pb-16 px-6 md:px-10 lg:px-14">
+        <div className="max-w-6xl mx-auto space-y-5">
 
-        {/* Dashboard Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-          {/* Left column (2/3): Votes + Referrals */}
-          <div className="lg:col-span-2 space-y-6">
-            <VoteHistory votes={stats.votes} />
+          {/* ── 1. ACCOUNT header (compact, single line) ── */}
+          <ProfileHeader profile={stats.profile} />
 
-            <ReferralDashboard
-              referralCode={stats.profile.referralCode}
-              referrals={stats.referrals.list}
-              totalReferrals={stats.referrals.total}
-              totalPointsFromReferrals={stats.referrals.totalPoints}
-              cashback={{ lifetimeEarnedCents: stats.cashback.lifetimeEarnedCents }}
-            />
+          {/* ── 2. COMMISSION | CAGNOTTE — full width, two equal columns ── */}
+          <CashbackWallet cashback={stats.cashback} commission={stats.commission} />
+
+          {/* ── 3. VOTES + PARRAINAGE + POINTS — three-column grid ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+            {/* Votes */}
+            <div className="lg:col-span-1">
+              <VoteHistory votes={stats.votes} />
+            </div>
+
+            {/* Parrainage */}
+            <div className="lg:col-span-1">
+              <ReferralDashboard
+                referralCode={stats.profile.referralCode}
+                referrals={stats.referrals.list}
+                totalReferrals={stats.referrals.total}
+                totalPointsFromReferrals={stats.referrals.totalPoints}
+                cashback={{ lifetimeEarnedCents: stats.cashback.lifetimeEarnedCents }}
+              />
+            </div>
+
+            {/* Founder Points */}
+            <div className="lg:col-span-1">
+              <FounderPointsCard
+                points={stats.points}
+                total={stats.profile.founderPointsTotal}
+              />
+            </div>
+
           </div>
 
-          {/* Right column (1/3): Profile Edit + Wallet + Points */}
-          <div className="space-y-6">
-            <ProfileEditor
-              displayName={stats.profile.displayName}
-              email={stats.profile.email}
-              onUpdate={() => setRefreshKey((k) => k + 1)}
-            />
-
-            <CashbackWallet
-              cashback={stats.cashback}
-              commission={stats.commission}
-            />
-
-            <FounderPointsCard
-              points={stats.points}
-              total={stats.profile.founderPointsTotal}
-            />
-          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
