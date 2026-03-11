@@ -245,7 +245,7 @@ export function XRayTubeCanvas() {
         <div className="relative w-full h-full">
             <Canvas
                 dpr={2}
-                camera={{ position: [0, 0, 1.8], fov: 18 }}
+                camera={{ position: [0, 0, 2.8], fov: 25 }}
                 gl={{
                     antialias: true,
                     alpha: true,
