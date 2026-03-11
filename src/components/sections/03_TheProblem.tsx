@@ -86,7 +86,7 @@ export function TheProblem() {
                             <ComparisonTable competitor={selectedCompetitor} />
                         </div>
 
-                        <div className="lg:col-span-7 flex items-center justify-center">
+                        <div className="lg:col-span-7 flex flex-col items-center justify-center">
                             <div className="w-full max-w-md">
                                 <RadarChart competitor={selectedCompetitor} />
                             </div>

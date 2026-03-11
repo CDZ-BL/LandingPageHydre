@@ -1,14 +1,15 @@
 'use client';
 
 /**
- * AuthRehydrator
+ * AuthRehydrator — Instant Auth Restoration (Phase 1 only)
  *
- * Runs once on mount (client-side only). Reads the JWT from localStorage,
- * calls /api/account/stats to validate it, and restores the Zustand auth
- * state if the token is still valid.
+ * Reads the JWT from localStorage synchronously on mount.
+ * If present, sets a provisional user state immediately (<1ms) so the
+ * Header renders "Compte" without waiting for any network call.
  *
- * Without this, Zustand resets on every page refresh and the user is
- * effectively logged out despite having a valid token in localStorage.
+ * Token validation happens lazily: each authenticated page/component
+ * fetches its own data and handles 401 → logout itself.
+ * This avoids a redundant /api/account/stats call on every page load.
  */
 
 import { useEffect } from 'react';
@@ -18,51 +19,31 @@ export function AuthRehydrator() {
     const { setUser, setAuthLoading } = useHydreStore();
 
     useEffect(() => {
-        const rehydrate = async () => {
-            const token = localStorage.getItem('hydre_auth_token');
+        const token = localStorage.getItem('hydre_auth_token');
 
-            // Always signal loading so pages can wait before deciding to redirect
-            setAuthLoading(true);
+        if (!token) {
+            // Definitively not logged in
+            setAuthLoading(false);
+            return;
+        }
 
-            // No token → nothing to rehydrate, but still mark loading as done
-            if (!token) {
-                setAuthLoading(false);
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/account/stats', {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-
-                if (!response.ok) {
-                    // Token expired or invalid — clear it
-                    localStorage.removeItem('hydre_auth_token');
-                    return;
-                }
-
-                const data = await response.json();
-
-                setUser({
-                    id: data.profile.id,
-                    email: data.profile.email,
-                    displayName: data.profile.displayName,
-                    emailVerified: data.profile.emailVerified,
-                    referralCode: data.profile.referralCode,
-                    founderPointsTotal: data.profile.founderPointsTotal,
-                    cashbackBalanceCents: data.cashback?.balanceCents ?? 0,
-                    commissionBalanceCents: data.commission?.balanceCents ?? 0,
-                });
-            } catch {
-                // Network error — leave user logged out, keep token for retry
-            } finally {
-                setAuthLoading(false);
-            }
-        };
-
-        rehydrate();
+        // Token present → set provisional auth state instantly (no network call)
+        // The account page will validate the token on its own fetch
+        // and call logout() if it gets a 401
+        setUser({
+            id: '',
+            email: '',
+            displayName: null,
+            emailVerified: false,
+            referralCode: '',
+            founderPointsTotal: 0,
+            cashbackBalanceCents: 0,
+            commissionBalanceCents: 0,
+        });
+        setAuthLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return null;
 }
+

@@ -42,7 +42,7 @@ const MAX_DELTA = 0.05; // seconds
 // ASSETS
 // ─────────────────────────────────────────────────────────
 const MODEL_PATH = '/models/Tube+Lid+Tabs2.glb' as const;
-const ETIQUETTE_PATH = '/images/tubelabelgoutte.webp';
+const ETIQUETTE_PATH = '/images/etiquette_smart.png';
 if (typeof window !== 'undefined' && window.innerWidth >= 768) {
     useGLTF.preload(MODEL_PATH);
     useTexture.preload(ETIQUETTE_PATH);

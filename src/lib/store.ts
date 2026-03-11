@@ -15,7 +15,7 @@ export interface HydreUser {
 
 export type AuthModal = 'closed' | 'login' | 'signup' | 'verify';
 export type GamePhase = 'intro' | 'playing' | 'voted' | 'converting';
-export type FlavorId = 'yuzu-ginger' | 'berry-mint' | 'electric-lime';
+export type FlavorId = 'Fruits des bois' | 'Melon HoneyDew' | 'Poire';
 
 interface HydreState {
   // ── Auth ─────────────────────────────────────
@@ -79,7 +79,7 @@ export const useHydreStore = create<HydreState>((set) => ({
   // ── Auth State ───────────────────────────────
   user: null,
   isAuthenticated: false,
-  isAuthLoading: false,
+  isAuthLoading: true, // true until AuthRehydrator Phase 1 completes (instant localStorage check)
   authModal: 'closed',
   pendingVerificationEmail: null,
 
@@ -98,9 +98,9 @@ export const useHydreStore = create<HydreState>((set) => ({
 
   // ── Flavor Battle State ──────────────────────
   flavorVotes: {
-    'yuzu-ginger': 0,
-    'berry-mint': 0,
-    'electric-lime': 0,
+    'Fruits des bois': 0,
+    'Melon HoneyDew': 0,
+    'Poire': 0,
   },
   selectedFlavor: null,
   isVoteComplete: false,

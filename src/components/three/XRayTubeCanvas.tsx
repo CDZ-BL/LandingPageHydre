@@ -17,7 +17,7 @@ import { useHydreStore } from '@/lib/store';
 // ASSETS
 // ─────────────────────────────────────────────────────────
 const MODEL_PATH = '/models/Tube+Lid+Tabs2.glb' as const;
-const ETIQUETTE_PATH = '/images/tubelabelgoutte.webp';
+const ETIQUETTE_PATH = '/images/etiquette_smart.png';
 
 // Skip preloads on mobile — avoids downloading ~2MB of assets on small screens
 if (typeof window !== 'undefined' && window.innerWidth >= 768) {
@@ -108,7 +108,7 @@ function XRayScene() {
     return (
         <group>
             {/* TUBE POSITION */}
-            <group position={[0, -0.28, 0]}>
+            <group position={[0, -0.42, 0]}>
                 <PresentationControls
                     global={false}
                     cursor={true}
@@ -245,7 +245,7 @@ export function XRayTubeCanvas() {
         <div className="relative w-full h-full">
             <Canvas
                 dpr={2}
-                camera={{ position: [0, 0.45, 1.8], fov: 20 }}
+                camera={{ position: [0, 0.35, 2.55], fov: 22 }}
                 gl={{
                     antialias: true,
                     alpha: true,

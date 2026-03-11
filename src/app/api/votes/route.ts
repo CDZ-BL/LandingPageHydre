@@ -180,3 +180,96 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 201 });
 }
+
+// ─────────────────────────────────────────────────────────────
+// PATCH — Change an existing vote (authenticated)
+// ─────────────────────────────────────────────────────────────
+export async function PATCH(request: NextRequest) {
+    // ── 1. RATE LIMIT ───────────────────────────────────────
+    const rateLimitResponse = await applyRateLimit(request, 'mutation');
+    if (rateLimitResponse) return rateLimitResponse;
+
+    // ── 2. AUTHENTICATE ─────────────────────────────────────
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+        return NextResponse.json(
+            { error: 'Authentication required' },
+            { status: 401 }
+        );
+    }
+
+    const token = authHeader.slice(7);
+    const supabase = getServerSupabase();
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+        return NextResponse.json(
+            { error: 'Invalid or expired session' },
+            { status: 401 }
+        );
+    }
+
+    // ── 3. VALIDATE INPUT ───────────────────────────────────
+    let body: unknown;
+    try {
+        body = await request.json();
+    } catch {
+        return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+
+    const parsed = CastVoteSchema.safeParse(body);
+    if (!parsed.success) {
+        return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+    }
+
+    const { campaignId, selectedOption } = parsed.data;
+
+    // ── 4. VERIFY CAMPAIGN & OPTION ─────────────────────────
+    const { data: campaign } = await supabase
+        .from('vote_campaigns')
+        .select('options, is_active, ends_at')
+        .eq('id', campaignId)
+        .single();
+
+    if (!campaign || !campaign.is_active) {
+        return NextResponse.json(
+            { error: 'Campaign not found or inactive' },
+            { status: 404 }
+        );
+    }
+
+    if (campaign.ends_at && new Date(campaign.ends_at) < new Date()) {
+        return NextResponse.json({ error: 'Campaign has ended' }, { status: 410 });
+    }
+
+    const validOptions = campaign.options as string[];
+    if (!validOptions.includes(selectedOption)) {
+        return NextResponse.json(
+            { error: 'Invalid option for this campaign' },
+            { status: 400 }
+        );
+    }
+
+    // ── 5. UPDATE EXISTING VOTE ─────────────────────────────
+    const { data: updatedRows, error: updateError } = await supabase
+        .from('votes')
+        .update({ selected_option: selectedOption, voted_at: new Date().toISOString() })
+        .eq('campaign_id', campaignId)
+        .eq('user_id', user.id)
+        .select();
+
+    if (updateError) {
+        console.error('[HYDRE] Vote update error:', updateError);
+        return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    }
+
+    if (!updatedRows || updatedRows.length === 0) {
+        // No existing vote found — user hasn't voted yet, should use POST
+        return NextResponse.json(
+            { error: 'No existing vote found for this campaign. Use POST to cast a new vote.' },
+            { status: 404 }
+        );
+    }
+
+    return NextResponse.json({ success: true }, { status: 200 });
+}

@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FounderCard3D } from '@/components/ui/FounderCard3D';
+import { useHydreStore } from '@/lib/store';
 
 // ═══════════════════════════════════════════════════════════════
 // R&D VOTE DATA
@@ -17,32 +18,25 @@ interface RDOption {
 
 const RD_OPTIONS: RDOption[] = [
     {
-        id: 'sommeil',
-        label: 'SOMMEIL',
-        subtitle: 'Mélatonine vectorisée + Magnésium',
-        baseVotes: 3421,
-        color: '#818CF8', // indigo
+        id: 'Fruits des bois',
+        label: 'FRUITS DES BOIS',
+        subtitle: 'Framboise · Myrtille · Cassis',
+        baseVotes: 0,
+        color: '#C084FC', // purple
     },
     {
-        id: 'focus',
-        label: 'FOCUS',
-        subtitle: 'Nootropiques naturels',
-        baseVotes: 2876,
-        color: '#22D3EE', // cyan
-    },
-    {
-        id: 'endurance',
-        label: 'ENDURANCE',
-        subtitle: 'Électrolytes renforcés V2',
-        baseVotes: 2154,
-        color: '#F59E0B', // amber
-    },
-    {
-        id: 'recovery',
-        label: 'RECOVERY',
-        subtitle: 'Complexe anti-inflammatoire',
-        baseVotes: 1549,
+        id: 'Melon HoneyDew',
+        label: 'MELON HONEYDEW',
+        subtitle: 'Melon d\'eau · Fraîcheur douce',
+        baseVotes: 0,
         color: '#34D399', // emerald
+    },
+    {
+        id: 'Poire',
+        label: 'POIRE',
+        subtitle: 'Poire Williams · Notes florales',
+        baseVotes: 0,
+        color: '#FDE68A', // amber-pale
     },
 ];
 
@@ -56,16 +50,22 @@ function VoteBar({
     option,
     totalVotes,
     userVote,
+    registeredVote,
     onVote,
 }: {
     option: RDOption;
     totalVotes: number;
+    /** Currently highlighted selection (always mutable) */
     userVote: string | null;
+    /** The vote that has been registered/confirmed in DB */
+    registeredVote: string | null;
     onVote: (id: string) => void;
 }) {
     const percentage = Math.round((option.baseVotes / totalVotes) * 100);
     const isSelected = userVote === option.id;
-    const hasVoted = userVote !== null;
+    const isRegistered = registeredVote === option.id;
+    // Show results whenever user has either selected or already voted
+    const hasVoted = userVote !== null || registeredVote !== null;
 
     return (
         <motion.button
@@ -74,7 +74,7 @@ function VoteBar({
             whileHover={{ scale: 1.005 }}
             whileTap={{ scale: 0.995 }}
         >
-            {/* ── External diffuse glow BEHIND the button (like Hero3D) ── */}
+            {/* ── External diffuse glow ── */}
             <div
                 className="absolute -inset-3 rounded-lg pointer-events-none transition-all duration-700"
                 style={{
@@ -84,29 +84,65 @@ function VoteBar({
                 }}
             />
 
-            {/* ── Button container with external box-shadow glow ── */}
+            {/* ── Button container ── */}
             <div
                 className="relative border px-4 py-3 transition-all duration-500 bg-[var(--bg-primary)]/90"
                 style={{
-                    borderColor: isSelected ? `${option.color}50` : 'rgba(255,255,255,0.06)',
+                    borderColor: isSelected
+                        ? `${option.color}50`
+                        : isRegistered
+                            ? `${option.color}30`
+                            : 'rgba(255,255,255,0.06)',
                     boxShadow: isSelected
                         ? `0 0 40px ${option.color}40, 0 0 80px ${option.color}20`
-                        : 'none',
+                        : isRegistered
+                            ? `0 0 20px ${option.color}20`
+                            : 'none',
                 }}
             >
                 <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
-                        <div
-                            className={`w-2.5 h-2.5 border-[1.5px] rounded-full transition-all duration-500 ${isSelected ? 'scale-110' : 'border-void-500'
-                                }`}
-                            style={isSelected ? {
-                                backgroundColor: option.color,
-                                borderColor: option.color,
-                                boxShadow: `0 0 8px ${option.color}80`,
-                            } : {}}
-                        />
+                        {/* Dot: filled if selected, ring if registered, empty otherwise */}
+                        <div className="relative flex items-center justify-center w-2.5 h-2.5">
+                            <div
+                                className="w-2.5 h-2.5 border-[1.5px] rounded-full transition-all duration-500"
+                                style={isSelected ? {
+                                    backgroundColor: option.color,
+                                    borderColor: option.color,
+                                    boxShadow: `0 0 8px ${option.color}80`,
+                                    transform: 'scale(1.1)',
+                                } : isRegistered ? {
+                                    // Registered but not currently selected: outlined ring in accent color
+                                    borderColor: option.color,
+                                    backgroundColor: `${option.color}30`,
+                                } : {
+                                    borderColor: 'rgba(255,255,255,0.2)',
+                                }}
+                            />
+                            {/* Pulsing ring only for the registered (confirmed) vote */}
+                            {isRegistered && !isSelected && (
+                                <motion.div
+                                    className="absolute inset-0 rounded-full border"
+                                    style={{ borderColor: option.color }}
+                                    animate={{ scale: [1, 1.8], opacity: [0.6, 0] }}
+                                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+                                />
+                            )}
+                        </div>
                         <span className="font-mono text-xs text-[var(--text-primary)] tracking-widest">{option.label}</span>
                         <span className="hidden sm:inline font-mono text-[10px] text-[var(--text-muted)]">— {option.subtitle}</span>
+                        {isRegistered && (
+                            <span
+                                className="font-mono text-[9px] tracking-widest px-1.5 py-0.5 rounded-sm"
+                                style={{
+                                    color: option.color,
+                                    backgroundColor: `${option.color}15`,
+                                    border: `1px solid ${option.color}35`,
+                                }}
+                            >
+                                ACTIF
+                            </span>
+                        )}
                     </div>
                     <span
                         className={`font-mono text-xs tabular-nums transition-opacity duration-300 ${hasVoted ? 'opacity-100' : 'opacity-0'}`}
@@ -185,24 +221,105 @@ function CommunityCounter() {
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════
 export function Alliance() {
-    const [userVote, setUserVote] = useState<string | null>(null);
+    const { openAuthModal } = useHydreStore();
+    
+    const [selectedOption, setSelectedOption] = useState<string | null>(null);
+    const [submittedVote, setSubmittedVote] = useState<string | null>(null);
+    const [campaigns, setCampaigns] = useState<any[]>([]);
+    const [isVoting, setIsVoting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    // Load vote from localStorage
+    // Load initial data
     useEffect(() => {
+        // Optimistic UI for unauthenticated return
         const saved = localStorage.getItem('aether-rd-vote');
-        if (saved) setUserVote(saved);
+        if (saved) {
+            setSubmittedVote(saved);
+        }
+
+        // Fetch live active campaigns and percentages
+        fetch('/api/votes')
+            .then(res => res.json())
+            .then(data => {
+                if (data.campaigns) {
+                    setCampaigns(data.campaigns);
+                }
+            })
+            .catch(err => console.error('Failed to load campaigns', err));
     }, []);
 
-    const handleVote = (id: string) => {
-        // Toggle logic: click same = unvote, click different = change vote
-        const newVote = userVote === id ? null : id;
-        setUserVote(newVote);
-        if (newVote) {
-            localStorage.setItem('aether-rd-vote', newVote);
-        } else {
-            localStorage.removeItem('aether-rd-vote');
-        }
+    const handleSelectOption = (id: string) => {
+        // Always allow changing the selection — even after a vote has been registered
+        setSelectedOption(prev => prev === id ? null : id);
+        setError(null);
     };
+
+    const handleSubmitVote = useCallback(async () => {
+        if (!selectedOption) return;
+        if (selectedOption === submittedVote) return;
+
+        setIsVoting(true);
+        setError(null);
+
+        try {
+            // Use the same token source as the rest of the app (account page, stats API, etc.)
+            const token = typeof window !== 'undefined'
+                ? localStorage.getItem('hydre_auth_token')
+                : null;
+
+            if (!token) {
+                openAuthModal('login');
+                setError('Authentification requise — votre vote ne peut être enregistré qu\'auprès d\'un compte fondateur validé.');
+                setIsVoting(false);
+                return;
+            }
+
+            const activeCampaign = campaigns[0];
+
+            if (!activeCampaign?.id) {
+                setError('Aucune campagne de vote active pour le moment.');
+                setIsVoting(false);
+                return;
+            }
+
+            // Use PATCH to change an existing vote, POST for a first-time vote
+            const method = submittedVote ? 'PATCH' : 'POST';
+
+            const res = await fetch('/api/votes', {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    campaignId: activeCampaign.id,
+                    selectedOption,
+                })
+            });
+
+            if (!res.ok) {
+                const errData = await res.json();
+                if (res.status === 409) {
+                    // Already voted — switch to PATCH on next attempt
+                    setSubmittedVote(selectedOption);
+                    localStorage.setItem('aether-rd-vote', selectedOption);
+                } else if (res.status === 401) {
+                    openAuthModal('login');
+                    setError('Authentification requise — votre vote ne peut être enregistré qu\'auprès d\'un compte fondateur validé.');
+                } else {
+                    setError(errData.error || 'Erreur lors de l\'envoi du vote');
+                }
+            } else {
+                setSubmittedVote(selectedOption);
+                localStorage.setItem('aether-rd-vote', selectedOption);
+            }
+        } catch (err) {
+            console.error(err);
+            setError('Erreur réseau. Veuillez réessayer.');
+        } finally {
+            setIsVoting(false);
+        }
+    }, [selectedOption, submittedVote, campaigns, openAuthModal]);
 
     const totalVotes = RD_OPTIONS.reduce((sum, opt) => sum + opt.baseVotes, 0);
 
@@ -231,7 +348,7 @@ export function Alliance() {
                     </span>
                     <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide leading-[1.05] mb-4">
                         Construisons ensemble.<br />
-                        <span className="text-[#E6DCC8] italic font-light tracking-normal">La marque que l'industrie n'a jamais osé faire.</span>
+                        <span className="text-[var(--text-primary)] italic font-light tracking-normal">La marque que l'industrie n'a jamais osé faire.</span>
                     </h2>
                     <p className="font-mono text-sm text-[var(--text-tertiary)] leading-relaxed tracking-wide mt-4">
                         Vous n'êtes pas un consommateur. Vous êtes co-fondateur. Votez, testez, décidez.
@@ -254,7 +371,7 @@ export function Alliance() {
 
                         {/* Vote Header */}
                         <h3 className="font-mono text-[10px] text-neon-orange/70 tracking-widest">
-                            [ VOTE EN COURS : DEVELOPPEMENT GAMME ]
+                            [ VOTE EN COURS : QUEL SERA LE PROCHAIN NECTAR ]
                         </h3>
 
                         {/* Vote Bars */}
@@ -264,24 +381,77 @@ export function Alliance() {
                                     key={option.id}
                                     option={option}
                                     totalVotes={totalVotes}
-                                    userVote={userVote}
-                                    onVote={handleVote}
+                                    userVote={selectedOption}
+                                    registeredVote={submittedVote}
+                                    onVote={handleSelectOption}
                                 />
                             ))}
                         </div>
 
-                        <AnimatePresence>
-                            {userVote && (
-                                <motion.p
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0 }}
-                                    className="font-mono text-xs text-[#E6DCC8]/70 tracking-wider"
-                                >
-                                    ✓ VOTE ENREGISTRÉ — {RD_OPTIONS.find((o) => o.id === userVote)?.label}
-                                </motion.p>
+                        {/* Submit Vote Button & Status */}
+                        <div className="pt-2 space-y-3">
+                            {error && (
+                                <p className="font-mono text-[10px] text-red-500 tracking-widest uppercase">
+                                    ! {error}
+                                </p>
                             )}
-                        </AnimatePresence>
+
+                            {/* Registered vote confirmation — always visible when a vote exists */}
+                            <AnimatePresence mode="wait">
+                                {submittedVote && (() => {
+                                    const registeredOpt = RD_OPTIONS.find(o => o.id === submittedVote);
+                                    return (
+                                        <motion.div
+                                            key={submittedVote}
+                                            initial={{ opacity: 0, y: 6 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -4 }}
+                                            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                                            className="flex items-center gap-2"
+                                        >
+                                            <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-widest">✓ VOTE ENREGISTRÉ</span>
+                                            <span
+                                                className="font-mono text-[10px] font-bold tracking-widest px-2 py-0.5 rounded-sm"
+                                                style={{
+                                                    color: registeredOpt?.color,
+                                                    backgroundColor: `${registeredOpt?.color}18`,
+                                                    border: `1px solid ${registeredOpt?.color}40`,
+                                                }}
+                                            >
+                                                {registeredOpt?.label}
+                                            </span>
+                                        </motion.div>
+                                    );
+                                })()}
+                            </AnimatePresence>
+
+                            {/* Validate button — visible whenever selection differs from registered vote */}
+                            <AnimatePresence>
+                                {selectedOption && selectedOption !== submittedVote && (
+                                    <motion.button
+                                        initial={{ opacity: 0, height: 0 }}
+                                        animate={{ opacity: 1, height: 'auto' }}
+                                        exit={{ opacity: 0, height: 0 }}
+                                        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                                        onClick={handleSubmitVote}
+                                        disabled={isVoting}
+                                        className="w-full relative group overflow-hidden border border-neon-orange/30 bg-neon-orange/5 hover:bg-neon-orange/10 
+                                                   transition-all duration-300 py-3 uppercase font-mono text-xs tracking-[0.2em] text-neon-orange"
+                                    >
+                                        <div className="absolute inset-0 bg-neon-orange/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <span className="relative z-10 font-bold flex items-center justify-center gap-2">
+                                            {isVoting ? (
+                                                <span className="w-3 h-3 border-2 border-neon-orange/30 border-t-neon-orange rounded-full animate-spin" />
+                                            ) : submittedVote ? (
+                                                'Modifier le vote'
+                                            ) : (
+                                                'Valider le vote'
+                                            )}
+                                        </span>
+                                    </motion.button>
+                                )}
+                            </AnimatePresence>
+                        </div>
 
                         {/* Features */}
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[var(--stroke)]">

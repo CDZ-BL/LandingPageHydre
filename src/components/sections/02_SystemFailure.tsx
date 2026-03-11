@@ -316,11 +316,17 @@ export function SystemFailure() {
     }, [startHold, stopHold]);
 
     // ─────────────────────────────────────────────────────────────────────
-    //  RENDER
+    //  RENDER — Section commented out for redesign (glitch aesthetic
+    //  doesn't match the site identity — to be reworked)
     // ─────────────────────────────────────────────────────────────────────
+    return null;
+
+    /* ═══════════════════════════════════════════════════════════════════════
+    ORIGINAL GLITCH SECTION — preserved for reference, pending redesign
+    ═══════════════════════════════════════════════════════════════════════
+
     return (
         <>
-            {/* Scroll shield — active only during reveal */}
             {isAnimating && (
                 <div
                     ref={shieldRef}
@@ -332,12 +338,9 @@ export function SystemFailure() {
                 />
             )}
 
-            {/* ── TOP GRADIENT VEIL — sits above the section, fades hero into background ── */}
             <div
                 className="relative z-[59] w-full h-24 -mb-24 pointer-events-none"
-                style={{
-                    background: 'var(--scanline-top-veil)',
-                }}
+                style={{ background: 'var(--scanline-top-veil)' }}
             />
 
             <section
@@ -345,188 +348,70 @@ export function SystemFailure() {
                 ref={containerRef}
                 className="relative z-[60] w-full bg-[var(--bg-primary)] min-h-screen flex items-center justify-center overflow-hidden"
             >
-
-
-                {/* ── GLITCH CONTENT ───────────────────────────────────────────
-                    Visible until the reveal fires.                            */}
                 <div
                     ref={glitchRef}
                     className={`sf-glitch absolute inset-0 flex items-center justify-center ${isComplete ? 'hidden' : ''}`}
                 >
-                    {/* Scanlines */}
                     <div className="absolute inset-0 pointer-events-none z-10 opacity-50"
                         style={{ background: 'repeating-linear-gradient(to bottom, transparent 0px, transparent 1px, var(--scanline-color) 2px, var(--scanline-color) 3px)' }} />
-                    {/* Noise */}
                     <div className="absolute inset-0 pointer-events-none z-5 opacity-10"
                         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")` }} />
-
                     <div className="relative z-30 w-[85%] max-w-[1200px] mx-auto text-center animate-screen-shake">
-
-                        {/* Status badge */}
                         <div className="inline-block font-mono text-neon-orange text-[10px] tracking-widest mb-4 animate-hard-blink">
                             [ ANALYSE_MARCHÉ // ANOMALIE DÉTECTÉE ]
                         </div>
-
-                        {/* Main headline — triple layer glitch */}
                         <div className="relative mb-16">
-                            <h2
-                                className="font-headline text-[var(--text-primary)] font-black uppercase tracking-wider leading-[1.3] animate-text-distort will-change-transform"
-                                style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
-                            >
+                            <h2 className="font-headline text-[var(--text-primary)] font-black uppercase tracking-wider leading-[1.3] animate-text-distort will-change-transform" style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}>
                                 /// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///
                             </h2>
-                            <h2
-                                className="absolute top-0 left-0 right-0 font-headline text-neon-orange font-black uppercase tracking-wider leading-[1.3] mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform"
-                                style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
-                                aria-hidden="true"
-                            >/// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///</h2>
-                            <h2
-                                className="absolute top-0 left-0 right-0 font-headline text-bone font-black uppercase tracking-wider leading-[1.3] mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform"
-                                style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }}
-                                aria-hidden="true"
-                            >/// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///</h2>
+                            <h2 className="absolute top-0 left-0 right-0 font-headline text-neon-orange font-black uppercase tracking-wider leading-[1.3] mix-blend-screen opacity-80 animate-glitch-hard-1 will-change-transform" style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }} aria-hidden="true">/// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///</h2>
+                            <h2 className="absolute top-0 left-0 right-0 font-headline text-bone font-black uppercase tracking-wider leading-[1.3] mix-blend-screen opacity-80 animate-glitch-hard-2 will-change-transform" style={{ fontSize: 'clamp(1.2rem, 2.5vw + 0.4rem, 2.6rem)' }} aria-hidden="true">/// SYSTEME CORROMPU :<br className="hidden sm:inline" /> MISE À JOUR FORCÉE ///</h2>
                         </div>
-
-                        {/* Info block */}
                         <div className="space-y-4 font-mono border-l-4 border-[var(--stroke)] pl-4 md:pl-6 my-5 text-left max-w-2xl mx-auto bg-[var(--bg-primary)]/40 backdrop-blur-sm p-4 md:p-5 rounded-r-lg">
-                            <div className="text-emerald-400 text-[10px] tracking-widest uppercase mb-3 font-bold">
-                                [ PROTOCOLE_SMART // SUPPRESSION_MARGE // OPTIMISATION_COÛT ]
-                            </div>
-                            <h3
-                                className="font-headline text-[var(--text-primary)] mb-4 tracking-widest leading-tight"
-                                style={{ fontSize: 'clamp(1rem, 2vw + 0.25rem, 1.75rem)' }}
-                            >
-                                /// DIAGNOSTIC : SURCOÛT SYSTÉMIQUE ///
-                            </h3>
+                            <div className="text-emerald-400 text-[10px] tracking-widest uppercase mb-3 font-bold">[ PROTOCOLE_SMART // SUPPRESSION_MARGE // OPTIMISATION_COÛT ]</div>
+                            <h3 className="font-headline text-[var(--text-primary)] mb-4 tracking-widest leading-tight" style={{ fontSize: 'clamp(1rem, 2vw + 0.25rem, 1.75rem)' }}>/// DIAGNOSTIC : SURCOÛT SYSTÉMIQUE ///</h3>
                             <div className="space-y-3 text-xs md:text-sm lg:text-base">
-                                <div className="text-[var(--text-secondary)] leading-relaxed animate-line-teleport">
-                                    <span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} ANALYSE :</span>
-                                    70% DE VOTRE ARGENT NE TOUCHE JAMAIS LE PRODUIT.
-                                </div>
-                                <div className="text-[var(--text-tertiary)] leading-relaxed animate-line-teleport">
-                                    <span className="text-neon-orange font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CONSÉQUENCES :</span>
-                                    VOUS SURPAYEZ. LE PRODUIT SOUS-PERFORME.
-                                </div>
-                                <div className="text-[var(--text-secondary)] leading-relaxed animate-emergency-flash">
-                                    <span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CORRECTIF :</span>
-                                    RÉÉCRITURE DU MODÈLE. DE ZÉRO.
-                                </div>
+                                <div className="text-[var(--text-secondary)] leading-relaxed animate-line-teleport"><span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} ANALYSE :</span>70% DE VOTRE ARGENT NE TOUCHE JAMAIS LE PRODUIT.</div>
+                                <div className="text-[var(--text-tertiary)] leading-relaxed animate-line-teleport"><span className="text-neon-orange font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CONSÉQUENCES :</span>VOUS SURPAYEZ. LE PRODUIT SOUS-PERFORME.</div>
+                                <div className="text-[var(--text-secondary)] leading-relaxed animate-emergency-flash"><span className="text-[#E6DCC8] font-black mr-2 text-sm md:text-base lg:text-lg">{'>'} CORRECTIF :</span>RÉÉCRITURE DU MODÈLE. DE ZÉRO.</div>
                             </div>
                         </div>
-
-                        {/* ── HOLD TO UPDATE — interactive ring ──────────────── */}
                         <div className="mt-6 flex flex-col items-center gap-4">
-
-                            {/* Ring hold zone */}
-                            <div
-                                ref={holdZoneRef}
-                                className="relative flex items-center justify-center rounded-full"
-                                style={{
-                                    cursor: isComplete ? 'default' : 'pointer',
-                                    touchAction: 'none',
-                                    userSelect: 'none',
-                                    // Glow expands as ring fills — driven by CSS transition
-                                    filter: isHolding
-                                        ? 'drop-shadow(0 0 24px rgba(255,107,0,0.7)) drop-shadow(0 0 8px rgba(255,107,0,0.4))'
-                                        : 'drop-shadow(0 0 6px rgba(230,220,200,0.15))',
-                                    transition: 'filter 0.4s ease',
-                                }}
-                            >
+                            <div ref={holdZoneRef} className="relative flex items-center justify-center rounded-full" style={{ cursor: isComplete ? 'default' : 'pointer', touchAction: 'none', userSelect: 'none', filter: isHolding ? 'drop-shadow(0 0 24px rgba(255,107,0,0.7)) drop-shadow(0 0 8px rgba(255,107,0,0.4))' : 'drop-shadow(0 0 6px rgba(230,220,200,0.15))', transition: 'filter 0.4s ease' }}>
                                 <svg width="160" height="160" className="-rotate-90" viewBox="0 0 100 100">
-                                    {/* Track */}
-                                    <circle
-                                        cx="50" cy="50" r={RING_RADIUS}
-                                        fill="none"
-                                        stroke={isHolding ? 'rgba(255,107,0,0.15)' : 'rgba(255,255,255,0.08)'}
-                                        strokeWidth="2"
-                                        style={{ transition: 'stroke 0.4s ease' }}
-                                    />
-                                    {/* Fill */}
-                                    <circle
-                                        ref={ringRef}
-                                        cx="50" cy="50" r={RING_RADIUS}
-                                        fill="none"
-                                        stroke={isHolding ? '#FF6B00' : '#E6DCC8'}
-                                        strokeWidth={isHolding ? '4' : '2.5'}
-                                        strokeLinecap="round"
-                                        className="transition-none"
-                                        style={{ transition: 'stroke 0.3s ease, stroke-width 0.3s ease' }}
-                                    />
+                                    <circle cx="50" cy="50" r={RING_RADIUS} fill="none" stroke={isHolding ? 'rgba(255,107,0,0.15)' : 'rgba(255,255,255,0.08)'} strokeWidth="2" style={{ transition: 'stroke 0.4s ease' }} />
+                                    <circle ref={ringRef} cx="50" cy="50" r={RING_RADIUS} fill="none" stroke={isHolding ? '#FF6B00' : '#E6DCC8'} strokeWidth={isHolding ? '4' : '2.5'} strokeLinecap="round" className="transition-none" style={{ transition: 'stroke 0.3s ease, stroke-width 0.3s ease' }} />
                                 </svg>
-
-                                {/* Center label */}
                                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                                    <span
-                                        className="text-[9px] font-mono tracking-widest uppercase mb-0.5 transition-colors duration-300"
-                                        style={{ color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.4)' }}
-                                    >
-                                        {isHolding ? 'CHARGEMENT' : 'MISE À JOUR'}
-                                    </span>
-                                    <span
-                                        ref={percentRef}
-                                        className="text-lg font-mono font-black tracking-widest transition-colors duration-300"
-                                        style={{ color: isHolding ? '#FF6B00' : '#E6DCC8' }}
-                                    >
-                                        0%
-                                    </span>
+                                    <span className="text-[9px] font-mono tracking-widest uppercase mb-0.5 transition-colors duration-300" style={{ color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.4)' }}>{isHolding ? 'CHARGEMENT' : 'MISE À JOUR'}</span>
+                                    <span ref={percentRef} className="text-lg font-mono font-black tracking-widest transition-colors duration-300" style={{ color: isHolding ? '#FF6B00' : '#E6DCC8' }}>0%</span>
                                 </div>
                             </div>
-
-                            {/* Instruction text */}
-                            <div
-                                className="font-mono text-[9px] tracking-[0.3em] uppercase transition-all duration-300"
-                                style={{
-                                    color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.85)',
-                                    opacity: isHolding ? 1 : 0.8,
-                                    letterSpacing: isHolding ? '0.35em' : '0.3em',
-                                }}
-                            >
-                                {isHolding
-                                    ? '█ CHARGEMENT EN COURS — NE PAS RELÂCHER'
-                                    : '[ PRESSEZ ET MAINTENEZ POUR METTRE À JOUR ]'
-                                }
+                            <div className="font-mono text-[9px] tracking-[0.3em] uppercase transition-all duration-300" style={{ color: isHolding ? '#FF6B00' : 'rgba(255,255,255,0.85)', opacity: isHolding ? 1 : 0.8, letterSpacing: isHolding ? '0.35em' : '0.3em' }}>
+                                {isHolding ? '█ CHARGEMENT EN COURS — NE PAS RELÂCHER' : '[ PRESSEZ ET MAINTENEZ POUR METTRE À JOUR ]'}
                             </div>
-
                         </div>
-                        {/* ── end hold zone ───────────────────────────────────── */}
-
                     </div>
                 </div>
 
-                {/* ── STABLE CONTENT — revealed after ring completes ───────────
-                    In-place reveal, no teleportation, no separate section.   */}
-                <div
-                    ref={stableRef}
-                    className={`relative z-10 w-[85%] max-w-[1400px] mx-auto text-center transition-opacity duration-500 ${isComplete ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-                >
+                <div ref={stableRef} className={`relative z-10 w-[85%] max-w-[1400px] mx-auto text-center transition-opacity duration-500 ${isComplete ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                     <div className="relative inline-block">
-
                         <div className="sf-stable-badge inline-flex items-center gap-3 mb-8 px-6 py-3 border border-emerald-400/40 bg-emerald-400/5 rounded-sm">
                             <span className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
                             <span className="font-mono text-emerald-400 text-sm tracking-widest">SYSTÈME STABILISÉ</span>
                         </div>
-
                         <h3 className="font-headline text-h2 text-[var(--text-primary)] font-bold mb-6">
-                            <span className="text-[#E6DCC8]">
-                                MISE À JOUR EFFECTUÉE
-                                <span className="inline-flex w-[1.5ch] justify-start">
-                                    <span>.</span>
-                                    <span>.</span>
-                                    <span className="animate-pulse" style={{ animationDuration: '1.4s' }}>.</span>
-                                </span>
-                            </span>
+                            <span className="text-[#E6DCC8]">MISE À JOUR EFFECTUÉE<span className="inline-flex w-[1.5ch] justify-start"><span>.</span><span>.</span><span className="animate-pulse" style={{ animationDuration: '1.4s' }}>.</span></span></span>
                         </h3>
-
                         <p className="font-sans text-h3 text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
                             <span className="text-emerald-400 font-semibold">Moins cher. Plus concentré.</span><br />
                             <span className="text-[#E6DCC8] font-semibold">Sans intermédiaire.</span>
                         </p>
-
                     </div>
                     <div className="mt-16 mx-auto w-24 h-px bg-gradient-to-r from-transparent via-[var(--text-muted)]/30 to-transparent" />
                 </div>
-
             </section>
         </>
     );
+    ═══════════════════════════════════════════════════════════════════════ */
 }

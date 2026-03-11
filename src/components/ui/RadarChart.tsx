@@ -130,10 +130,14 @@ export function RadarChart({ competitor }: RadarChartProps) {
         };
     });
 
+    // Legend is rendered inside the SVG — extend viewBox height to fit it
+    const legendY = viewBoxSize + 28;
+    const totalHeight = viewBoxSize + 52;
+
     return (
         <div className="relative group">
             <svg
-                viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
+                viewBox={`0 0 ${viewBoxSize} ${totalHeight}`}
                 className="w-full max-w-[420px] mx-auto select-none"
             >
                 {/* Definitions for glow effects */}
@@ -167,6 +171,10 @@ export function RadarChart({ competitor }: RadarChartProps) {
                         <stop offset="0%" stopColor="var(--radar-dot)" stopOpacity="0" />
                         <stop offset="100%" stopColor="var(--radar-dot)" stopOpacity="0.12" />
                     </linearGradient>
+                    {/* Clip sweep to radar circle */}
+                    <clipPath id="radar-circle-clip">
+                        <circle cx={center} cy={center} r={radius} />
+                    </clipPath>
                 </defs>
 
                 {/* 1. Radar Grid (Concentric) */}
@@ -291,11 +299,12 @@ export function RadarChart({ competitor }: RadarChartProps) {
                     );
                 })}
 
-                {/* 5. Scanner Sweep Animation */}
+                {/* 5. Scanner Sweep Animation — clipped to radar circle */}
                 <motion.g
                     animate={{ rotate: 360 }}
                     transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
                     style={{ originX: "50%", originY: "50%" }}
+                    clipPath="url(#radar-circle-clip)"
                 >
                     <path
                         d={`M${center},${center} L${center},${center - radius} A${radius},${radius} 0 0,1 ${center + 10},${center - radius} Z`}
@@ -376,6 +385,49 @@ export function RadarChart({ competitor }: RadarChartProps) {
                 <circle cx={center} cy={center} r="2" fill="var(--radar-dot)" />
                 <line x1={center - 5} y1={center} x2={center + 5} y2={center} stroke="var(--radar-crosshair)" strokeWidth="0.5" />
                 <line x1={center} y1={center - 5} x2={center} y2={center + 5} stroke="var(--radar-crosshair)" strokeWidth="0.5" />
+
+                {/* ── Legend ── */}
+                <g>
+                    {/* HYDRE swatch */}
+                    <rect
+                        x={center - 80}
+                        y={legendY}
+                        width={14}
+                        height={10}
+                        fill="var(--radar-label)"
+                    />
+                    <text
+                        x={center - 62}
+                        y={legendY + 5}
+                        dominantBaseline="middle"
+                        fontSize="9"
+                        fontFamily="monospace"
+                        letterSpacing="0.12em"
+                        fill="var(--radar-label)"
+                    >
+                        HYDRE
+                    </text>
+
+                    {/* Competitor swatch */}
+                    <rect
+                        x={center + 14}
+                        y={legendY}
+                        width={14}
+                        height={10}
+                        fill="#F97316"
+                    />
+                    <text
+                        x={center + 32}
+                        y={legendY + 5}
+                        dominantBaseline="middle"
+                        fontSize="9"
+                        fontFamily="monospace"
+                        letterSpacing="0.12em"
+                        fill="var(--radar-label)"
+                    >
+                        {competitor.codeName}
+                    </text>
+                </g>
             </svg>
 
             {/* Sonar wave keyframes */}

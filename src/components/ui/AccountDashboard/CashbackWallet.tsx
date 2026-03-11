@@ -64,7 +64,9 @@ export const CashbackWallet = ({ cashback, commission }: CashbackWalletProps) =>
   const [txError, setTxError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
+    // Defer wallet fetch slightly so it doesn't compete with the primary
+    // /api/account/stats request fired by the account page on mount
+    const timer = setTimeout(async () => {
       try {
         setIsLoadingTx(true);
         const token = typeof window !== 'undefined' ? localStorage.getItem('hydre_auth_token') : null;
@@ -78,8 +80,9 @@ export const CashbackWallet = ({ cashback, commission }: CashbackWalletProps) =>
       } finally {
         setIsLoadingTx(false);
       }
-    };
-    fetchTransactions();
+    }, 800);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const containerVariants = {

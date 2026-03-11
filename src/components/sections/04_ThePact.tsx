@@ -161,7 +161,7 @@ export function ThePact() {
                     </span>
                     <h2 className="font-headline text-h1 text-[var(--text-primary)] font-bold tracking-wide leading-[1.05] mb-6">
                         Vous payez le produit.<br />
-                        <span className="text-[#E6DCC8] italic font-light tracking-normal">Pas le bruit.</span>
+                        <span className="text-[var(--text-primary)] italic font-light tracking-normal">Pas le bruit.</span>
                     </h2>
                     <p className="font-mono text-sm md:text-base text-[var(--text-tertiary)] leading-relaxed tracking-wide">
                         Le modèle standard est cassé — 85% du prix finance le marketing, pas vos performances.
@@ -191,7 +191,7 @@ export function ThePact() {
                                 <span className="font-mono text-[10px] text-[var(--text-muted)] tracking-[0.2em] block mb-1">CONCURRENT PREMIUM</span>
                                 <span className="font-mono text-2xl md:text-3xl text-[var(--text-muted)] tabular-nums">{COMPETITOR_PRICE.toFixed(2)}€</span>
                             </div>
-                            <span className="font-mono text-[10px] text-neon-orange/60 tracking-wider">
+                            <span className="font-mono text-[10px] text-neon-orange tracking-wider opacity-80">
                                 INEFFICIENT
                             </span>
                         </div>
@@ -203,7 +203,7 @@ export function ThePact() {
                         <div className="mt-6 pt-4 border-t border-[var(--stroke)]">
                             <div className="flex items-center gap-2">
                                 <div className="w-1 h-1 rounded-full bg-neon-orange/60" />
-                                <span className="font-mono text-[10px] text-neon-orange/40 tracking-wider">
+                                <span className="font-mono text-[10px] text-neon-orange tracking-wider opacity-70">
                                     SEULEMENT 15% DU PRIX ATTEINT LE PRODUIT
                                 </span>
                             </div>
@@ -231,7 +231,7 @@ export function ThePact() {
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#E6DCC8] animate-pulse" />
-                                <span className="font-mono text-[10px] text-[#E6DCC8]/70 tracking-wider">
+                                <span className="font-mono text-[10px] text-[var(--text-primary)] tracking-wider opacity-80">
                                     −{savings}% VS MARCHÉ
                                 </span>
                             </div>

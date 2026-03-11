@@ -58,15 +58,13 @@ interface AccountStats {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { user, isAuthLoading, openAuthModal, logout } = useHydreStore();
+  const { logout, openAuthModal } = useHydreStore();
   const [stats, setStats] = useState<AccountStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
-    if (isAuthLoading) return;
-
     const fetchAccountStats = async () => {
       try {
         setIsLoading(true);
@@ -110,13 +108,9 @@ export default function AccountPage() {
       }
     };
 
-    if (user) {
-      fetchAccountStats();
-    } else {
-      router.push('/');
-      openAuthModal('login');
-    }
-  }, [user, isAuthLoading, router, openAuthModal, refreshKey]);
+    fetchAccountStats();
+  // refreshKey triggers a manual refresh; router/openAuthModal are stable refs
+  }, [refreshKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleLogout = () => {
     const token = localStorage.getItem('hydre_auth_token');
@@ -131,7 +125,7 @@ export default function AccountPage() {
     router.push('/');
   };
 
-  if (isAuthLoading || isLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-[var(--bg-primary)] pt-24 pb-16 px-6 md:px-10 lg:px-14 flex items-center justify-center">
         <div className="text-center">
