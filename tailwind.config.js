@@ -48,8 +48,8 @@ module.exports = {
             fontFamily: {
                 headline: ['var(--font-headline)', 'system-ui', 'sans-serif'],
                 body: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-                data: ['var(--font-jetbrains)', 'monospace'],
-                mono: ['var(--font-jetbrains)', 'monospace'],
+                data: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+                mono: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
                 sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
                 display: ['var(--font-headline)', 'system-ui', 'sans-serif'],
             },

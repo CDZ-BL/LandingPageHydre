@@ -304,7 +304,7 @@ body::before {
   }
 
   .font-data {
-    font-family: var(--font-jetbrains), monospace;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
     font-size: 0.75rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -419,7 +419,7 @@ body::before {
   border-bottom: 1px solid var(--stroke);
   padding: 0.75rem 0;
   color: var(--text-primary);
-  font-family: var(--font-jetbrains), monospace;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: 0.875rem;
   width: 100%;
   outline: none;

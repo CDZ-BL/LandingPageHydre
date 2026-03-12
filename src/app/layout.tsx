@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next';
-import { Raleway, JetBrains_Mono } from 'next/font/google';
+import { Raleway } from 'next/font/google';
 import { GeistSans } from 'geist/font/sans';
 import { LenisProvider } from '@/components/providers/LenisProvider';
 import { AuthRehydrator } from '@/components/providers/AuthRehydrator';
@@ -15,12 +15,6 @@ const instrumentSans = Raleway({
     display: 'swap',
 });
 
-// JETBRAINS MONO - Technical Data
-const jetbrains = JetBrains_Mono({
-    subsets: ['latin'],
-    variable: '--font-jetbrains',
-    display: 'swap',
-});
 
 export const metadata: Metadata = {
     title: 'Smart Nutrition | Expérience Pré-Lancement',
@@ -51,7 +45,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="fr" data-theme="dark" className={`${instrumentSans.variable} ${jetbrains.variable} ${GeistSans.variable}`}>
+        <html lang="fr" data-theme="dark" className={`${instrumentSans.variable} ${GeistSans.variable}`}>
             <body className="antialiased bg-[var(--bg-primary)] text-[var(--text-secondary)]">
                 <script
                     dangerouslySetInnerHTML={{
