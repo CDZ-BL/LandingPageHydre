@@ -2,12 +2,14 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useLenis } from 'lenis/react';
+import { useHydreStore } from '@/lib/store';
 
 // --- HERO ---
 export function HeroVoid() {
     const { scrollY } = useScroll();
     const textY = useTransform(scrollY, [0, 500], [0, -100]);
     const lenis = useLenis();
+    const { theme } = useHydreStore();
 
     const handleCTAClick = () => {
         if (lenis) {
@@ -24,24 +26,33 @@ export function HeroVoid() {
         >
             <div className="relative h-full flex">
 
-                {/* ━━━ FULLSCREEN VIDEO BACKGROUND ━━━━━━━━━━━━━━━━━━
-                    Desktop only — saves 3.4MB on mobile.
-                    Mobile gets a rich CSS gradient fallback.            */}
-                <video
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    className="hidden md:block absolute inset-0 w-full h-full object-cover z-0"
-                    src="/videos/Backgroundvideo3Dhero.webm"
-                />
-                {/* Mobile gradient fallback — no download cost */}
-                <div
-                    className="md:hidden absolute inset-0 z-0"
-                    style={{
-                        background: 'radial-gradient(ellipse 80% 60% at 70% 40%, #1a1a2e 0%, #0d0d1a 40%, #050505 100%)',
-                    }}
-                />
+                {/* ━━━ FULLSCREEN BACKGROUND ━━━━━━━━━━━━━━━━━━ */}
+                {theme === 'light' ? (
+                    <img
+                        src="/images/backgroundwhitetheme.jpeg"
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover z-0"
+                    />
+                ) : (
+                    <>
+                        {/* Desktop only — saves 3.4MB on mobile. */}
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="hidden md:block absolute inset-0 w-full h-full object-cover z-0"
+                            src="/videos/Backgroundvideo3Dhero.webm"
+                        />
+                        {/* Mobile gradient fallback — no download cost */}
+                        <div
+                            className="md:hidden absolute inset-0 z-0"
+                            style={{
+                                background: 'radial-gradient(ellipse 80% 60% at 70% 40%, #1a1a2e 0%, #0d0d1a 40%, #050505 100%)',
+                            }}
+                        />
+                    </>
+                )}
 
                 {/* ━━━ LEFT TEXT OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
                 <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-full lg:w-1/2">
