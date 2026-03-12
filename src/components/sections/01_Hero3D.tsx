@@ -29,7 +29,7 @@ export function HeroVoid() {
                 {/* ━━━ FULLSCREEN BACKGROUND ━━━━━━━━━━━━━━━━━━ */}
                 {theme === 'light' ? (
                     <img
-                        src="/images/backgroundwhitetheme.jpeg"
+                        src="/images/backgroundwhitetheme.png"
                         alt=""
                         className="absolute inset-0 w-full h-full object-cover z-0"
                     />
@@ -111,8 +111,10 @@ export function HeroVoid() {
 
                 </motion.div>
 
-                {/* Bottom gradient */}
-                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent z-[2] pointer-events-none" />
+                {/* Bottom gradient — dark theme only */}
+                {theme !== 'light' && (
+                    <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[var(--bg-primary)] via-[var(--bg-primary)]/80 to-transparent z-[2] pointer-events-none" />
+                )}
             </div>
         </section>
     );
