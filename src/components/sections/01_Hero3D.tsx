@@ -31,17 +31,21 @@ export function HeroVoid() {
                     <img
                         src="/images/backgroundwhitetheme.png"
                         alt=""
-                        className="absolute inset-0 w-full h-full object-cover z-0"
+                        className="absolute inset-0 w-full h-full object-cover object-top md:object-center z-0"
                     />
                 ) : (
                     <>
                         {/* Desktop only — saves 3.4MB on mobile. */}
+                        {/* will-change:transform keeps the video in its own
+                            composite layer, preventing it from bleeding above
+                            the WebGL canvas (GPU compositing order bug). */}
                         <video
                             autoPlay
                             loop
                             muted
                             playsInline
                             className="hidden md:block absolute inset-0 w-full h-full object-cover z-0"
+                            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                             src="/videos/Backgroundvideo3Dhero.webm"
                         />
                         {/* Mobile gradient fallback — no download cost */}
@@ -55,7 +59,7 @@ export function HeroVoid() {
                 )}
 
                 {/* ━━━ LEFT TEXT OVERLAY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-                <motion.div style={{ y: textY }} className="relative z-20 h-full flex flex-col items-start justify-center pl-8 md:pl-16 lg:pl-24 max-w-xl w-full lg:w-1/2">
+                <motion.div style={{ y: textY }} className="relative z-[60] h-full flex flex-col items-start justify-start pt-28 sm:pt-32 lg:justify-center lg:pt-0 pl-8 md:pl-16 lg:pl-24 max-w-xl w-full lg:w-1/2">
 
 
                     <motion.h1

@@ -4,17 +4,15 @@ import { motion } from 'framer-motion';
 
 // Color map matching RD_OPTIONS in Alliance — kept local to avoid cross-bundle imports
 const OPTION_COLORS: Record<string, string> = {
-  sommeil:   '#818CF8',
-  focus:     '#22D3EE',
-  endurance: '#F59E0B',
-  recovery:  '#34D399',
+  'Fruits des bois': '#FF6B00',
+  'Melon HoneyDew':  '#34D399',
+  'Poire':           '#FDE68A',
 };
 
 const OPTION_LABELS: Record<string, string> = {
-  sommeil:   'SOMMEIL',
-  focus:     'FOCUS',
-  endurance: 'ENDURANCE',
-  recovery:  'RECOVERY',
+  'Fruits des bois': 'FRUITS DES BOIS',
+  'Melon HoneyDew':  'MELON HONEYDEW',
+  'Poire':           'POIRE',
 };
 
 interface Vote {

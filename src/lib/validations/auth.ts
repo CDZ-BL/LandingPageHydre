@@ -75,6 +75,28 @@ export const ResendCodeSchema = z.object({
 
 export type ResendCodeInput = z.infer<typeof ResendCodeSchema>;
 
+// ── FORGOT PASSWORD ──────────────────────────────────────────
+
+export const ForgotPasswordSchema = z.object({
+    email: z
+        .string()
+        .email('Invalid email address')
+        .min(5)
+        .max(254)
+        .transform((v) => v.toLowerCase().trim()),
+});
+
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
+
+// ── RESET PASSWORD ────────────────────────────────────────────
+
+export const ResetPasswordSchema = z.object({
+    token: z.string().min(1, 'Token is required'),
+    newPassword: passwordSchema,
+});
+
+export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
+
 // ── UPDATE PROFILE ──────────────────────────────────────────
 
 export const UpdateProfileSchema = z.object({

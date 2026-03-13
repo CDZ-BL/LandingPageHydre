@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useHydreStore } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
-type AuthView = 'login' | 'signup' | 'verify';
+type AuthView = 'login' | 'signup' | 'verify' | 'forgot-password';
 
 interface FormState {
 	email: string;
@@ -69,6 +69,8 @@ export function AuthModal() {
 	const [loading, setLoading] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [forgotEmail, setForgotEmail] = useState('');
+	const [forgotSent, setForgotSent] = useState(false);
 	const [resendTimer, setResendTimer] = useState(0);
 	const [verifyTimer, setVerifyTimer] = useState(600); // 10 minutes
 	const verifyTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -525,10 +527,42 @@ export function AuthModal() {
 		}
 	}, [pendingVerificationEmail]);
 
+	const handleForgotPassword = useCallback(async () => {
+		setError(null);
+
+		if (!forgotEmail.trim()) {
+			setError({ field: 'forgotEmail', message: 'E-mail requis' });
+			return;
+		}
+
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(forgotEmail)) {
+			setError({ field: 'forgotEmail', message: 'Format e-mail invalide' });
+			return;
+		}
+
+		setLoading(true);
+		try {
+			await fetch('/api/auth/forgot-password', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email: forgotEmail }),
+			});
+			// Always show success (anti-enumeration — we never reveal if email exists)
+			setForgotSent(true);
+		} catch {
+			setError({ message: 'Erreur réseau. Veuillez réessayer.' });
+		} finally {
+			setLoading(false);
+		}
+	}, [forgotEmail]);
+
 	const handleSwitchView = useCallback((newView: AuthView) => {
-		setDirection(newView === 'signup' || newView === 'verify' ? 1 : -1);
+		setDirection(newView === 'signup' || newView === 'verify' || newView === 'forgot-password' ? 1 : -1);
 		setView(newView);
 		setError(null);
+		setForgotSent(false);
+		setForgotEmail('');
 		setFormState((prev) => ({
 			...prev,
 			password: '',
@@ -543,10 +577,12 @@ export function AuthModal() {
 					handleLogin();
 				} else if (view === 'signup') {
 					handleSignup();
+				} else if (view === 'forgot-password') {
+					handleForgotPassword();
 				}
 			}
 		},
-		[view, loading, handleLogin, handleSignup]
+		[view, loading, handleLogin, handleSignup, handleForgotPassword]
 	);
 
 	const formatTime = (seconds: number): string => {
@@ -700,6 +736,16 @@ export function AuthModal() {
 													{error.message}
 												</p>
 											)}
+											{/* Forgot password link */}
+											<div className="mt-2 text-right">
+												<button
+													type="button"
+													onClick={() => handleSwitchView('forgot-password')}
+													className="font-mono text-[10px] text-white/30 hover:text-[#FF6B00] transition-colors duration-200"
+												>
+													Mot de passe oublié ?
+												</button>
+											</div>
 										</div>
 
 										{/* General error */}
@@ -1123,6 +1169,149 @@ export function AuthModal() {
 												</button>
 											</p>
 										</div>
+									</motion.div>
+								)}
+								{view === 'forgot-password' && (
+									<motion.div
+										key="forgot-password-view"
+										custom={direction}
+										initial="enter"
+										animate="center"
+										exit="exit"
+										variants={viewVariants}
+										transition={{ duration: 0.3, ease: SMOOTH_EASING }}
+										onKeyDown={handleKeyDown}
+									>
+										{forgotSent ? (
+											<>
+												{/* Success state */}
+												<div className="flex flex-col items-center text-center">
+													<div className="w-12 h-12 mb-6 rounded-full border border-[#39FF14]/40 flex items-center justify-center">
+														<svg
+															className="w-6 h-6 text-[#39FF14]"
+															fill="none"
+															stroke="currentColor"
+															viewBox="0 0 24 24"
+														>
+															<path
+																strokeLinecap="round"
+																strokeLinejoin="round"
+																strokeWidth={2}
+																d="M5 13l4 4L19 7"
+															/>
+														</svg>
+													</div>
+
+													<h2 className="font-headline text-xl uppercase tracking-[0.2em] text-white mb-2">
+														Email envoyé
+													</h2>
+													<p className="font-mono text-[10px] text-white/40 mb-2 leading-relaxed">
+														Si un compte est associé à{' '}
+														<span className="text-white/60">{forgotEmail}</span>,
+														vous recevrez un lien valable{' '}
+														<span className="text-[#FF6B00]">10 minutes</span>.
+													</p>
+													<p className="font-mono text-[10px] text-white/30 mb-8 leading-relaxed">
+														Vérifiez votre dossier spam si vous ne le trouvez pas.
+													</p>
+												</div>
+
+												<motion.button
+													whileHover={{ scale: 1.01 }}
+													whileTap={{ scale: 0.99 }}
+													onClick={() => handleSwitchView('login')}
+													className="w-full py-3 px-4 rounded-sm font-mono text-sm uppercase tracking-[0.15em] bg-gradient-to-r from-[#FF6B00] to-[#FF8533] text-white hover:shadow-lg hover:shadow-[#FF6B00]/30 transition-all duration-300"
+												>
+													Retour à la connexion
+												</motion.button>
+											</>
+										) : (
+											<>
+												{/* Title */}
+												<h2 className="font-headline text-xl uppercase tracking-[0.2em] text-white mb-2">
+													Mot de passe oublié
+												</h2>
+
+												{/* Subtitle */}
+												<p className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/40 mb-8">
+													Entrez votre email pour recevoir un lien de réinitialisation
+												</p>
+
+												{/* Email input */}
+												<div className="mb-6">
+													<label className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/60 block mb-2">
+														Email
+													</label>
+													<input
+														type="email"
+														placeholder="vous@example.com"
+														value={forgotEmail}
+														onChange={(e) => {
+															setForgotEmail(e.target.value);
+															setError(null);
+														}}
+														onKeyDown={handleKeyDown}
+														className={cn(
+															'w-full bg-white/[0.04] border rounded-sm px-4 py-3',
+															'font-mono text-sm text-white placeholder:text-white/20',
+															'focus:outline-none transition-all duration-300',
+															error?.field === 'forgotEmail'
+																? 'border-red-500/50 focus:border-red-500/50'
+																: 'border-white/10 focus:border-[#FF6B00]/50 focus:bg-white/[0.06]'
+														)}
+													/>
+													{error?.field === 'forgotEmail' && (
+														<p className="font-mono text-[10px] text-red-500/70 mt-1">
+															{error.message}
+														</p>
+													)}
+												</div>
+
+												{/* General error */}
+												{error && !error.field && (
+													<div className="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-sm">
+														<p className="font-mono text-[10px] text-red-500/90">
+															{error.message}
+														</p>
+													</div>
+												)}
+
+												{/* Submit button */}
+												<motion.button
+													whileHover={{ scale: 1.01 }}
+													whileTap={{ scale: 0.99 }}
+													onClick={handleForgotPassword}
+													disabled={loading}
+													className={cn(
+														'w-full py-3 px-4 rounded-sm font-mono text-sm uppercase tracking-[0.15em]',
+														'transition-all duration-300',
+														loading
+															? 'bg-[#FF6B00]/50 text-white/50 cursor-not-allowed'
+															: 'bg-gradient-to-r from-[#FF6B00] to-[#FF8533] text-white hover:shadow-lg hover:shadow-[#FF6B00]/30'
+													)}
+												>
+													{loading ? (
+														<div className="flex items-center justify-center">
+															<div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+														</div>
+													) : (
+														'Envoyer le lien'
+													)}
+												</motion.button>
+
+												{/* Back to login */}
+												<div className="mt-6 text-center">
+													<p className="font-mono text-[10px] text-white/40">
+														<button
+															onClick={() => handleSwitchView('login')}
+															className="text-[#FF6B00] hover:text-[#FF8533] transition-colors duration-200"
+														>
+															← Retour à la connexion
+														</button>
+													</p>
+												</div>
+											</>
+										)}
 									</motion.div>
 								)}
 							</AnimatePresence>

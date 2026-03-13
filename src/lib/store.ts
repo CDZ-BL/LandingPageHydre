@@ -13,7 +13,7 @@ export interface HydreUser {
   commissionBalanceCents: number;
 }
 
-export type AuthModal = 'closed' | 'login' | 'signup' | 'verify';
+export type AuthModal = 'closed' | 'login' | 'signup' | 'verify' | 'forgot-password';
 export type GamePhase = 'intro' | 'playing' | 'voted' | 'converting';
 export type FlavorId = 'Fruits des bois' | 'Melon HoneyDew' | 'Poire';
 
@@ -170,7 +170,7 @@ export const useHydreStore = create<HydreState>((set) => ({
         localStorage.setItem('hydre-theme', next);
         // Update meta theme-color
         const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', next === 'light' ? '#F0EAE0' : '#050505');
+        if (meta) meta.setAttribute('content', next === 'light' ? '#FAFAFA' : '#050505');
       }
       return { theme: next };
     }),
@@ -181,7 +181,7 @@ export const useHydreStore = create<HydreState>((set) => ({
         document.documentElement.dataset.theme = theme;
         localStorage.setItem('hydre-theme', theme);
         const meta = document.querySelector('meta[name="theme-color"]');
-        if (meta) meta.setAttribute('content', theme === 'light' ? '#F0EAE0' : '#050505');
+        if (meta) meta.setAttribute('content', theme === 'light' ? '#FAFAFA' : '#050505');
       }
       return { theme };
     }),

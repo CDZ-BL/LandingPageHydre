@@ -272,7 +272,7 @@ export function TheSpecs() {
                                 background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.04) 0%, transparent 60%)',
                             }}
                         />
-                        <div className="w-full h-full min-h-[400px] lg:min-h-[550px]">
+                        <div className="w-full h-full min-h-[280px] lg:min-h-[550px]">
                             <XRayTubeCanvas />
                         </div>
                     </motion.div>

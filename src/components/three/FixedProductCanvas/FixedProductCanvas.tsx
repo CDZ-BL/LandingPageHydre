@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useRef, useEffect } from 'react';
+import { Suspense, useRef, useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useThree } from '@react-three/fiber';
 import { Environment, Lightformer } from '@react-three/drei';
@@ -48,6 +48,14 @@ const CAMERA_FOV = 20;
 export function FixedProductCanvas() {
     const wrapperRef = useRef<HTMLDivElement>(null);
     const theme = useHydreStore((s) => s.theme);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 1024);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
 
     useEffect(() => {
         if (!wrapperRef.current) return;
@@ -87,6 +95,7 @@ export function FixedProductCanvas() {
         <div
             ref={wrapperRef}
             className="absolute top-0 right-0 w-full lg:w-1/2 h-screen z-50 pointer-events-none"
+            style={{ isolation: 'isolate', transform: 'translateZ(0)' }}
         >
             <Canvas
                 dpr={[1, 1.5]}
@@ -131,7 +140,10 @@ export function FixedProductCanvas() {
 
                 <FrameGuard />
                 <Suspense fallback={null}>
-                    <HydreCoreAssembly scale={4.5} position={[0, -0.34, 0]} />
+                    <HydreCoreAssembly
+                        scale={isMobile ? 3.2 : 4.5}
+                        position={isMobile ? [0, -0.45, 0] : [0, -0.34, 0]}
+                    />
                 </Suspense>
             </Canvas>
         </div>

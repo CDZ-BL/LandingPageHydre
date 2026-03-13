@@ -66,17 +66,60 @@ Flavors: `'yuzu-ginger'` | `'berry-mint'` | `'electric-lime'`
 
 ## Design System
 
-**Palette** (Tailwind custom):
-- `void` — monochrome #050505–#FFFFFF (dominant)
-- `neon` — orange `#FF6B00`, purple `#9B30FF`, yellow `#CCFF00`, lime `#39FF14` (product/CTA only)
-- `bone` — `#E6DCC8` (Founder Circle accent)
+**Palette** (Tailwind custom — OKLCH-based):
+
+> All tokens share **H 279** (blue-violet) for brand coherence. `secondary` uses **H 99** (yellow-green complement). Semantic states (danger/warning/success/info) keep the same C but shift H. Light ↔ Dark flips L values while C and H stay locked.
+
+**Light mode:**
+```css
+--bg-dark:     oklch(0.92 0.09 279);
+--bg:          oklch(0.96 0.09 279);
+--bg-light:    oklch(1    0.09 279);
+--text:        oklch(0.15 0.18 279);
+--text-muted:  oklch(0.4  0.18 279);
+--highlight:   oklch(1    0.18 279);
+--border:      oklch(0.6  0.18 279);
+--border-muted:oklch(0.7  0.18 279);
+--primary:     oklch(0.4  0.18 279);
+--secondary:   oklch(0.4  0.18  99);
+--danger:      oklch(0.5  0.18  30);
+--warning:     oklch(0.5  0.18 100);
+--success:     oklch(0.5  0.18 160);
+--info:        oklch(0.5  0.18 260);
+```
+
+**Dark mode:**
+```css
+--bg-dark:     oklch(0.10 0.09 279);
+--bg:          oklch(0.15 0.09 279);
+--bg-light:    oklch(0.20 0.09 279);
+--text:        oklch(0.96 0.10 279);
+--text-muted:  oklch(0.76 0.10 279);
+--highlight:   oklch(0.5  0.18 279);
+--border:      oklch(0.4  0.18 279);
+--border-muted:oklch(0.3  0.18 279);
+--primary:     oklch(0.76 0.18 279);
+--secondary:   oklch(0.76 0.18  99);
+--danger:      oklch(0.7  0.18  30);
+--warning:     oklch(0.7  0.18 100);
+--success:     oklch(0.7  0.18 160);
+--info:        oklch(0.7  0.18 260);
+```
+
+**Derivation logic** (for generating variants / new tokens):
+| Parameter | Light | Dark | Role |
+|---|---|---|---|
+| Backgrounds | L 0.92 → 1.0 | L 0.10 → 0.20 | C low (0.09) — desaturated surfaces |
+| Text | L 0.15 / 0.40 | L 0.96 / 0.76 | C mid (0.10–0.18) — readable |
+| Brand (primary/secondary) | L 0.40 | L 0.76 | C high (0.18) — vivid |
+| Semantic states | L 0.50 | L 0.70 | C 0.18, H shifted per meaning |
 
 **Typography**:
 - `font-headline` — Clash Display
 - `font-body` / `font-sans` — Geist Sans
 - `font-mono` / `font-data` — JetBrains Mono
 
-**Aesthetic**: High contrast, clinical, premium brutalist. `shadow-glow` = orange neon. `shadow-inner-glow` = white soft.
+**Aesthetic**: High contrast, clinical, premium brutalist. `shadow-glow` = primary glow. `shadow-inner-glow` = white soft.
 
 ---
 

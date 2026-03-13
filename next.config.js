@@ -28,7 +28,7 @@ const nextConfig = {
                             "font-src 'self' https://fonts.gstatic.com",
                             "img-src 'self' data: blob: https:",
                             "media-src 'self' blob: https:", // Added https: for remote videos
-                            "connect-src 'self' blob: https://*.supabase.co https://*.upstash.io https://api.resend.com https://raw.githack.com https://*.vercel.app",
+                            "connect-src 'self' blob: https://*.supabase.co https://*.upstash.io https://api.resend.com https://raw.githack.com https://*.vercel.app https://vercel.live wss://ws-us3.pusher.com",
                             "worker-src 'self' blob:",
                             "frame-src 'none'",
                         ].join('; '),

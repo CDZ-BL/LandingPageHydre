@@ -229,7 +229,7 @@ export function Header() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                        className="lg:hidden pointer-events-auto bg-[var(--bg-primary)]/90 backdrop-blur-xl border-b border-[var(--stroke)] px-6 py-5 flex flex-col gap-4"
+                        className="lg:hidden pointer-events-auto bg-[var(--bg-primary)]/90 backdrop-blur-xl px-6 py-5 flex flex-col gap-4"
                     >
                         {(['Manifeste', 'Produit', 'Alliance', 'Roadmap'] as const).map((item) => {
                             const targets: Record<string, string> = {

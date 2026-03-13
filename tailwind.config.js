@@ -8,42 +8,39 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                // AETHER Monochrome Palette - Improved Luminosity
-                void: {
-                    DEFAULT: '#050505',
-                    50: '#0D0D0D',
-                    100: '#151515',
-                    200: '#222222',
-                    300: '#333333',
-                    400: '#555555',
-                    500: '#777777',
-                    600: '#999999',  // Brighter muted text
-                    700: '#BBBBBB',  // Brighter secondary text
-                    800: '#DDDDDD',  // Brighter text
-                    900: '#EEEEEE',  // Near white
-                    950: '#FFFFFF',  // Pure white for headings
+                // ── BRAND SEMANTIC TOKENS (CSS variable-backed, OKLCH) ──────────
+                bg: {
+                    DEFAULT: 'var(--bg)',
+                    dark:    'var(--bg-dark)',
+                    light:   'var(--bg-light)',
                 },
-                // Accent colors - ONLY for product imagery
-                neon: {
-                    orange: '#FF6B00',
-                    purple: '#9B30FF',
-                    yellow: '#CCFF00',
-                    lime: '#39FF14',
+                text: {
+                    DEFAULT: 'var(--text)',
+                    muted:   'var(--text-muted)',
                 },
-                // BIOLOGIC BONE - Alliance accent
-                bone: '#E6DCC8',
-                // SEMANTIC THEME TOKENS (CSS variable-backed)
+                highlight:     'var(--highlight)',
+                border: {
+                    DEFAULT: 'var(--border)',
+                    muted:   'var(--border-muted)',
+                },
+                primary:   'var(--primary)',
+                secondary: 'var(--secondary)',
+                danger:    'var(--danger)',
+                warning:   'var(--warning)',
+                success:   'var(--success)',
+                info:      'var(--info)',
+                // ── LEGACY ALIASES (backwards compat) ────────────────────────────
                 surface: {
-                    DEFAULT: 'var(--bg-primary)',
-                    '2': 'var(--bg-secondary)',
-                    '3': 'var(--bg-surface)',
-                    elevated: 'var(--bg-elevated)',
+                    DEFAULT:  'var(--bg)',
+                    '2':      'var(--bg-dark)',
+                    '3':      'var(--bg-light)',
+                    elevated: 'var(--bg-light)',
                 },
-                heading: 'var(--text-primary)',
-                body: 'var(--text-secondary)',
-                subtle: 'var(--text-tertiary)',
+                heading:       'var(--text)',
+                body:          'var(--text)',
+                subtle:        'var(--text-muted)',
                 'theme-muted': 'var(--text-muted)',
-                'theme-stroke': 'var(--stroke)',
+                'theme-stroke':'var(--border-muted)',
             },
             fontFamily: {
                 headline: ['var(--font-headline)', 'system-ui', 'sans-serif'],
@@ -106,8 +103,8 @@ module.exports = {
                 'gradient-radial': 'radial-gradient(circle at center, var(--bg-elevated) 0%, var(--bg-primary) 70%)',
             },
             boxShadow: {
-                'glow': '0 0 60px rgba(255, 107, 0, 0.15)',
-                'inner-glow': 'inset 0 0 30px rgba(255, 255, 255, 0.05)',
+                'glow':       '0 0 60px var(--glow-color)',
+                'inner-glow': 'inset 0 0 30px oklch(from var(--text) l c h / 0.05)',
             },
         },
     },
